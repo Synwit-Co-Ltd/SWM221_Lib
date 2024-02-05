@@ -1,0 +1,1 @@
+功能说明：使用TIMR的Input Capture功能测量输入PWM的占空比
