@@ -2125,6 +2125,35 @@ typedef struct {
 
 
 typedef struct {
+    __IO uint32_t CR;
+    
+	__O  uint32_t DATAIN;
+	
+    __IO uint32_t INIVAL;					//CR.EN写1时，INIVAL中的值写入RESULT
+    
+    __I  uint32_t RESULT;
+} CRC_TypeDef;
+
+
+#define CRC_CR_EN_Pos			    0
+#define CRC_CR_EN_Msk			    (0x01 << CRC_CR_EN_Pos)
+#define CRC_CR_IREV_Pos				1       //输入数据是否翻转，0 bit顺序不变    1 bit顺序完全翻转   2 bit顺序字节内翻转   3 仅字节顺序翻转
+#define CRC_CR_IREV_Msk				(0x03 << CRC_CR_IREV_Pos)
+#define CRC_CR_INOT_Pos				3       //输入数据是否取反
+#define CRC_CR_INOT_Msk				(0x01 << CRC_CR_INOT_Pos)
+#define CRC_CR_OREV_Pos				4       //输出结果是否翻转，0 bit顺序不变    1 bit顺序完全翻转   2 bit顺序字节内翻转   3 仅字节顺序翻转
+#define CRC_CR_OREV_Msk				(0x03 << CRC_CR_OREV_Pos)
+#define CRC_CR_ONOT_Pos				6       //输出结果是否取反
+#define CRC_CR_ONOT_Msk				(0x01 << CRC_CR_ONOT_Pos)
+#define CRC_CR_POLY_Pos				7       //多项式选择，0 x^16+x^12+x^5+1   1 x^8+x^2+x+1   2 x^16+x^15+x^2+1   3 x^32+x^26+x^23+x^22+x^16+x^12+x^11+x^10+x^8+x^7+x^5+x^4+x^2+x+1
+#define CRC_CR_POLY_Msk				(0x03 << CRC_CR_POLY_Pos)
+#define CRC_CR_IBIT_Pos				9       //输入数据有效位数 0 32位    1 16位    2 8位
+#define CRC_CR_IBIT_Msk				(0x03 << CRC_CR_IBIT_Pos)
+
+
+
+
+typedef struct {
 		 uint32_t RESERVED[2];
 	
 	__IO uint32_t SR;
@@ -2352,6 +2381,8 @@ typedef struct {
 
 #define DIV					((DIV_TypeDef  *) DIV_BASE)
 
+#define CRC					((CRC_TypeDef  *) DIV_BASE)
+
 #define DMA					((DMA_TypeDef  *) DMA_BASE)
 
 #define MPU					((MPU_TypeDef  *) MPU_BASE)
@@ -2376,6 +2407,7 @@ typedef struct {
 #include "SWM221_mpu.h"
 #include "SWM221_can.h"
 #include "SWM221_div.h"
+#include "SWM221_crc.h"
 #include "SWM221_wdt.h"
 #include "SWM221_qei.h"
 #include "SWM221_qspi.h"

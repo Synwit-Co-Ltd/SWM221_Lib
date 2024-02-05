@@ -51,25 +51,25 @@ typedef struct {
 
 // memory read handshake signal
 #define DMA_CH0_UART0TX		(0 | DMA_HS_MRD)
-#define DMA_CH0_UART5TX		(1 | DMA_HS_MRD)
-#define DMA_CH0_SPI0TX		(2 | DMA_HS_MRD)
-#define DMA_CH0_I2S0TX		(3 | DMA_HS_MRD)
+#define DMA_CH0_SPI0TX		(1 | DMA_HS_MRD)
+#define DMA_CH0_QSPI0TX		(2 | DMA_HS_MRD)
+#define DMA_CH0_ADC0SEQ0	(3 | DMA_HS_MRD)
 
 #define DMA_CH1_UART1TX		(0 | DMA_HS_MRD)
-#define DMA_CH1_UART4TX		(1 | DMA_HS_MRD)
-#define DMA_CH1_SPI1TX		(2 | DMA_HS_MRD)
-#define DMA_CH1_I2S1TX		(3 | DMA_HS_MRD)
+#define DMA_CH1_QSPI1TX		(1 | DMA_HS_MRD)
+#define DMA_CH1_MPUTX		(2 | DMA_HS_MRD)
+#define DMA_CH1_ADC1SEQ0	(3 | DMA_HS_MRD)
 
 // memory write handshake signal
-#define DMA_CH0_UART2RX		(0 | DMA_HS_MWR)
-#define DMA_CH0_UART3RX		(1 | DMA_HS_MWR)
-#define DMA_CH0_ADC0SEQ0	(2 | DMA_HS_MWR)
-#define DMA_CH0_SPI1RX		(3 | DMA_HS_MWR)
+#define DMA_CH0_UART1RX		(0 | DMA_HS_MWR)
+#define DMA_CH0_QSPI0RX		(1 | DMA_HS_MWR)
+#define DMA_CH0_MPURX		(2 | DMA_HS_MWR)
+#define DMA_CH0_ADC0SEQ1	(3 | DMA_HS_MWR)
 
 #define DMA_CH1_UART0RX		(0 | DMA_HS_MWR)
-#define DMA_CH1_UART5RX		(1 | DMA_HS_MWR)
-#define DMA_CH1_ADC0SEQ1	(2 | DMA_HS_MWR)
-#define DMA_CH1_SPI0RX		(3 | DMA_HS_MWR)
+#define DMA_CH1_SPI0RX		(1 | DMA_HS_MWR)
+#define DMA_CH1_QSPI1RX		(2 | DMA_HS_MWR)
+#define DMA_CH1_ADC1SEQ1	(3 | DMA_HS_MWR)
 
 
 // 外部握手信号
