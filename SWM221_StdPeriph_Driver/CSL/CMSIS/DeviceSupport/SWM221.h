@@ -1034,248 +1034,173 @@ typedef struct {
 
 
 typedef struct {
-	__IO uint32_t CTRL;
-	
-	__IO uint32_t START;
+	__IO uint32_t CR;
 	
 	__IO uint32_t IE;
 	
 	__IO uint32_t IF;
 	
-	struct {
-		__IO uint32_t STAT;
+	__IO uint32_t SMPNUM;
+	
+	__IO uint32_t SMPTIM;
+	
+	__IO uint32_t SEQTRG;
 		
-		__IO uint32_t DATA;
+	__IO uint32_t SEQ0CHN;
+	
+	__IO uint32_t SEQ1CHN;
+	
+	__IO uint32_t SEQ0CHK;
+	    
+	__IO uint32_t SEQ1CHK;
+	
+		 uint32_t RESERVED[2];
 		
-			 uint32_t RESERVED[2];
-	} CH[12];
+	__IO uint32_t DATA[10];
 	
-	__IO uint32_t CHSEL;					//ADC->CTRL.CH = PWM_Trigger ? ADC->CHSEL.PWM : ADC->CHSEL.SW
+		 uint32_t RESERVED2[6];
 	
-		 uint32_t RESERVED[47];
+	__IO uint32_t SEQ0DMA;
 	
-	__IO uint32_t FIFOSR;
+	__IO uint32_t SEQ1DMA;
 	
-	__IO uint32_t FIFODR;
+		 uint32_t RESERVED3[98];
 	
-		 uint32_t RESERVED2[2];
-	
-	__IO uint32_t CTRL2;
-	
-	__IO uint32_t CTRL3;
-	
-	__IO uint32_t CTRL4;
-	
-		 uint32_t RESERVED3;
-    
-	__IO uint32_t TRGMSK;					//对应位置1后，则相应通道触发ADC功能被屏蔽
-	
-		 uint32_t RESERVED4[16];
-	
-	__IO uint32_t CALIBSET;
-	
-	__IO uint32_t CALIBEN;
+	__IO uint32_t START;
 } ADC_TypeDef;
 
 
-#define ADC_CTRL_EN_Pos				12
-#define ADC_CTRL_EN_Msk				(0x01 << ADC_CTRL_EN_Pos)
-#define ADC_CTRL_CONT_Pos			13		//Continuous conversion，只在软件启动模式下有效，0 单次转换，转换完成后START位自动清除停止转换
-#define ADC_CTRL_CONT_Msk			(0x01 << ADC_CTRL_CONT_Pos)							//   1 连续转换，启动后一直采样、转换，直到软件清除START位
-#define ADC_CTRL_TRIG_Pos			14		//转换触发方式：0 软件启动转换	  1 PWM触发   2 TIMR0   3 TIMR1
-#define ADC_CTRL_TRIG_Msk			(0x07 << ADC_CTRL_TRIG_Pos)
-#define ADC_CTRL_DMAEN_Pos			17
-#define ADC_CTRL_DMAEN_Msk			(0x01 << ADC_CTRL_DMAEN_Pos)
-#define ADC_CTRL_RES2FIFO_Pos		18		//0 转换结果存储通道数据寄存器   1 转换结果存入FIFO，DMA时必须选此模式
-#define ADC_CTRL_RES2FIFO_Msk		(0x01 << ADC_CTRL_RES2FIFO_Pos)
-#define ADC_CTRL_FIFOCLR_Pos		19
-#define ADC_CTRL_FIFOCLR_Msk		(0x01 << ADC_CTRL_FIFOCLR_Pos)
-#define ADC_CTRL_RESET_Pos			20
-#define ADC_CTRL_RESET_Msk			(0x01 << ADC_CTRL_RESET_Pos)
-#define ADC_CTRL_AVG_Pos			21		//0 1次采样	  1 2次采样取平均值	  3 4次采样取平均值	  7 8次采样取平均值	  15 16次采样取平均值
-#define ADC_CTRL_AVG_Msk			(0x0F << ADC_CTRL_AVG_Pos)
+#define ADC_CR_PWDN_Pos				0		//1 Power Down   0 正常工作模式，写 0 后需等待 32 个采样周期
+#define ADC_CR_PWDN_Msk				(0x01 << ADC_CR_PWDN_Pos)
+#define ADC_CR_RESET_Pos			1		//硬件自动清零
+#define ADC_CR_RESET_Msk			(0x01 << ADC_CR_RESET_Pos)
+#define ADC_CR_BITS_Pos				2 		//转换结果位数：0 12-bit   1 10-bit   2 8-bit   3 6-bit
+#define ADC_CR_BITS_Msk				(0x03 << ADC_CR_BITS_Pos)
+#define ADC_CR_SEQ0DMAEN_Pos		4
+#define ADC_CR_SEQ0DMAEN_Msk		(0x01 << ADC_CR_SEQ0DMAEN_Pos)
+#define ADC_CR_SEQ1DMAEN_Pos		5
+#define ADC_CR_SEQ1DMAEN_Msk		(0x01 << ADC_CR_SEQ1DMAEN_Pos)
+#define ADC_CR_AVG_Pos				6 		//
+#define ADC_CR_AVG_Msk				(0x03 << ADC_CR_AVG_Pos)
+#define ADC_CR_CLKDIV_Pos			8
+#define ADC_CR_CLKDIV_Msk			(0x1F << ADC_CR_CLKDIV_Pos)
 
-#define ADC_START_GO_Pos			0		//软件触发模式下，写1启动ADC采样和转换，在单次模式下转换完成后硬件自动清零，在扫描模式下必须软件写0停止ADC转换
-#define ADC_START_GO_Msk			(0x01 << ADC_START_GO_Pos)
-#define ADC_START_BUSY_Pos			4
-#define ADC_START_BUSY_Msk			(0x01 << ADC_START_BUSY_Pos)
+#define ADC_IE_SEQ0EOC_Pos			0
+#define ADC_IE_SEQ0EOC_Msk			(0x01 << ADC_IE_SEQ0EOC_Pos)
+#define ADC_IE_SEQ0MAX_Pos			1
+#define ADC_IE_SEQ0MAX_Msk			(0x01 << ADC_IE_SEQ0MAX_Pos)
+#define ADC_IE_SEQ0MIN_Pos			2
+#define ADC_IE_SEQ0MIN_Msk			(0x01 << ADC_IE_SEQ0MIN_Pos)
+#define ADC_IE_SEQ1EOC_Pos			8
+#define ADC_IE_SEQ1EOC_Msk			(0x01 << ADC_IE_SEQ1EOC_Pos)
+#define ADC_IE_SEQ1MAX_Pos			9
+#define ADC_IE_SEQ1MAX_Msk			(0x01 << ADC_IE_SEQ1MAX_Pos)
+#define ADC_IE_SEQ1MIN_Pos			10
+#define ADC_IE_SEQ1MIN_Msk			(0x01 << ADC_IE_SEQ1MIN_Pos)
 
-#define ADC_IE_CH0EOC_Pos			0		//End Of Convertion
-#define ADC_IE_CH0EOC_Msk			(0x01 << ADC_IE_CH0EOC_Pos)
-#define ADC_IE_CH0OVF_Pos			1		//Overflow
-#define ADC_IE_CH0OVF_Msk			(0x01 << ADC_IE_CH0OVF_Pos)
-#define ADC_IE_CH1EOC_Pos			2
-#define ADC_IE_CH1EOC_Msk			(0x01 << ADC_IE_CH1EOC_Pos)
-#define ADC_IE_CH1OVF_Pos			3
-#define ADC_IE_CH1OVF_Msk			(0x01 << ADC_IE_CH1OVF_Pos)
-#define ADC_IE_CH2EOC_Pos			4
-#define ADC_IE_CH2EOC_Msk			(0x01 << ADC_IE_CH2EOC_Pos)
-#define ADC_IE_CH2OVF_Pos			5
-#define ADC_IE_CH2OVF_Msk			(0x01 << ADC_IE_CH2OVF_Pos)
-#define ADC_IE_CH3EOC_Pos			6
-#define ADC_IE_CH3EOC_Msk			(0x01 << ADC_IE_CH3EOC_Pos)
-#define ADC_IE_CH3OVF_Pos			7
-#define ADC_IE_CH3OVF_Msk			(0x01 << ADC_IE_CH3OVF_Pos)
-#define ADC_IE_CH4EOC_Pos			8
-#define ADC_IE_CH4EOC_Msk			(0x01 << ADC_IE_CH4EOC_Pos)
-#define ADC_IE_CH4OVF_Pos			9
-#define ADC_IE_CH4OVF_Msk			(0x01 << ADC_IE_CH4OVF_Pos)
-#define ADC_IE_CH5EOC_Pos			10
-#define ADC_IE_CH5EOC_Msk			(0x01 << ADC_IE_CH5EOC_Pos)
-#define ADC_IE_CH5OVF_Pos			11
-#define ADC_IE_CH5OVF_Msk			(0x01 << ADC_IE_CH5OVF_Pos)
-#define ADC_IE_CH6EOC_Pos			12
-#define ADC_IE_CH6EOC_Msk			(0x01 << ADC_IE_CH6EOC_Pos)
-#define ADC_IE_CH6OVF_Pos			13
-#define ADC_IE_CH6OVF_Msk			(0x01 << ADC_IE_CH6OVF_Pos)
-#define ADC_IE_CH7EOC_Pos			14
-#define ADC_IE_CH7EOC_Msk			(0x01 << ADC_IE_CH7EOC_Pos)
-#define ADC_IE_CH7OVF_Pos			15
-#define ADC_IE_CH7OVF_Msk			(0x01 << ADC_IE_CH7OVF_Pos)
-#define ADC_IE_CH8EOC_Pos			16
-#define ADC_IE_CH8EOC_Msk			(0x01 << ADC_IE_CH8EOC_Pos)
-#define ADC_IE_CH8OVF_Pos			17
-#define ADC_IE_CH8OVF_Msk			(0x01 << ADC_IE_CH8OVF_Pos)
-#define ADC_IE_CH9EOC_Pos			18
-#define ADC_IE_CH9EOC_Msk			(0x01 << ADC_IE_CH9EOC_Pos)
-#define ADC_IE_CH9OVF_Pos			19
-#define ADC_IE_CH9OVF_Msk			(0x01 << ADC_IE_CH9OVF_Pos)
-#define ADC_IE_CH10EOC_Pos			20
-#define ADC_IE_CH10EOC_Msk			(0x01 << ADC_IE_CH10EOC_Pos)
-#define ADC_IE_CH10OVF_Pos			21
-#define ADC_IE_CH10OVF_Msk			(0x01 << ADC_IE_CH10OVF_Pos)
-#define ADC_IE_CH11EOC_Pos			22
-#define ADC_IE_CH11EOC_Msk			(0x01 << ADC_IE_CH11EOC_Pos)
-#define ADC_IE_CH11OVF_Pos			23
-#define ADC_IE_CH11OVF_Msk			(0x01 << ADC_IE_CH11OVF_Pos)
-#define ADC_IE_FIFOOV_Pos			24
-#define ADC_IE_FIFOOV_Msk			(0x01 << ADC_IE_FIFOOV_Pos)
-#define ADC_IE_FIFOHF_Pos			25
-#define ADC_IE_FIFOHF_Msk			(0x01 << ADC_IE_FIFOHF_Pos)
-#define ADC_IE_FIFOF_Pos			26
-#define ADC_IE_FIFOF_Msk			(0x01 << ADC_IE_FIFOF_Pos)
+#define ADC_IF_SEQ0EOC_Pos			0
+#define ADC_IF_SEQ0EOC_Msk			(0x01 << ADC_IF_SEQ0EOC_Pos)
+#define ADC_IF_SEQ0MAX_Pos			1
+#define ADC_IF_SEQ0MAX_Msk			(0x01 << ADC_IF_SEQ0MAX_Pos)
+#define ADC_IF_SEQ0MIN_Pos			2
+#define ADC_IF_SEQ0MIN_Msk			(0x01 << ADC_IF_SEQ0MIN_Pos)
+#define ADC_IF_SEQ1EOC_Pos			8
+#define ADC_IF_SEQ1EOC_Msk			(0x01 << ADC_IF_SEQ1EOC_Pos)
+#define ADC_IF_SEQ1MAX_Pos			9
+#define ADC_IF_SEQ1MAX_Msk			(0x01 << ADC_IF_SEQ1MAX_Pos)
+#define ADC_IF_SEQ1MIN_Pos			10
+#define ADC_IF_SEQ1MIN_Msk			(0x01 << ADC_IF_SEQ1MIN_Pos)
 
-#define ADC_IF_CH0EOC_Pos			0		//写1清零
-#define ADC_IF_CH0EOC_Msk			(0x01 << ADC_IF_CH0EOC_Pos)
-#define ADC_IF_CH0OVF_Pos			1
-#define ADC_IF_CH0OVF_Msk			(0x01 << ADC_IF_CH0OVF_Pos)
-#define ADC_IF_CH1EOC_Pos			2
-#define ADC_IF_CH1EOC_Msk			(0x01 << ADC_IF_CH1EOC_Pos)
-#define ADC_IF_CH1OVF_Pos			3
-#define ADC_IF_CH1OVF_Msk			(0x01 << ADC_IF_CH1OVF_Pos)
-#define ADC_IF_CH2EOC_Pos			4
-#define ADC_IF_CH2EOC_Msk			(0x01 << ADC_IF_CH2EOC_Pos)
-#define ADC_IF_CH2OVF_Pos			5
-#define ADC_IF_CH2OVF_Msk			(0x01 << ADC_IF_CH2OVF_Pos)
-#define ADC_IF_CH3EOC_Pos			6
-#define ADC_IF_CH3EOC_Msk			(0x01 << ADC_IF_CH3EOC_Pos)
-#define ADC_IF_CH3OVF_Pos			7
-#define ADC_IF_CH3OVF_Msk			(0x01 << ADC_IF_CH3OVF_Pos)
-#define ADC_IF_CH4EOC_Pos			8
-#define ADC_IF_CH4EOC_Msk			(0x01 << ADC_IF_CH4EOC_Pos)
-#define ADC_IF_CH4OVF_Pos			9
-#define ADC_IF_CH4OVF_Msk			(0x01 << ADC_IF_CH4OVF_Pos)
-#define ADC_IF_CH5EOC_Pos			10
-#define ADC_IF_CH5EOC_Msk			(0x01 << ADC_IF_CH5EOC_Pos)
-#define ADC_IF_CH5OVF_Pos			11
-#define ADC_IF_CH5OVF_Msk			(0x01 << ADC_IF_CH5OVF_Pos)
-#define ADC_IF_CH6EOC_Pos			12
-#define ADC_IF_CH6EOC_Msk			(0x01 << ADC_IF_CH6EOC_Pos)
-#define ADC_IF_CH6OVF_Pos			13
-#define ADC_IF_CH6OVF_Msk			(0x01 << ADC_IF_CH6OVF_Pos)
-#define ADC_IF_CH7EOC_Pos			14
-#define ADC_IF_CH7EOC_Msk			(0x01 << ADC_IF_CH7EOC_Pos)
-#define ADC_IF_CH7OVF_Pos			15
-#define ADC_IF_CH7OVF_Msk			(0x01 << ADC_IF_CH7OVF_Pos)
-#define ADC_IF_CH8EOC_Pos			16
-#define ADC_IF_CH8EOC_Msk			(0x01 << ADC_IF_CH8EOC_Pos)
-#define ADC_IF_CH8OVF_Pos			17
-#define ADC_IF_CH8OVF_Msk			(0x01 << ADC_IF_CH8OVF_Pos)
-#define ADC_IF_CH9EOC_Pos			18
-#define ADC_IF_CH9EOC_Msk			(0x01 << ADC_IF_CH9EOC_Pos)
-#define ADC_IF_CH9OVF_Pos			19
-#define ADC_IF_CH9OVF_Msk			(0x01 << ADC_IF_CH9OVF_Pos)
-#define ADC_IF_CH10EOC_Pos			20
-#define ADC_IF_CH10EOC_Msk			(0x01 << ADC_IF_CH10EOC_Pos)
-#define ADC_IF_CH10OVF_Pos			21
-#define ADC_IF_CH10OVF_Msk			(0x01 << ADC_IF_CH10OVF_Pos)
-#define ADC_IF_CH11EOC_Pos			22
-#define ADC_IF_CH11EOC_Msk			(0x01 << ADC_IF_CH11EOC_Pos)
-#define ADC_IF_CH11OVF_Pos			23
-#define ADC_IF_CH11OVF_Msk			(0x01 << ADC_IF_CH11OVF_Pos)
-#define ADC_IF_FIFOOV_Pos			24
-#define ADC_IF_FIFOOV_Msk			(0x01 << ADC_IF_FIFOOV_Pos)
-#define ADC_IF_FIFOHF_Pos			25
-#define ADC_IF_FIFOHF_Msk			(0x01 << ADC_IF_FIFOHF_Pos)
-#define ADC_IF_FIFOF_Pos			26
-#define ADC_IF_FIFOF_Msk			(0x01 << ADC_IF_FIFOF_Pos)
+#define ADC_SMPNUM_SEQ0_Pos			0
+#define ADC_SMPNUM_SEQ0_Msk			(0xFF << ADC_SMPNUM_SEQ0_Pos)
+#define ADC_SMPNUM_SEQ1_Pos			8
+#define ADC_SMPNUM_SEQ1_Msk			(0xFF << ADC_SMPNUM_SEQ1_Pos)
 
-#define ADC_STAT_EOC_Pos			0		//写1清零
-#define ADC_STAT_EOC_Msk			(0x01 << ADC_STAT_EOC_Pos)
-#define ADC_STAT_OVF_Pos			1		//读数据寄存器清除
-#define ADC_STAT_OVF_Msk			(0x01 << ADC_STAT_OVF_Pos)
+#define ADC_SMPTIM_SEQ0_Pos			0
+#define ADC_SMPTIM_SEQ0_Msk			(0xFF << ADC_SMPTIM_SEQ0_Pos)
+#define ADC_SMPTIM_SEQ1_Pos			8
+#define ADC_SMPTIM_SEQ1_Msk			(0xFF << ADC_SMPTIM_SEQ1_Pos)
 
-#define ADC_DATA_VAL_Pos			0
-#define ADC_DATA_VAL_Msk			(0xFFF<< ADC_DATA_VAL_Pos)
-#define ADC_DATA_NUM_Pos			12
-#define ADC_DATA_NUM_Msk			(0x0F << ADC_DATA_NUM_Pos)
+#define ADC_SEQTRG_SEQ0_Pos			0
+#define ADC_SEQTRG_SEQ0_Msk			(0xFF << ADC_SEQTRG_SEQ0_Pos)
+#define ADC_SEQTRG_SEQ1_Pos			8
+#define ADC_SEQTRG_SEQ1_Msk			(0xFF << ADC_SEQTRG_SEQ1_Pos)
 
-#define ADC_CHSEL_SW_Pos			0		//软件启动转换时采样的通道
-#define ADC_CHSEL_SW_Msk			(0xFFF<< ADC_CHSEL_SW_Pos)
-#define ADC_CHSEL_PWM_Pos			16		//PWM 启动转换时采样的通道
-#define ADC_CHSEL_PWM_Msk			(0xFFF<< ADC_CHSEL_PWM_Pos)
+#define ADC_SEQ0CHN_CH0_Pos			0
+#define ADC_SEQ0CHN_CH0_Msk			(0x0F << ADC_SEQ0CHN_CH0_Pos)
+#define ADC_SEQ0CHN_CH1_Pos			4
+#define ADC_SEQ0CHN_CH1_Msk			(0x0F << ADC_SEQ0CHN_CH1_Pos)
+#define ADC_SEQ0CHN_CH2_Pos			8
+#define ADC_SEQ0CHN_CH2_Msk			(0x0F << ADC_SEQ0CHN_CH2_Pos)
+#define ADC_SEQ0CHN_CH3_Pos			12
+#define ADC_SEQ0CHN_CH3_Msk			(0x0F << ADC_SEQ0CHN_CH3_Pos)
+#define ADC_SEQ0CHN_CH4_Pos			16
+#define ADC_SEQ0CHN_CH4_Msk			(0x0F << ADC_SEQ0CHN_CH4_Pos)
+#define ADC_SEQ0CHN_CH5_Pos			20
+#define ADC_SEQ0CHN_CH5_Msk			(0x0F << ADC_SEQ0CHN_CH5_Pos)
+#define ADC_SEQ0CHN_CH6_Pos			24
+#define ADC_SEQ0CHN_CH6_Msk			(0x0F << ADC_SEQ0CHN_CH6_Pos)
+#define ADC_SEQ0CHN_CH7_Pos			28
+#define ADC_SEQ0CHN_CH7_Msk			(0x0F << ADC_SEQ0CHN_CH7_Pos)
 
-#define ADC_FIFOSR_OV_Pos			0
-#define ADC_FIFOSR_OV_Msk			(0x01 << ADC_FIFOSR_OV_Pos)
-#define ADC_FIFOSR_HF_Pos			1
-#define ADC_FIFOSR_HF_Msk			(0x01 << ADC_FIFOSR_HF_Pos)
-#define ADC_FIFOSR_FULL_Pos			2		//FIFO Full
-#define ADC_FIFOSR_FULL_Msk			(0x01 << ADC_FIFOSR_FULL_Pos)
-#define ADC_FIFOSR_EMPTY_Pos		3		//FIFO Empty
-#define ADC_FIFOSR_EMPTY_Msk		(0x01 << ADC_FIFOSR_EMPTY_Pos)
+#define ADC_SEQ1CHN_CH0_Pos			0
+#define ADC_SEQ1CHN_CH0_Msk			(0x0F << ADC_SEQ1CHN_CH0_Pos)
+#define ADC_SEQ1CHN_CH1_Pos			4
+#define ADC_SEQ1CHN_CH1_Msk			(0x0F << ADC_SEQ1CHN_CH1_Pos)
+#define ADC_SEQ1CHN_CH2_Pos			8
+#define ADC_SEQ1CHN_CH2_Msk			(0x0F << ADC_SEQ1CHN_CH2_Pos)
+#define ADC_SEQ1CHN_CH3_Pos			12
+#define ADC_SEQ1CHN_CH3_Msk			(0x0F << ADC_SEQ1CHN_CH3_Pos)
+#define ADC_SEQ1CHN_CH4_Pos			16
+#define ADC_SEQ1CHN_CH4_Msk			(0x0F << ADC_SEQ1CHN_CH4_Pos)
+#define ADC_SEQ1CHN_CH5_Pos			20
+#define ADC_SEQ1CHN_CH5_Msk			(0x0F << ADC_SEQ1CHN_CH5_Pos)
+#define ADC_SEQ1CHN_CH6_Pos			24
+#define ADC_SEQ1CHN_CH6_Msk			(0x0F << ADC_SEQ1CHN_CH6_Pos)
+#define ADC_SEQ1CHN_CH7_Pos			28
+#define ADC_SEQ1CHN_CH7_Msk			(0x0F << ADC_SEQ1CHN_CH7_Pos)
 
-#define ADC_FIFDR_VAL_Pos			0
-#define ADC_FIFDR_VAL_Msk			(0xFFF<< ADC_FIFDR_VAL_Pos)
-#define ADC_FIFDR_NUM_Pos			12
-#define ADC_FIFDR_NUM_Msk			(0x07 << ADC_FIFDR_NUM_Pos)
+#define ADC_SEQ0CHK_MAX_Pos			0
+#define ADC_SEQ0CHK_MAX_Msk			(0xFFF<< ADC_SEQ0CHK_MAX_Pos)
+#define ADC_SEQ0CHK_MIN_Pos			16
+#define ADC_SEQ0CHK_MIN_Msk			(0xFFF<< ADC_SEQ0CHK_MIN_Pos)
 
-#define ADC_CTRL2_CLKSEL_Pos		0		//0 由SYS->CLKSEL.ADC选择   1 外部晶振
-#define ADC_CTRL2_CLKSEL_Msk		(0x01 << ADC_CTRL2_CLKSEL_Pos)
-#define ADC_CTRL2_LCHSEL_Pos		2		//0 上升沿锁存   1 下降沿锁存
-#define ADC_CTRL2_LCHSEL_Msk		(0x01 << ADC_CTRL2_LCHSEL_Pos)
-#define ADC_CTRL2_ADJH_Pos			8
-#define ADC_CTRL2_ADJH_Msk			(0xFF << ADC_CTRL2_ADJH_Pos)
-#define ADC_CTRL2_ADJL_Pos			16
-#define ADC_CTRL2_ADJL_Msk			(0x0F << ADC_CTRL2_ADJL_Pos)
-#define ADC_CTRL2_EREFSEL_Pos		28		//External Reference Select, 0 Vrefp pin   1 VDD
-#define ADC_CTRL2_EREFSEL_Msk		(0x01 << ADC_CTRL2_EREFSEL_Pos)
+#define ADC_SEQ1CHK_MAX_Pos			0
+#define ADC_SEQ1CHK_MAX_Msk			(0xFFF<< ADC_SEQ1CHK_MAX_Pos)
+#define ADC_SEQ1CHK_MIN_Pos			16
+#define ADC_SEQ1CHK_MIN_Msk			(0xFFF<< ADC_SEQ1CHK_MIN_Pos)
 
-#define ADC_CTRL3_REFSEL_Pos		1		//Reference Select, 0 内部REFP   3 外部REFP
-#define ADC_CTRL3_REFSEL_Msk		(0x03 << ADC_CTRL3_REFSEL_Pos)
-#define ADC_CTRL3_IREFSEL_Pos		8		//Internal Reference Select, 7 3.6V   0 5V
-#define ADC_CTRL3_IREFSEL_Msk		(0x07 << ADC_CTRL3_IREFSEL_Pos)
-#define ADC_CTRL3_CLKDIV2_Pos		24
-#define ADC_CTRL3_CLKDIV2_Msk		(0x1F << ADC_CTRL3_CLKDIV2_Pos)
-#define ADC_CTRL3_CLKDIV1_Pos		29
-#define ADC_CTRL3_CLKDIV1_Msk		(0x03 << ADC_CTRL3_CLKDIV1_Pos)
+#define ADC_DATA_DATA_Pos			0
+#define ADC_DATA_DATA_Msk			(0xFFF<< ADC_DATA_DATA_Pos)
+#define ADC_DATA_FLAG_Pos			16		//0 自上次读取无新数据   1 有新数据   2 发生过数据覆盖
+#define ADC_DATA_FLAG_Msk			(0x03 << ADC_DATA_FLAG_Pos)
 
-#define ADC_CTRL4_CLKDIV0_Pos		3
-#define ADC_CTRL4_CLKDIV0_Msk		(0x03 << ADC_CTRL4_CLKDIV0_Pos)
+#define ADC_SEQ0DMA_DATA_Pos		0
+#define ADC_SEQ0DMA_DATA_Msk		(0xFFF<< ADC_SEQ0DMA_DATA_Pos)
+#define ADC_SEQ0DMA_CHNUM_Pos		12
+#define ADC_SEQ0DMA_CHNUM_Msk		(0x0F << ADC_SEQ0DMA_CHNUM_Pos)
+#define ADC_SEQ0DMA_FLAG_Pos		16
+#define ADC_SEQ0DMA_FLAG_Msk		(0x03 << ADC_SEQ0DMA_FLAG_Pos)
 
-#define ADC_TRGMSK_PWM0_Pos			0
-#define ADC_TRGMSK_PWM0_Msk			(0x01 << ADC_TRGMSK_PWM0_Pos)
-#define ADC_TRGMSK_PWM1_Pos			2
-#define ADC_TRGMSK_PWM1_Msk			(0x01 << ADC_TRGMSK_PWM1_Pos)
+#define ADC_SEQ1DMA_DATA_Pos		0
+#define ADC_SEQ1DMA_DATA_Msk		(0xFFF<< ADC_SEQ1DMA_DATA_Pos)
+#define ADC_SEQ1DMA_CHNUM_Pos		12
+#define ADC_SEQ1DMA_CHNUM_Msk		(0x0F << ADC_SEQ1DMA_CHNUM_Pos)
+#define ADC_SEQ1DMA_FLAG_Pos		16
+#define ADC_SEQ1DMA_FLAG_Msk		(0x03 << ADC_SEQ1DMA_FLAG_Pos)
 
-#define ADC_CALIBSET_OFFSET_Pos		0
-#define ADC_CALIBSET_OFFSET_Msk		(0x1FF<< ADC_CALIBSET_OFFSET_Pos)
-#define ADC_CALIBSET_K_Pos			16
-#define ADC_CALIBSET_K_Msk			(0x1FF<< ADC_CALIBSET_K_Pos)
-
-#define ADC_CALIBEN_OFFSET_Pos		0
-#define ADC_CALIBEN_OFFSET_Msk		(0x01 << ADC_CALIBEN_OFFSET_Pos)
-#define ADC_CALIBEN_K_Pos			1
-#define ADC_CALIBEN_K_Msk			(0x01 << ADC_CALIBEN_K_Pos)
+#define ADC_START_ADC0SEQ0_Pos		0
+#define ADC_START_ADC0SEQ0_Msk		(0x01 << ADC_START_ADC0SEQ0_Pos)
+#define ADC_START_ADC0SEQ1_Pos		1
+#define ADC_START_ADC0SEQ1_Msk		(0x01 << ADC_START_ADC0SEQ1_Pos)
+#define ADC_START_ADC0BUSY_Pos		2
+#define ADC_START_ADC0BUSY_Msk		(0x01 << ADC_START_ADC0BUSY_Pos)
+#define ADC_START_ADC1SEQ0_Pos		8
+#define ADC_START_ADC1SEQ0_Msk		(0x01 << ADC_START_ADC1SEQ0_Pos)
+#define ADC_START_ADC1SEQ1_Pos		9
+#define ADC_START_ADC1SEQ1_Msk		(0x01 << ADC_START_ADC1SEQ1_Pos)
+#define ADC_START_ADC1BUSY_Pos		10
+#define ADC_START_ADC1BUSY_Msk		(0x01 << ADC_START_ADC1BUSY_Pos)
 
 
 
@@ -2198,29 +2123,34 @@ typedef struct {
 	
 	__IO uint32_t CFG0;
 	
-	__IO uint32_t CFG1;
+	__IO uint32_t CFG1;						//连续写入 0x5A5A5A5A、0xA5A5A5A5 解除 readonly；写入其他任意值恢复 readonly
+	
+	__IO uint32_t CFG2;
+	
+	__IO uint32_t CFG3;
+	
+	__IO uint32_t CFG4;
 	
 	__IO uint32_t STAT;
-	
-		 uint32_t RESERVED[3];
-	
+		
 	__IO uint32_t REMAP;
 } FMC_TypeDef;
 
 
-#define FMC_ERASE_ADDR_Pos			0
+#define FMC_ERASE_ADDR_Pos			0		//512 Byte per Page
 #define FMC_ERASE_ADDR_Msk			(0xFFFF<< FMC_ERASE_ADDR_Pos)
 #define FMC_ERASE_REQ_Pos			24
 #define FMC_ERASE_REQ_Msk			(0xFFu<< FMC_ERASE_REQ_Pos)
 
-#define FMC_CACHE_PROGEN_Pos		0		//Flash Program Enable
-#define FMC_CACHE_PROGEN_Msk		(0x01 << FMC_CACHE_PROGEN_Pos)
-#define FMC_CACHE_CEN_Pos			16		//Cache Enable
+#define FMC_CACHE_CEN_Pos			0		//Cache Enable
 #define FMC_CACHE_CEN_Msk			(0x01 << FMC_CACHE_CEN_Pos)
-#define FMC_CACHE_CPEN_Pos			17		//Cache Predict Enable
+#define FMC_CACHE_CPEN_Pos			1		//Cache Predict Enable
 #define FMC_CACHE_CPEN_Msk			(0x01 << FMC_CACHE_CPEN_Pos)
-#define FMC_CACHE_CCLR_Pos			18		//Cache Clear，自动清零
-#define FMC_CACHE_CCLR_Msk			(0x01 << FMC_CACHE_CCLR_Pos)
+#define FMC_CACHE_CCLR_Pos			31		//Cache Clear，自动清零
+#define FMC_CACHE_CCLR_Msk			(0x01u<< FMC_CACHE_CCLR_Pos)
+
+#define FMC_CFG0_WREN_Pos			9
+#define FMC_CFG0_WREN_Mskk			(0x01 << FMC_CFG0_WREN_Pos)
 
 #define FMC_STAT_ERASEBUSY_Pos		0
 #define FMC_STAT_ERASEBUSY_Msk		(0x01 << FMC_STAT_ERASEBUSY_Pos)
@@ -2232,6 +2162,10 @@ typedef struct {
 #define FMC_STAT_FIFOEMPTY_Msk		(0x01 << FMC_STAT_FIFOEMPTY_Pos)
 #define FMC_STAT_FIFOFULL_Pos		4		//Write FIFO Full
 #define FMC_STAT_FIFOFULL_Msk		(0x01 << FMC_STAT_FIFOFULL_Pos)
+#define FMC_STAT_READONLY_Pos		7
+#define FMC_STAT_READONLY_Msk		(0x01 << FMC_STAT_READONLY_Pos)
+#define FMC_STAT_INITDONE_Pos		30
+#define FMC_STAT_INITDONE_Msk		(0x01 << FMC_STAT_INITDONE_Pos)
 #define FMC_STAT_IDLE_Pos			31
 #define FMC_STAT_IDLE_Msk			(0x01u<< FMC_STAT_IDLE_Pos)
 
@@ -2325,6 +2259,7 @@ typedef struct {
 #define BTIMRG_BASE			(APB1_BASE + 0x4400)
 
 #define ADC0_BASE			(APB1_BASE + 0x4800)
+#define ADC1_BASE			(APB1_BASE + 0x4900)
 
 #define FMC_BASE			(APB1_BASE + 0x5000)		//Flash Memory Controller
 
@@ -2374,6 +2309,7 @@ typedef struct {
 #define CAN0				((CAN_TypeDef  *) CAN0_BASE)
 
 #define ADC0 				((ADC_TypeDef  *) ADC0_BASE)
+#define ADC1				((ADC_TypeDef  *) ADC1_BASE)
 
 #define PWM0				((PWM_TypeDef  *) PWM0_BASE)
 #define PWM1				((PWM_TypeDef  *) PWM1_BASE)

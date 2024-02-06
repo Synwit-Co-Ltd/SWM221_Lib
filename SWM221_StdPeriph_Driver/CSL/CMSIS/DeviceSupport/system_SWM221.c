@@ -161,7 +161,7 @@ void SystemInit(void)
 	
 	Flash_Param_at_xMHz(SystemCoreClock/1000000);
 	
-	FMC->CACHE = (1 << FMC_CACHE_CEN_Pos) | (1 << FMC_CACHE_CCLR_Pos);	// Çå³ý Cache
+	FMC->CACHE = (1 << FMC_CACHE_CEN_Pos) | FMC_CACHE_CCLR_Msk;	// Çå³ý Cache
 	__NOP(); __NOP(); __NOP(); __NOP(); __NOP(); __NOP(); __NOP();
 	FMC->CACHE = (1 << FMC_CACHE_CEN_Pos) | (1 << FMC_CACHE_CPEN_Pos);
 	

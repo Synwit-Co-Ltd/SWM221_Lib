@@ -1,18 +1,32 @@
 #ifndef __SWM221_ADC_H__
 #define	__SWM221_ADC_H__
 
+
 typedef struct {
-	uint8_t  clk_src;		//ADCè½¬æ¢æ—¶é’Ÿæºï¼šADC_CLKSRC_HRC_DIV32ã€ADC_CLKSRC_XTAL_DIV32ã€...
-	uint8_t  clk_div;		//ADCè½¬æ¢æ—¶é’Ÿåˆ†é¢‘ï¼Œå–å€¼1--31
-	uint8_t  ref_src;		//ADCè½¬æ¢å‚è€ƒæºï¼šADC_REFSRC_VREFPã€ADC_REFSRC_VDD
-	uint16_t channels;		//ADCè½¬æ¢é€šé“é€‰ä¸­ï¼ŒADC_CH0ã€ADC_CH1ã€... ... ã€ADC_CH11åŠå…¶ç»„åˆï¼ˆå³â€œæŒ‰ä½æˆ–â€è¿ç®—ï¼‰
-	uint8_t  samplAvg;		//é‡‡æ ·å–å¹³å‡ï¼Œè§¦å‘å¯åŠ¨ADCè½¬æ¢åï¼ŒADCåœ¨ä¸€ä¸ªé€šé“ä¸Šè¿ç»­é‡‡æ ·ã€è½¬æ¢å¤šæ¬¡ï¼Œå¹¶å°†å®ƒä»¬çš„å¹³å‡å€¼ä½œä¸ºè¯¥é€šé“è½¬æ¢ç»“æœ
-	uint16_t trig_src;		//ADCè§¦å‘æ–¹å¼ï¼šADC_TRIGGER_SWã€ADC_TRIGGER_TIMR2ã€ADC_TRIGGER_TIMR3ã€ADC_TRIGGER_PWM0Aã€...
-	uint8_t  Continue;		//åœ¨è½¯ä»¶è§¦å‘æ¨¡å¼ä¸‹ï¼š1 è¿ç»­è½¬æ¢æ¨¡å¼ï¼Œå¯åŠ¨åä¸€ç›´é‡‡æ ·ã€è½¬æ¢ï¼Œç›´åˆ°è½¯ä»¶æ¸…é™¤STARTä½
-							//                  0 å•æ¬¡è½¬æ¢æ¨¡å¼ï¼Œè½¬æ¢å®ŒæˆåSTARTä½è‡ªåŠ¨æ¸…é™¤åœæ­¢è½¬æ¢
-	uint16_t EOC_IEn;		//EOCä¸­æ–­ä½¿èƒ½ï¼Œå¯é’ˆå¯¹æ¯ä¸ªé€šé“è®¾ç½®ï¼Œå…¶æœ‰æ•ˆå€¼ä¸ºADC_CH0ã€ADC_CH1ã€... ... ã€ADC_CH11åŠå…¶ç»„åˆï¼ˆå³â€œæŒ‰ä½æˆ–â€è¿ç®—ï¼‰
-	uint16_t OVF_IEn;		//OVFä¸­æ–­ä½¿èƒ½ï¼Œå¯é’ˆå¯¹æ¯ä¸ªé€šé“è®¾ç½®ï¼Œå…¶æœ‰æ•ˆå€¼ä¸ºADC_CH0ã€ADC_CH1ã€... ... ã€ADC_CH11åŠå…¶ç»„åˆï¼ˆå³â€œæŒ‰ä½æˆ–â€è¿ç®—ï¼‰
+	uint8_t  clkdiv;		//1-32
+	uint8_t  samplAvg;		//ADC_AVG_SAMPLE1¡¢ADC_AVG_SAMPLE2¡¢ADC_AVG_SAMPLE4¡¢ADC_AVG_SAMPLE8
 } ADC_InitStructure;
+
+
+typedef struct {
+	uint8_t  trig_src;		//ADCĞòÁĞ´¥·¢·½Ê½£ºADC_TRIGGER_SW¡¢ADC_TRIGGER_TIMER0¡¢ADC_TRIGGER_TIMER1¡¢... ...
+	uint8_t  samp_tim;		//ADCĞòÁĞ²ÉÑùÊ±¼ä£¬¿ÉÈ¡Öµ4--259
+	uint8_t  conv_cnt;		//ADCĞòÁĞ×ª»»´ÎÊı£¬¿ÉÈ¡Öµ1--256
+	uint8_t  EOCIntEn;		//×ª»»Íê³ÉÖĞ¶ÏÊ¹ÄÜ£¬¿ÉÈ¡Öµ0¡¢1
+	uint8_t *channels;		//ĞòÁĞ×ª»»Í¨µÀÑ¡Ôñ£¬ÔªËØÎª ADC_CH0¡¢ADC_CH1¡¢...¡¢ADC_CH11 µÄÊı×é£¬×î¶à 8 ¸öÍ¨µÀ£¬ÒÔ 0 ½áÊø£¬Í¨µÀ¿ÉÖØ¸´
+} ADC_SEQ_InitStructure;
+
+
+typedef struct {
+	uint16_t UpperLimit;	//±È½ÏÉÏÏŞÖµ
+	uint16_t UpperLimitIEn;	//ADC×ª»»½á¹û´óÓÚUpperLimitÖĞ¶ÏÊ¹ÄÜ
+	uint16_t LowerLimit;	//±È½ÏÏÂÏŞÖµ
+	uint16_t LowerLimitIEn;	//ADC×ª»»½á¹ûĞ¡ÓÚLowerLimitÖĞ¶ÏÊ¹ÄÜ
+} ADC_CMP_InitStructure;
+
+
+#define ADC_SEQ0	0x1
+#define ADC_SEQ1	0x2
 
 #define ADC_CH0		0x001
 #define ADC_CH1		0x002
@@ -28,73 +42,44 @@ typedef struct {
 #define ADC_CH11	0x800
 
 
-/*  clk_srcï¼ˆSYS->CLKSEL.ADCï¼‰:  0 HRC   1 XTAL   2 PLL
-	sys_divï¼ˆSYS->CLKSEL.ADCï¼‰:  0 1åˆ†é¢‘   2 4åˆ†é¢‘   3 8åˆ†é¢‘
-	adc_div0ï¼ˆADC->CTRL4.CLKDIV0ï¼‰: 0 4åˆ†é¢‘   1 2åˆ†é¢‘   2 1åˆ†é¢‘
-	adc_div1ï¼ˆADC->CTRL3.CLKDIV1ï¼‰: 0 4åˆ†é¢‘   1 2åˆ†é¢‘   2 1åˆ†é¢‘
-*/
-#define ADC_CLKSRC(clk_src, sys_div, adc_div0, adc_div1) \
-			(clk_src | (sys_div << 2) | (adc_div0 << 4) | (adc_div1 << 6))
+#define ADC_AVG_SAMPLE1			0
+#define ADC_AVG_SAMPLE2			1	//Ò»´ÎÆô¶¯Á¬Ğø²ÉÑù¡¢×ª»»2´Î£¬²¢¼ÆËãÁ½´Î½á¹ûµÄÆ½¾ùÖµ×÷Îª×ª»»½á¹û
+#define ADC_AVG_SAMPLE4			2
+#define ADC_AVG_SAMPLE8			3
 
-#define ADC_CLKSRC_HRC			ADC_CLKSRC(0, 0, 2, 2)
-#define ADC_CLKSRC_XTAL			ADC_CLKSRC(1, 0, 2, 2)
-#define ADC_CLKSRC_PLL			ADC_CLKSRC(2, 0, 2, 2)
-#define ADC_CLKSRC_HRC_DIV2		ADC_CLKSRC(0, 0, 1, 2)
-#define ADC_CLKSRC_XTAL_DIV2	ADC_CLKSRC(1, 0, 1, 2)
-#define ADC_CLKSRC_PLL_DIV2		ADC_CLKSRC(2, 0, 1, 2)
-#define ADC_CLKSRC_HRC_DIV4		ADC_CLKSRC(0, 0, 1, 1)
-#define ADC_CLKSRC_XTAL_DIV4	ADC_CLKSRC(1, 0, 1, 1)
-#define ADC_CLKSRC_PLL_DIV4		ADC_CLKSRC(2, 0, 1, 1)
-#define ADC_CLKSRC_HRC_DIV8		ADC_CLKSRC(0, 0, 0, 1)
-#define ADC_CLKSRC_XTAL_DIV8	ADC_CLKSRC(1, 0, 0, 1)
-#define ADC_CLKSRC_PLL_DIV8		ADC_CLKSRC(2, 0, 0, 1)
-#define ADC_CLKSRC_HRC_DIV16	ADC_CLKSRC(0, 0, 0, 0)
-#define ADC_CLKSRC_XTAL_DIV16	ADC_CLKSRC(1, 0, 0, 0)
-#define ADC_CLKSRC_PLL_DIV16	ADC_CLKSRC(2, 0, 0, 0)
+#define ADC_TRIGGER_NO			0
+#define ADC_TRIGGER_SW			1	//Èí¼şÆô¶¯
+#define ADC_TRIGGER_TIMER0		2
+#define ADC_TRIGGER_TIMER1		3
+#define ADC_TRIGGER_TIMER2		4
+#define ADC_TRIGGER_EXTRIG0		6
+#define ADC_TRIGGER_EXTRIG1		7
+#define ADC_TRIGGER_PWM0		10
+#define ADC_TRIGGER_PWM1		11
 
 
-#define ADC_REFSRC_VREFP3V3		((7 << 4) | 0)	//èŠ¯ç‰‡ 3.3V ä¾›ç”µæ—¶ï¼šVrefp å¼•è„šï¼Œåªèƒ½ç”¨äº F ç‰ˆèŠ¯ç‰‡
-#define ADC_REFSRC_VDD3V3		((7 << 4) | 1)	//èŠ¯ç‰‡ 3.3V ä¾›ç”µæ—¶ï¼šèŠ¯ç‰‡VDDï¼Œåªèƒ½ç”¨äº F ç‰ˆèŠ¯ç‰‡
-#define ADC_REFSRC_VREFP5V		((3 << 4) | 0)	//èŠ¯ç‰‡ 5V   ä¾›ç”µæ—¶ï¼šVrefp å¼•è„š
-#define ADC_REFSRC_VDD5V		((3 << 4) | 1)	//èŠ¯ç‰‡ 5V   ä¾›ç”µæ—¶ï¼šèŠ¯ç‰‡VDD
-#define ADC_REFSRC_3V6			((0 << 4) | 7)	//èŠ¯ç‰‡ 5V   ä¾›ç”µæ—¶ï¼šå†…éƒ¨3.6V
-
-#define ADC_AVG_SAMPLE1			0	
-#define ADC_AVG_SAMPLE2			1	//ä¸€æ¬¡å¯åŠ¨è¿ç»­é‡‡æ ·ã€è½¬æ¢2æ¬¡ï¼Œå¹¶è®¡ç®—ä¸¤æ¬¡ç»“æœçš„å¹³å‡å€¼ä½œä¸ºè½¬æ¢ç»“æœ
-#define ADC_AVG_SAMPLE4			3
-#define ADC_AVG_SAMPLE8			7
-#define ADC_AVG_SAMPLE16		15
+/* Interrupt Type */
+#define ADC_IT_EOC			(1 << 0)	//End Of Conversion
+#define ADC_IT_CMP_MAX		(1 << 1)	//×ª»»½á¹û´óÓÚCOMP.MAX
+#define ADC_IT_CMP_MIN		(1 << 2)	//×ª»»½á¹ûĞ¡ÓÚCOMP.MIN
 
 
-#define ADC_TRIGGER_SW			0	//è½¯ä»¶è§¦å‘ï¼Œå³ADC->START.GOå†™1å¯åŠ¨è½¬æ¢
-#define ADC_TRIGGER_TIMR0		2
-#define ADC_TRIGGER_TIMR1		3
-#define ADC_TRIGGER_PWM0		0x1001
-#define ADC_TRIGGER_PWM1		0x1004
+void ADC_Init(ADC_TypeDef * ADCx, ADC_InitStructure * initStruct);		//ADCÄ£Êı×ª»»Æ÷³õÊ¼»¯
+void ADC_SEQ_Init(ADC_TypeDef * ADCx, uint32_t seq, ADC_SEQ_InitStructure * initStruct);	//ADCĞòÁĞ³õÊ¼»¯
+void ADC_CMP_Init(ADC_TypeDef * ADCx, uint32_t seq, ADC_CMP_InitStructure * initStruct);	//ADC±È½Ï¹¦ÄÜ³õÊ¼»¯
+void ADC_Open(ADC_TypeDef * ADCx);							//ADC¿ªÆô£¬¿ÉÒÔÈí¼şÆô¶¯¡¢»òÓ²¼ş´¥·¢ADC×ª»»
+void ADC_Close(ADC_TypeDef * ADCx);							//ADC¹Ø±Õ£¬ÎŞ·¨Èí¼şÆô¶¯¡¢»òÓ²¼ş´¥·¢ADC×ª»»
+void ADC_Start(uint32_t ADC0_seq, uint32_t ADC1_seq);		//Æô¶¯Ö¸¶¨ADC£¬¿ªÊ¼Ä£Êı×ª»»
+void ADC_Stop(uint32_t ADC0_seq, uint32_t ADC1_seq);		//¹Ø±ÕÖ¸¶¨ADC£¬Í£Ö¹Ä£Êı×ª»»
+
+uint32_t ADC_Read(ADC_TypeDef * ADCx, uint32_t chn);		//´ÓÖ¸¶¨Í¨µÀ¶ÁÈ¡×ª»»½á¹û
+uint32_t ADC_DataAvailable(ADC_TypeDef * ADCx, uint32_t chn);			//Ö¸¶¨Í¨µÀÊÇ·ñÓĞÊı¾İ¿É¶ÁÈ¡
 
 
-
-void ADC_Init(ADC_TypeDef * ADCx, ADC_InitStructure * initStruct);		//ADCæ¨¡æ•°è½¬æ¢å™¨åˆå§‹åŒ–
-uint32_t ADC_Calibrate(ADC_TypeDef * ADCx);
-void ADC_Open(ADC_TypeDef * ADCx);							//ADCå¼€å¯ï¼Œå¯ä»¥è½¯ä»¶å¯åŠ¨ã€æˆ–ç¡¬ä»¶è§¦å‘ADCè½¬æ¢
-void ADC_Close(ADC_TypeDef * ADCx);							//ADCå…³é—­ï¼Œæ— æ³•è½¯ä»¶å¯åŠ¨ã€æˆ–ç¡¬ä»¶è§¦å‘ADCè½¬æ¢
-void ADC_Start(ADC_TypeDef * ADCx);							//å¯åŠ¨æŒ‡å®šADCï¼Œå¼€å§‹æ¨¡æ•°è½¬æ¢
-void ADC_Stop(ADC_TypeDef * ADCx);							//å…³é—­æŒ‡å®šADCï¼Œåœæ­¢æ¨¡æ•°è½¬æ¢
-
-uint32_t ADC_Read(ADC_TypeDef * ADCx, uint32_t chn);		//ä»æŒ‡å®šé€šé“è¯»å–è½¬æ¢ç»“æœ
-uint32_t ADC_IsEOC(ADC_TypeDef * ADCx, uint32_t chn);		//æŒ‡å®šé€šé“æ˜¯å¦End Of Conversion
-
-void ADC_ChnSelect(ADC_TypeDef * ADCx, uint32_t chns);
-
-void ADC_IntEOCEn(ADC_TypeDef * ADCx, uint32_t chn);		//è½¬æ¢å®Œæˆä¸­æ–­ä½¿èƒ½
-void ADC_IntEOCDis(ADC_TypeDef * ADCx, uint32_t chn);		//è½¬æ¢å®Œæˆä¸­æ–­ç¦æ­¢
-void ADC_IntEOCClr(ADC_TypeDef * ADCx, uint32_t chn);		//è½¬æ¢å®Œæˆä¸­æ–­æ ‡å¿—æ¸…é™¤
-uint32_t ADC_IntEOCStat(ADC_TypeDef * ADCx, uint32_t chn);	//è½¬æ¢å®Œæˆä¸­æ–­çŠ¶æ€
-
-void ADC_IntOVFEn(ADC_TypeDef * ADCx, uint32_t chn);		//æ•°æ®æº¢å‡ºä¸­æ–­ä½¿èƒ½
-void ADC_IntOVFDis(ADC_TypeDef * ADCx, uint32_t chn);		//æ•°æ®æº¢å‡ºä¸­æ–­ç¦æ­¢
-void ADC_IntOVFClr(ADC_TypeDef * ADCx, uint32_t chn);		//æ•°æ®æº¢å‡ºä¸­æ–­æ ‡å¿—æ¸…é™¤
-uint32_t ADC_IntOVFStat(ADC_TypeDef * ADCx, uint32_t chn);	//æ•°æ®æº¢å‡ºä¸­æ–­çŠ¶æ€
+void ADC_INTEn(ADC_TypeDef * ADCx, uint32_t seq, uint32_t it);
+void ADC_INTEn(ADC_TypeDef * ADCx, uint32_t seq, uint32_t it);
+void ADC_INTClr(ADC_TypeDef * ADCx, uint32_t seq, uint32_t it);
+uint32_t ADC_INTStat(ADC_TypeDef * ADCx, uint32_t seq, uint32_t it);
 
 
 #endif //__SWM221_ADC_H__

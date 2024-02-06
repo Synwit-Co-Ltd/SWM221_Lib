@@ -22,28 +22,28 @@
 
 typedef int  (*IAP_Flash_Param_t)(uint32_t param, uint32_t flag);
 typedef int  (*IAP_Flash_Erase_t)(uint32_t sector, uint32_t flag);
-typedef int  (*IAP_Flash_Write_t)(uint32_t flash_addr, uint32_t ram_addr, uint32_t count);
+typedef int  (*IAP_Flash_Write_t)(uint32_t flash_addr, uint32_t ram_addr, uint32_t count, uint32_t flag);
 
 
-IAP_Flash_Param_t IAP_Flash_Param = (IAP_Flash_Param_t)0x110004C1;
+IAP_Flash_Param_t IAP_Flash_Param = (IAP_Flash_Param_t)0x110004D1;
 IAP_Flash_Erase_t IAP_Flash_Erase = (IAP_Flash_Erase_t)0x11000401;
-IAP_Flash_Write_t IAP_Flash_Write = (IAP_Flash_Write_t)0x11000451;
+IAP_Flash_Write_t IAP_Flash_Write = (IAP_Flash_Write_t)0x11000461;
 
 
 /****************************************************************************************************************************************** 
 * 函数名称: FLASH_Erase()
 * 功能说明:	片内Flash擦除
-* 输    入: uint32_t addr		擦除地址，扇区大小为1K Byte
+* 输    入: uint32_t addr		擦除地址，扇区大小为512 Byte
 * 输    出: uint32_t			FLASH_RES_OK、FLASH_RES_TO、FLASH_RES_ERR
 * 注意事项: 无
 ******************************************************************************************************************************************/
 uint32_t FLASH_Erase(uint32_t addr)
-{	
+{
 	__disable_irq();
 	
-	IAP_Flash_Erase(addr / 0x400, 0x0B11FFAC);
+	IAP_Flash_Erase(addr / 0x200, 0x0B11FFAC);
 	
-	FMC->CACHE |= (1 << FMC_CACHE_CCLR_Pos);
+	FMC->CACHE |= FMC_CACHE_CCLR_Msk;
 	
 	__enable_irq();
 	
@@ -64,9 +64,9 @@ uint32_t FLASH_Write(uint32_t addr, uint32_t buff[], uint32_t count)
 {
 	__disable_irq();
 	
-	IAP_Flash_Write(addr, (uint32_t)buff, count/2);
+	IAP_Flash_Write(addr, (uint32_t)buff, count/2, 0x0B11FFAC);
 	
-	FMC->CACHE |= (1 << FMC_CACHE_CCLR_Pos);
+	FMC->CACHE |= FMC_CACHE_CCLR_Msk;
 	
 	__enable_irq();
 	
