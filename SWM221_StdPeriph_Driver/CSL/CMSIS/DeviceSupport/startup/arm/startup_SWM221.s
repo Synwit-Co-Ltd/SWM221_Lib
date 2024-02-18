@@ -78,7 +78,7 @@ __Vectors       DCD     __initial_sp               ; Top of Stack
 				DCD    WDT_Handler
 				DCD    I2C0_Handler
 				DCD    XTALSTOP_Handler
-				DCD    ADC0_Handler
+				DCD    ADC_Handler
 				DCD    ACMP_Handler
 				DCD    BTIMR0_Handler
 				DCD    BTIMR1_Handler
@@ -209,8 +209,8 @@ XTALSTOP_Handler  PROC
 				B       .
 				ENDP
 
-ADC0_Handler  PROC
-				EXPORT  ADC0_Handler                 [WEAK]
+ADC_Handler  PROC
+				EXPORT  ADC_Handler                  [WEAK]
 				B       .
 				ENDP
 

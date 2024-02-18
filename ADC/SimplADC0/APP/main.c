@@ -1,6 +1,9 @@
 #include "SWM221.h"
 
 
+#define ADC_USE_INT
+
+
 void SerialInit(void);
 
 int main(void)
@@ -30,19 +33,43 @@ int main(void)
 	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_SW;
 	ADC_SEQ_initStruct.samp_tim = 6;
 	ADC_SEQ_initStruct.conv_cnt = 1;
+#ifdef ADC_USE_INT
+	ADC_SEQ_initStruct.EOCIntEn = 1;
+#else
 	ADC_SEQ_initStruct.EOCIntEn = 0;
+#endif
 	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH0, 0 };
 	ADC_SEQ_Init(ADC0, ADC_SEQ0, &ADC_SEQ_initStruct);
 	
 	ADC_Open(ADC0);
 	
+#ifdef ADC_USE_INT
+	ADC_Start(ADC_SEQ0, 0);
+	
+	while(1==1)
+	{
+	}
+#else
 	while(1==1)
 	{
 		ADC_Start(ADC_SEQ0, 0);
 		while(ADC_DataAvailable(ADC0, ADC_CH0) == 0);
 		printf("%4d,", ADC_Read(ADC0, ADC_CH0));
 	}
+#endif
+}
 
+
+void ADC_Handler(void)
+{
+	if(ADC_INTStat(ADC0, ADC_SEQ0, ADC_IT_EOC))
+	{
+		ADC_INTClr(ADC0, ADC_SEQ0, ADC_IT_EOC);
+		
+		printf("%4d,", ADC_Read(ADC0, ADC_CH0));
+		
+		ADC_Start(ADC_SEQ0, 0);
+	}
 }
 
 

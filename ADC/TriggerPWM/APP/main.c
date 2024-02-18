@@ -5,8 +5,8 @@ void PWM0AInit(void);
 
 int main(void)
 {
-	uint32_t i;
 	ADC_InitStructure ADC_initStruct;
+	ADC_SEQ_InitStructure ADC_SEQ_initStruct;
 	
  	SystemInit();
 	
@@ -18,61 +18,58 @@ int main(void)
 	PORT_Init(PORTA, PIN11, PORTA_PIN11_ADC0_CH1, 0);		//PA.11 => ADC0.CH1
 	PORT_Init(PORTA, PIN8,  PORTA_PIN8_ADC0_CH2,  0);		//PA.8  => ADC0.CH2
 	PORT_Init(PORTB, PIN9,  PORTB_PIN9_ADC0_CH3,  0);		//PB.9  => ADC0.CH3
-	PORT_Init(PORTB, PIN7,  PORTB_PIN7_ADC0_CH5,  0);		//PB.7  => ADC0.CH5
-	PORT_Init(PORTB, PIN6,  PORTB_PIN6_ADC0_CH6,  0);		//PB.6  => ADC0.CH6
-	PORT_Init(PORTB, PIN5,  PORTB_PIN5_ADC0_CH7,  0);		//PB.5  => ADC0.CH7
-	PORT_Init(PORTB, PIN4,  PORTB_PIN4_ADC0_CH8,  0);		//PB.4  => ADC0.CH8
-	PORT_Init(PORTB, PIN3,  PORTB_PIN3_ADC0_CH9,  0);		//PB.3  => ADC0.CH9
-	PORT_Init(PORTM, PIN9,  PORTM_PIN9_ADC0_CH10, 0);		//PM.9  => ADC0.CH10
+//	PORT_Init(PORTB, PIN7,  PORTB_PIN7_ADC0_CH5,  0);		//PB.7  => ADC0.CH5
+//	PORT_Init(PORTB, PIN6,  PORTB_PIN6_ADC0_CH6,  0);		//PB.6  => ADC0.CH6
+//	PORT_Init(PORTB, PIN5,  PORTB_PIN5_ADC0_CH7,  0);		//PB.5  => ADC0.CH7
+//	PORT_Init(PORTB, PIN4,  PORTB_PIN4_ADC0_CH8,  0);		//PB.4  => ADC0.CH8
+//	PORT_Init(PORTB, PIN3,  PORTB_PIN3_ADC0_CH9,  0);		//PB.3  => ADC0.CH9
+//	PORT_Init(PORTM, PIN9,  PORTM_PIN9_ADC0_CH10, 0);		//PM.9  => ADC0.CH10
 
-	ADC_initStruct.clk_src = ADC_CLKSRC_HRC_DIV2;
-	ADC_initStruct.clk_div = 6;
-	ADC_initStruct.ref_src = ADC_REFSRC_3V6;
-	ADC_initStruct.channels = ADC_CH0;					//PWM 启动CH0
+	ADC_initStruct.clkdiv = 4;
 	ADC_initStruct.samplAvg = ADC_AVG_SAMPLE1;
-	ADC_initStruct.trig_src = ADC_TRIGGER_PWM0;
-	ADC_initStruct.Continue = 0;						//非连续模式，即单次模式
-	ADC_initStruct.EOC_IEn = ADC_CH0 | ADC_CH1;	
-	ADC_initStruct.OVF_IEn = 0;
-	ADC_Init(ADC0, &ADC_initStruct);					//配置ADC
-	ADC_Open(ADC0);										//使能ADC
-
+	ADC_Init(ADC0, &ADC_initStruct);
+	
+	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_PWM0;		// PWM0 触发 ADC 通道 0 转换，产生中断
+	ADC_SEQ_initStruct.samp_tim = 6;
+	ADC_SEQ_initStruct.conv_cnt = 1;
+	ADC_SEQ_initStruct.EOCIntEn = 1;
+	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH0, 0 };
+	ADC_SEQ_Init(ADC0, ADC_SEQ0, &ADC_SEQ_initStruct);
+	
+	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_SW;		// 软件 启动 ADC 通道 1 转换，不产生中断
+	ADC_SEQ_initStruct.samp_tim = 6;
+	ADC_SEQ_initStruct.conv_cnt = 1;
+	ADC_SEQ_initStruct.EOCIntEn = 0;
+	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH1, 0 };
+	ADC_SEQ_Init(ADC0, ADC_SEQ1, &ADC_SEQ_initStruct);
+	
+	ADC_Open(ADC0);
+	
 	PWM0AInit();
 	
 	while(1==1)
 	{
-		ADC0->CTRL &= ~ADC_CTRL_TRIG_Msk;		//软件启动ADC前，将触发切成CPU
-		for(i = 0; i < CyclesPerUs; i++) __NOP();		//等待PWM启动的通道转换完成，防止PWM启动错误的转换通道
-		ADC0->CHSEL &= ~(   0xFF << ADC_CHSEL_SW_Pos);
-		ADC0->CHSEL |=  (ADC_CH1 << ADC_CHSEL_SW_Pos);	//软件启动CH1
-		ADC0->CTRL = ADC0->CTRL;	//注意：写 CTRL 寄存器才能更新通道选择
-		ADC_Start(ADC0);
-		for(i = 0; i < CyclesPerUs; i++) __NOP();		//等待软件启动的通道转换完成
+		ADC_Start(ADC_SEQ1, 0);		// 若 ADC 正在转换，此操作会被忽略
+		for(int i = 0; i < CyclesPerUs * 10; i++) {}
+		if(ADC_DataAvailable(ADC0, ADC_CH1))
+		{
+			printf("%d,", ADC_Read(ADC0, ADC_CH1));
+		}
 		
-		ADC0->CHSEL &= ~(   0xFF << ADC_CHSEL_SW_Pos);
-		ADC0->CHSEL |=  (ADC_CH0 << ADC_CHSEL_SW_Pos);	//软件启动的通道和PWM启动的通道必须完全一样
-		ADC0->CTRL |= (1 << ADC_CTRL_TRIG_Pos);	//软件启动ADC后，将触发切成PWM
-		
-		for(i = 0; i < SystemCoreClock/1000; i++) __NOP();
+		for(int i = 0; i < SystemCoreClock/1000; i++) {}
 	}
 }
 
 
-void ADC0_Handler(void)
+void ADC_Handler(void)
 {
 	GPIO_InvBit(GPIOA, PIN5);
 	
-	if(ADC_IntEOCStat(ADC0, ADC_CH0))
+	if(ADC_INTStat(ADC0, ADC_SEQ0, ADC_IT_EOC))
 	{
-		ADC_IntEOCClr(ADC0, ADC_CH0);
+		ADC_INTClr(ADC0, ADC_SEQ0, ADC_IT_EOC);
 		
 		printf("%d,", ADC_Read(ADC0, ADC_CH0));
-	}
-	else if(ADC_IntEOCStat(ADC0, ADC_CH1))
-	{
-		ADC_IntEOCClr(ADC0, ADC_CH1);
-		
-// 		printf("%d,", ADC_Read(ADC0, ADC_CH1));
 	}
 }
 

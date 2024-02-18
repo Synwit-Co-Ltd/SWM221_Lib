@@ -18,9 +18,6 @@
 *
 * COPYRIGHT 2012 Synwit Technology
 *******************************************************************************************************************************************/
-
-#ifdef CHIP_SWM221
-
 #include "SWM221.h"
 #include "SWM221_mpu.h"
 
@@ -58,34 +55,28 @@ static uint32_t MPU_IsBusy(MPU_TypeDef * MPUx)
 }
 
 
-void MPU_WR_REG(MPU_TypeDef * MPUx, uint16_t reg)
+void MPU_WR_REG(MPU_TypeDef * MPUx, uint8_t reg)
 {
 	MPUx->IR = reg;
-	while(MPU_IsBusy(MPUx)) __NOP();
+	while(MPU_IsBusy(MPUx)) {}
 }
 
-void MPU_WR_DATA(MPU_TypeDef * MPUx, uint16_t val)
+void MPU_WR_DATA(MPU_TypeDef * MPUx, uint8_t val)
 {
 	MPUx->DR = val;
-	while(MPU_IsBusy(MPUx)) __NOP();
+	while(MPU_IsBusy(MPUx)) {}
 }
 
-void MPU_WriteReg(MPU_TypeDef * MPUx, uint16_t reg, uint16_t val)
+void MPU_WriteReg(MPU_TypeDef * MPUx, uint8_t reg, uint8_t val)
 {
-	MPUx->IR = reg;
-	while(MPU_IsBusy(MPUx)) __NOP();
+	MPU_WR_REG(MPUx, reg);
 	
-	MPUx->DR = val;
-	while(MPU_IsBusy(MPUx)) __NOP();
+	MPU_WR_DATA(MPUx, val);
 }
 
-uint16_t MPU_ReadReg(MPU_TypeDef * MPUx, uint16_t reg)
+uint8_t MPU_ReadReg(MPU_TypeDef * MPUx, uint8_t reg)
 {
-	MPUx->IR = reg;
-	while(MPU_IsBusy(MPUx)) __NOP();
+	MPU_WR_REG(MPUx, reg);
 	
 	return MPUx->DR;
 }
-
-
-#endif

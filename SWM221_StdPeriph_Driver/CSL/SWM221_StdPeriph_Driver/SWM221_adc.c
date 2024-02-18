@@ -110,7 +110,7 @@ void ADC_SEQ_Init(ADC_TypeDef * ADCx, uint32_t seq, ADC_SEQ_InitStructure * init
 	ADCx->IE |= (initStruct->EOCIntEn << pos);
 	
 	if(initStruct->EOCIntEn)
-		NVIC_EnableIRQ(ADC0_IRQn);
+		NVIC_EnableIRQ(ADC_IRQn);
 	
 	__IO uint32_t * SEQxCHN = (seq == ADC_SEQ0) ? &ADCx->SEQ0CHN : &ADCx->SEQ1CHN;
 	*SEQxCHN = 0;
@@ -148,7 +148,7 @@ void ADC_CMP_Init(ADC_TypeDef * ADCx, uint32_t seq, ADC_CMP_InitStructure * init
 		ADC_INTEn(ADCx, seq, ADC_IT_CMP_MIN);
 	
 	if(initStruct->UpperLimitIEn || initStruct->LowerLimitIEn)
-		NVIC_EnableIRQ(ADC0_IRQn);
+		NVIC_EnableIRQ(ADC_IRQn);
 }
 
 /****************************************************************************************************************************************** 

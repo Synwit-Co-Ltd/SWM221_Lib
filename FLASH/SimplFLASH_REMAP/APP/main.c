@@ -29,11 +29,11 @@ int main(void)
 	
 	/* 将EEPROM_ADDR处的Flash映射到0地址，然后从0地址读取数据 */
 	FMC->REMAP = (1 << FMC_REMAP_ON_Pos) | ((EEPROM_ADDR/0x800) << FMC_REMAP_OFFSET_Pos);
-	FMC->CACHE |= (1 << FMC_CACHE_CCLR_Pos);
+	FMC->CACHE |= FMC_CACHE_CCLR_Msk;
 
 	for(i = 0; i < 20; i++) RdBuff[i] = ((volatile uint32_t *)0x00)[i];
 	FMC->REMAP = (0 << FMC_REMAP_ON_Pos);
-	FMC->CACHE |= (1 << FMC_CACHE_CCLR_Pos);
+	FMC->CACHE |= FMC_CACHE_CCLR_Msk;
 
 	for(i = 0; i < 20; i++) printf("0x%08X, ", RdBuff[i]);
 
@@ -44,11 +44,11 @@ int main(void)
 	
 	/* 将EEPROM_ADDR处的Flash映射到0地址，然后从0地址读取数据 */
 	FMC->REMAP = (1 << FMC_REMAP_ON_Pos) | ((EEPROM_ADDR/0x800) << FMC_REMAP_OFFSET_Pos);
-	FMC->CACHE |= (1 << FMC_CACHE_CCLR_Pos);
+	FMC->CACHE |= FMC_CACHE_CCLR_Msk;
 
 	for(i = 0; i < 20; i++) RdBuff[i] = ((volatile uint32_t *)0x00)[i];
 	FMC->REMAP = (0 << FMC_REMAP_ON_Pos);
-	FMC->CACHE |= (1 << FMC_CACHE_CCLR_Pos);
+	FMC->CACHE |= FMC_CACHE_CCLR_Msk;
 
 	for(i = 0; i < 20; i++) printf("0x%08X, ", RdBuff[i]);
    	

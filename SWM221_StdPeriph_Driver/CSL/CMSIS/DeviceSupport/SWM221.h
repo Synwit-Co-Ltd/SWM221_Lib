@@ -30,7 +30,7 @@ typedef enum IRQn
   WDT_IRQn                 = 11,
   I2C0_IRQn                = 12,
   XTALSTOP_IRQn            = 13,
-  ADC0_IRQn                = 14,
+  ADC_IRQn                 = 14,
   ACMP_IRQn                = 15,
   BTIMR0_IRQn              = 16,
   BTIMR1_IRQn              = 17,
@@ -321,38 +321,38 @@ typedef struct {
 #define SYS_LVRCR_WEN_Pos			3		//LVRCR 写使能，写 LVRCR 时此位必须是 1
 #define SYS_LVRCR_WEN_Msk			(0x01 << SYS_LVRCR_WEN_Pos)
 
-#define SYS_ACMPCR0_EN_Pos			0
-#define SYS_ACMPCR0_EN_Msk			(0x01 << SYS_ACMPCR0_EN_Pos)
-#define SYS_ACMPCR0_HYS_Pos			1		//迟滞电压
-#define SYS_ACMPCR0_HYS_Msk			(0x03 << SYS_ACMPCR0_HYS_Pos)
-#define SYS_ACMPCR0_VNSEL_Pos		3		//负端选择：0 VN   1 DAC_OUT   2 VPX
-#define SYS_ACMPCR0_VNSEL_Msk		(0x03 << SYS_ACMPCR0_VNSEL_Pos)
-#define SYS_ACMPCR0_IE_Pos			5		//中断使能
-#define SYS_ACMPCR0_IE_Msk			(0x01 << SYS_ACMPCR0_IE_Pos)
-#define SYS_ACMPCR0_TOPWM_Pos		6		//比较器输出作为 PWM 刹车信号
-#define SYS_ACMPCR0_TOPWM_Msk		(0x01 << SYS_ACMPCR0_TOPWM_Pos)
+#define SYS_ACMP0CR_EN_Pos			0
+#define SYS_ACMP0CR_EN_Msk			(0x01 << SYS_ACMP0CR_EN_Pos)
+#define SYS_ACMP0CR_HYS_Pos			1		//迟滞电压
+#define SYS_ACMP0CR_HYS_Msk			(0x03 << SYS_ACMP0CR_HYS_Pos)
+#define SYS_ACMP0CR_VNSEL_Pos		3		//负端选择：0 VN   1 DAC_OUT   2 VPX
+#define SYS_ACMP0CR_VNSEL_Msk		(0x03 << SYS_ACMP0CR_VNSEL_Pos)
+#define SYS_ACMP0CR_IE_Pos			5		//中断使能
+#define SYS_ACMP0CR_IE_Msk			(0x01 << SYS_ACMP0CR_IE_Pos)
+#define SYS_ACMP0CR_TOPWM_Pos		6		//比较器输出作为 PWM 刹车信号
+#define SYS_ACMP0CR_TOPWM_Msk		(0x01 << SYS_ACMP0CR_TOPWM_Pos)
 
-#define SYS_ACMPCR1_EN_Pos			0
-#define SYS_ACMPCR1_EN_Msk			(0x01 << SYS_ACMPCR1_EN_Pos)
-#define SYS_ACMPCR1_HYS_Pos			1
-#define SYS_ACMPCR1_HYS_Msk			(0x03 << SYS_ACMPCR1_HYS_Pos)
-#define SYS_ACMPCR1_VNSEL_Pos		3
-#define SYS_ACMPCR1_VNSEL_Msk		(0x03 << SYS_ACMPCR1_VNSEL_Pos)
-#define SYS_ACMPCR1_IE_Pos			5
-#define SYS_ACMPCR1_IE_Msk			(0x01 << SYS_ACMPCR1_IE_Pos)
-#define SYS_ACMPCR1_TOPWM_Pos		6
-#define SYS_ACMPCR1_TOPWM_Msk		(0x01 << SYS_ACMPCR1_TOPWM_Pos)
+#define SYS_ACMP1CR_EN_Pos			0
+#define SYS_ACMP1CR_EN_Msk			(0x01 << SYS_ACMP1CR_EN_Pos)
+#define SYS_ACMP1CR_HYS_Pos			1
+#define SYS_ACMP1CR_HYS_Msk			(0x03 << SYS_ACMP1CR_HYS_Pos)
+#define SYS_ACMP1CR_VNSEL_Pos		3
+#define SYS_ACMP1CR_VNSEL_Msk		(0x03 << SYS_ACMP1CR_VNSEL_Pos)
+#define SYS_ACMP1CR_IE_Pos			5
+#define SYS_ACMP1CR_IE_Msk			(0x01 << SYS_ACMP1CR_IE_Pos)
+#define SYS_ACMP1CR_TOPWM_Pos		6
+#define SYS_ACMP1CR_TOPWM_Msk		(0x01 << SYS_ACMP1CR_TOPWM_Pos)
 
-#define SYS_ACMPCR2_EN_Pos			0
-#define SYS_ACMPCR2_EN_Msk			(0x01 << SYS_ACMPCR2_EN_Pos)
-#define SYS_ACMPCR2_HYS_Pos			1
-#define SYS_ACMPCR2_HYS_Msk			(0x03 << SYS_ACMPCR2_HYS_Pos)
-#define SYS_ACMPCR2_VNSEL_Pos		3
-#define SYS_ACMPCR2_VNSEL_Msk		(0x03 << SYS_ACMPCR2_VNSEL_Pos)
-#define SYS_ACMPCR2_IE_Pos			5
-#define SYS_ACMPCR2_IE_Msk			(0x01 << SYS_ACMPCR2_IE_Pos)
-#define SYS_ACMPCR2_TOPWM_Pos		6
-#define SYS_ACMPCR2_TOPWM_Msk		(0x01 << SYS_ACMPCR2_TOPWM_Pos)
+#define SYS_ACMP2CR_EN_Pos			0
+#define SYS_ACMP2CR_EN_Msk			(0x01 << SYS_ACMP2CR_EN_Pos)
+#define SYS_ACMP2CR_HYS_Pos			1
+#define SYS_ACMP2CR_HYS_Msk			(0x03 << SYS_ACMP2CR_HYS_Pos)
+#define SYS_ACMP2CR_VNSEL_Pos		3
+#define SYS_ACMP2CR_VNSEL_Msk		(0x03 << SYS_ACMP2CR_VNSEL_Pos)
+#define SYS_ACMP2CR_IE_Pos			5
+#define SYS_ACMP2CR_IE_Msk			(0x01 << SYS_ACMP2CR_IE_Pos)
+#define SYS_ACMP2CR_TOPWM_Pos		6
+#define SYS_ACMP2CR_TOPWM_Msk		(0x01 << SYS_ACMP2CR_TOPWM_Pos)
 
 #define SYS_ACMPCR_VPXEN_Pos		0 		//1 VP0/VP1/VP2星形连接,中心点作为VPX
 #define SYS_ACMPCR_VPXEN_Msk		(0x01 << SYS_ACMPCR_VPXEN_Pos)

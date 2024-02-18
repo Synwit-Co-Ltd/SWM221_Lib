@@ -13,10 +13,10 @@ typedef struct {
 
 void MPU_Init(MPU_TypeDef * MPUx, MPU_InitStructure * initStruct);
 
-void MPU_WR_REG(MPU_TypeDef * MPUx, uint16_t reg);
-void MPU_WR_DATA(MPU_TypeDef * MPUx, uint16_t val);
-void MPU_WriteReg(MPU_TypeDef * MPUx, uint16_t reg, uint16_t val);
-uint16_t MPU_ReadReg(MPU_TypeDef * MPUx, uint16_t reg);
+void MPU_WR_REG(MPU_TypeDef * MPUx, uint8_t reg);
+void MPU_WR_DATA(MPU_TypeDef * MPUx, uint8_t val);
+void MPU_WriteReg(MPU_TypeDef * MPUx, uint8_t reg, uint8_t val);
+uint8_t MPU_ReadReg(MPU_TypeDef * MPUx, uint8_t reg);
 
 
 #endif // __SWM221_MPU_H__

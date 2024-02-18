@@ -16,11 +16,11 @@ int main(void)
 	DMA_initStruct.Mode = DMA_MODE_CIRCLE;
 	DMA_initStruct.Unit = DMA_UNIT_BYTE;
 	DMA_initStruct.Count = strlen(str_hi);
-	DMA_initStruct.SrcAddr = (uint32_t)str_hi;
-	DMA_initStruct.SrcAddrInc = 1;
-	DMA_initStruct.DstAddr = (uint32_t)&UART0->DATA;
-	DMA_initStruct.DstAddrInc = 0;
-	DMA_initStruct.Handshake = DMA_EXHS_TIMR0;
+	DMA_initStruct.MemoryAddr = (uint32_t)str_hi;
+	DMA_initStruct.MemoryAddrInc = 1;
+	DMA_initStruct.PeripheralAddr = (uint32_t)&UART0->DATA;
+	DMA_initStruct.PeripheralAddrInc = 0;
+	DMA_initStruct.Handshake = DMA_EXMRD_TIMR0;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = 0;
 	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
