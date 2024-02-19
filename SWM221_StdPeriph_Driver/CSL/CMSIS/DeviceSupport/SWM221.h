@@ -2299,8 +2299,8 @@ typedef struct {
 #define UART0				((UART_TypeDef *) UART0_BASE)
 #define UART1				((UART_TypeDef *) UART1_BASE)
 
-#define QSPI0				((UART_TypeDef *) QSPI0_BASE)
-#define QSPI1				((UART_TypeDef *) QSPI1_BASE)
+#define QSPI0				((QSPI_TypeDef *) QSPI0_BASE)
+#define QSPI1				((QSPI_TypeDef *) QSPI1_BASE)
 
 #define SPI0				((SPI_TypeDef  *) SPI0_BASE)
 

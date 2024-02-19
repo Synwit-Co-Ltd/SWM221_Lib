@@ -4,7 +4,6 @@
 
 typedef struct {
 	uint16_t Size;			// Flash 大小，双 Flash 时指两个 Flash 的总大小，取值 QSPI_Size_1MB、...、QSPI_Size_512MB
-	uint8_t  Bank;			// 选择 SPI Flash 连接的 QSPI Bank，可取值 QSPI_Bank_1、QSPI_Bank_2、QSPI_Bank_Dual
 	uint16_t ClkDiv;		// 可取值 2--256
 	uint8_t  ClkMode;		// 可取值 QSPI_ClkMode_0、QSPI_ClkMode_3
 	uint8_t  SampleShift;	// 可取值 QSPI_SampleShift_None、QSPI_SampleShift_Half_SPICLK、QSPI_SampleShift_1_SYSCLK、...
@@ -21,10 +20,6 @@ typedef struct {
 #define QSPI_Size_128MB		26
 #define QSPI_Size_256MB		27
 #define QSPI_Size_512MB		28
-
-#define QSPI_Bank_1			0
-#define QSPI_Bank_2			2
-#define QSPI_Bank_Dual		1
 
 #define QSPI_ClkMode_0		0
 #define QSPI_ClkMode_3		1
@@ -135,8 +130,6 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 #define QSPI_Read_IO2bit(QSPIx, addr, buff, count)	QSPI_Read_(QSPIx, (addr), (buff), (count), 2, 2);
 #define QSPI_Read_IO4bit(QSPIx, addr, buff, count)	QSPI_Read_(QSPIx, (addr), (buff), (count), 4, 4);
 
-void QSPI_MemoryMap(QSPI_TypeDef * QSPIx, uint8_t addr_width, uint8_t data_width);
-void QSPI_MemoryMapClose(QSPI_TypeDef * QSPIx);
 
 bool QSPI_FlashBusy(QSPI_TypeDef * QSPIx);
 uint8_t QSPI_QuadState(QSPI_TypeDef * QSPIx);

@@ -50,7 +50,7 @@ void QSPI_Init(QSPI_TypeDef * QSPIx, QSPI_InitStructure * initStruct)
 	
 	QSPIx->CR = (1 								<< QSPI_CR_TOEN_Pos)   |
 				((initStruct->SampleShift >> 4)	<< QSPI_CR_SSHIFT_Pos) |
-				(initStruct->Bank 				<< QSPI_CR_DUAL_Pos)   |
+				(0 								<< QSPI_CR_DUAL_Pos)   |
 				(15 							<< QSPI_CR_FFTHR_Pos)  |
 				(initStruct->IntEn 				<< QSPI_CR_ERRIE_Pos)  |
 				((initStruct->ClkDiv - 1) 		<< QSPI_CR_CLKDIV_Pos);
@@ -374,100 +374,6 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 		
 		buff[count - 1] = QSPIx->DRB;
 	}
-}
-
-
-/****************************************************************************************************************************************** 
-* 函数名称:	QSPI_MemoryMap()
-* 功能说明:	QSPI Flash 内存映射，映射后可通过读取单片机 [0x70000000, 0x78000000) 地址空间来间接读取 QSPI Flash 内容
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
-*			uint8_t addr_width		读取使用的地址线个数，有效值包括 1、2、4
-*			uint8_t data_width		读取使用的数据线个数，有效值包括 1、2、4
-* 输    出: 无
-* 注意事项: 内存映射开启时，不能执行 QSPI_Erase()、QSPI_Write() 等函数
-******************************************************************************************************************************************/
-void QSPI_MemoryMap(QSPI_TypeDef * QSPIx, uint8_t addr_width, uint8_t data_width)
-{
-	uint8_t instruction, addressMode, dataMode, dummyCycles;
-	uint8_t alternateBytesMode, alternateBytesSize, alternateBytes;
-	switch((addr_width << 4) | data_width)
-	{
-	case 0x11:
-		instruction 	   = QSPI_CMD_FAST_READ;
-		addressMode 	   = QSPI_PhaseMode_1bit;
-		alternateBytesMode = QSPI_PhaseMode_None;
-		alternateBytesSize = 0;
-		dummyCycles        = 8;
-		dataMode 		   = QSPI_PhaseMode_1bit;
-		break;
-	
-	case 0x12:
-		instruction 	   = QSPI_CMD_FAST_READ_2bit;
-		addressMode 	   = QSPI_PhaseMode_1bit;
-		alternateBytesMode = QSPI_PhaseMode_None;
-		alternateBytesSize = 0;
-		dummyCycles        = 8;
-		dataMode 		   = QSPI_PhaseMode_2bit;
-		break;
-	
-	case 0x22:
-		instruction 	   = QSPI_CMD_FAST_READ_IO2bit;
-		addressMode 	   = QSPI_PhaseMode_2bit;
-		alternateBytesMode = QSPI_PhaseMode_2bit;
-		alternateBytesSize = QSPI_PhaseSize_8bit;
-		alternateBytes     = 0xFF;
-		dummyCycles        = 0;
-		dataMode 		   = QSPI_PhaseMode_2bit;
-		break;
-	
-	case 0x14:
-		instruction 	   = QSPI_CMD_FAST_READ_4bit;
-		addressMode 	   = QSPI_PhaseMode_1bit;
-		alternateBytesMode = QSPI_PhaseMode_None;
-		alternateBytesSize = 0;
-		dummyCycles        = 8;
-		dataMode 		   = QSPI_PhaseMode_4bit;
-		break;
-	
-	case 0x44:
-		instruction 	   = QSPI_CMD_FAST_READ_IO4bit;
-		addressMode 	   = QSPI_PhaseMode_4bit;
-		alternateBytesMode = QSPI_PhaseMode_4bit;
-		alternateBytesSize = QSPI_PhaseSize_8bit;
-		alternateBytes     = 0xFF;
-		dummyCycles        = 4;
-		dataMode 		   = QSPI_PhaseMode_4bit;
-		break;
-	}
-	
-	if(alternateBytesMode != QSPI_PhaseMode_None)
-		QSPIx->ABR = alternateBytes;
-		
-	QSPIx->CCR = (instruction				<< QSPI_CCR_CODE_Pos)   |
-				 (QSPI_PhaseMode_1bit		<< QSPI_CCR_IMODE_Pos)  |
-				 (addressMode				<< QSPI_CCR_AMODE_Pos)  |
-				 (AddressSize				<< QSPI_CCR_ASIZE_Pos)  |
-				 (alternateBytesMode		<< QSPI_CCR_ABMODE_Pos) |
-				 (alternateBytesSize		<< QSPI_CCR_ABSIZE_Pos) |
-				 (dummyCycles				<< QSPI_CCR_DUMMY_Pos)  |
-				 (dataMode					<< QSPI_CCR_DMODE_Pos)  |
-				 (QSPI_Mode_MemoryMapped	<< QSPI_CCR_MODE_Pos)   |
-				 (0							<< QSPI_CCR_SIOO_Pos);
-}
-
-
-/****************************************************************************************************************************************** 
-* 函数名称:	QSPI_MemoryMapClose()
-* 功能说明:	QSPI Flash 内存映射关闭
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
-* 输    出: 无
-* 注意事项: 无
-******************************************************************************************************************************************/
-void QSPI_MemoryMapClose(QSPI_TypeDef * QSPIx)
-{
-	while(QSPI_Busy(QSPIx)) __NOP();
-	
-	QSPI_FlashBusy(QSPIx);
 }
 
 
