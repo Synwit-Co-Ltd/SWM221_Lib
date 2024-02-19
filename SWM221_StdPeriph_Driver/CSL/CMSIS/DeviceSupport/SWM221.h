@@ -141,7 +141,6 @@ typedef struct {
 	
     __IO uint32_t ACMP0CR;					//Analog Comparator 0 Control Register
 	__IO uint32_t ACMP1CR;
-	__IO uint32_t ACMP2CR;
 	__IO uint32_t ACMPCR;
 	__IO uint32_t ACMPSR;					//Analog Comparator Status Register
 	
@@ -323,42 +322,35 @@ typedef struct {
 
 #define SYS_ACMP0CR_EN_Pos			0
 #define SYS_ACMP0CR_EN_Msk			(0x01 << SYS_ACMP0CR_EN_Pos)
-#define SYS_ACMP0CR_HYS_Pos			1		//迟滞电压
+#define SYS_ACMP0CR_HYS_Pos			1		//迟滞电压：0 1mV   1 10mV   2 20mV   3 50mV
 #define SYS_ACMP0CR_HYS_Msk			(0x03 << SYS_ACMP0CR_HYS_Pos)
 #define SYS_ACMP0CR_VNSEL_Pos		3		//负端选择：0 VN   1 DAC_OUT   2 VPX
 #define SYS_ACMP0CR_VNSEL_Msk		(0x03 << SYS_ACMP0CR_VNSEL_Pos)
-#define SYS_ACMP0CR_IE_Pos			5		//中断使能
+#define SYS_ACMP0CR_VPSEL_Pos		5		//正端选择：0 VP0   1 VP1   2 VP2   3 PGA0_VP   4 PGA2_VP
+#define SYS_ACMP0CR_VPSEL_Msk		(0x07 << SYS_ACMP0CR_VPSEL_Pos)
+#define SYS_ACMP0CR_VPXEN_Pos		8		//1 VP0/VP1/VP2星形连接,中心点作为VPX
+#define SYS_ACMP0CR_VPXEN_Msk		(0x01 << SYS_ACMP0CR_VPXEN_Pos)
+#define SYS_ACMP0CR_IE_Pos			16		//中断使能
 #define SYS_ACMP0CR_IE_Msk			(0x01 << SYS_ACMP0CR_IE_Pos)
-#define SYS_ACMP0CR_TOPWM_Pos		6		//比较器输出作为 PWM 刹车信号
+#define SYS_ACMP0CR_TOPWM_Pos		17		//比较器输出作为 PWM 刹车信号
 #define SYS_ACMP0CR_TOPWM_Msk		(0x01 << SYS_ACMP0CR_TOPWM_Pos)
 
 #define SYS_ACMP1CR_EN_Pos			0
 #define SYS_ACMP1CR_EN_Msk			(0x01 << SYS_ACMP1CR_EN_Pos)
 #define SYS_ACMP1CR_HYS_Pos			1
 #define SYS_ACMP1CR_HYS_Msk			(0x03 << SYS_ACMP1CR_HYS_Pos)
-#define SYS_ACMP1CR_VNSEL_Pos		3
-#define SYS_ACMP1CR_VNSEL_Msk		(0x03 << SYS_ACMP1CR_VNSEL_Pos)
-#define SYS_ACMP1CR_IE_Pos			5
+#define SYS_ACMP1CR_VNSEL_Pos		3		//负端选择：0 VN   1 DAC_OUT
+#define SYS_ACMP1CR_VNSEL_Msk		(0x01 << SYS_ACMP1CR_VNSEL_Pos)
+#define SYS_ACMP1CR_VPSEL_Pos		5		//正端选择：0 VP   1 PGA1_VP   2 PGA0_OUT   3 PGA1_OUT   4 PGA2_OUT
+#define SYS_ACMP1CR_VPSEL_Msk		(0x07 << SYS_ACMP1CR_VPSEL_Pos)
+#define SYS_ACMP1CR_IE_Pos			16
 #define SYS_ACMP1CR_IE_Msk			(0x01 << SYS_ACMP1CR_IE_Pos)
-#define SYS_ACMP1CR_TOPWM_Pos		6
+#define SYS_ACMP1CR_TOPWM_Pos		17
 #define SYS_ACMP1CR_TOPWM_Msk		(0x01 << SYS_ACMP1CR_TOPWM_Pos)
 
-#define SYS_ACMP2CR_EN_Pos			0
-#define SYS_ACMP2CR_EN_Msk			(0x01 << SYS_ACMP2CR_EN_Pos)
-#define SYS_ACMP2CR_HYS_Pos			1
-#define SYS_ACMP2CR_HYS_Msk			(0x03 << SYS_ACMP2CR_HYS_Pos)
-#define SYS_ACMP2CR_VNSEL_Pos		3
-#define SYS_ACMP2CR_VNSEL_Msk		(0x03 << SYS_ACMP2CR_VNSEL_Pos)
-#define SYS_ACMP2CR_IE_Pos			5
-#define SYS_ACMP2CR_IE_Msk			(0x01 << SYS_ACMP2CR_IE_Pos)
-#define SYS_ACMP2CR_TOPWM_Pos		6
-#define SYS_ACMP2CR_TOPWM_Msk		(0x01 << SYS_ACMP2CR_TOPWM_Pos)
-
-#define SYS_ACMPCR_VPXEN_Pos		0 		//1 VP0/VP1/VP2星形连接,中心点作为VPX
-#define SYS_ACMPCR_VPXEN_Msk		(0x01 << SYS_ACMPCR_VPXEN_Pos)
-#define SYS_ACMPCR_DACEN_Pos		1 		//ACMP DAC使能
+#define SYS_ACMPCR_DACEN_Pos		0 		//ACMP DAC使能
 #define SYS_ACMPCR_DACEN_Msk		(0x01 << SYS_ACMPCR_DACEN_Pos)
-#define SYS_ACMPCR_DACVR_Pos		2 		//ACMP DAC参考电压选择
+#define SYS_ACMPCR_DACVR_Pos		1 		//ACMP DAC参考电压选择
 #define SYS_ACMPCR_DACVR_Msk		(0x03 << SYS_ACMPCR_DACVR_Pos)
 #define SYS_ACMPCR_DACDR_Pos		8 		//ACMP DAC数据寄存器
 #define SYS_ACMPCR_DACDR_Msk		(0xFF << SYS_ACMPCR_DACDR_Pos)
@@ -1104,12 +1096,16 @@ typedef struct {
 #define ADC_IF_SEQ0MAX_Msk			(0x01 << ADC_IF_SEQ0MAX_Pos)
 #define ADC_IF_SEQ0MIN_Pos			2
 #define ADC_IF_SEQ0MIN_Msk			(0x01 << ADC_IF_SEQ0MIN_Pos)
+#define ADC_IF_SEQ0BRK_Pos			3		//CPU启动采样被PWM触发打断，状态位，不产生中断
+#define ADC_IF_SEQ0BRK_Msk			(0x01 << ADC_IF_SEQ0BRK_Pos)
 #define ADC_IF_SEQ1EOC_Pos			8
 #define ADC_IF_SEQ1EOC_Msk			(0x01 << ADC_IF_SEQ1EOC_Pos)
 #define ADC_IF_SEQ1MAX_Pos			9
 #define ADC_IF_SEQ1MAX_Msk			(0x01 << ADC_IF_SEQ1MAX_Pos)
 #define ADC_IF_SEQ1MIN_Pos			10
 #define ADC_IF_SEQ1MIN_Msk			(0x01 << ADC_IF_SEQ1MIN_Pos)
+#define ADC_IF_SEQ1BRK_Pos			11
+#define ADC_IF_SEQ1BRK_Msk			(0x01 << ADC_IF_SEQ1BRK_Pos)
 
 #define ADC_SMPNUM_SEQ0_Pos			0
 #define ADC_SMPNUM_SEQ0_Msk			(0xFF << ADC_SMPNUM_SEQ0_Pos)

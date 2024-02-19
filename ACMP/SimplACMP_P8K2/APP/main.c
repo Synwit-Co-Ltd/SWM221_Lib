@@ -8,32 +8,20 @@ int main(void)
 	
 	SerialInit();
 	
-	PORT_Init(PORTB, PIN6,  PORTB_PIN6_ACMP0_INP,  0);
+	PORT_Init(PORTB, PIN6,  PORTB_PIN6_ACMP0_INP0, 0);
+	PORT_Init(PORTB, PIN5,  PORTB_PIN5_ACMP0_INP1, 0);
+	PORT_Init(PORTB, PIN4,  PORTB_PIN4_ACMP0_INP2, 0);
 	PORT_Init(PORTB, PIN3,  PORTB_PIN3_ACMP0_INN,  0);
-	PORT_Init(PORTB, PIN5,  PORTB_PIN5_ACMP1_INP,  0);
-	PORT_Init(PORTA, PIN12, PORTA_PIN12_ACMP1_INN, 0);
-	PORT_Init(PORTB, PIN4,  PORTB_PIN4_ACMP2_INP,  0);
-//	PORT_Init(PORTB, PIN0,  PORTB_PIN0_ACMP2_INN,  0);
 	
 	SYS->ACMP0CR |= (1 << SYS_ACMP0CR_EN_Pos)  | 
 					(1 << SYS_ACMP0CR_HYS_Pos) |
-					(2 << SYS_ACMP0CR_VNSEL_Pos);
-	
-	SYS->ACMP1CR |= (1 << SYS_ACMP1CR_EN_Pos)  | 
-					(1 << SYS_ACMP1CR_HYS_Pos) |
-					(2 << SYS_ACMP1CR_VNSEL_Pos);
-	
-	SYS->ACMP2CR |= (1 << SYS_ACMP2CR_EN_Pos)  | 
-					(1 << SYS_ACMP2CR_HYS_Pos) |
-					(2 << SYS_ACMP2CR_VNSEL_Pos);
-
-	SYS->ACMPCR = (1 << SYS_ACMPCR_VPXEN_Pos);	//ACMP0、ACMP1、ACMP2的P端经8.2K电阻相连，相连点电平替代VREF电平作为它们的N端输入
+					(2 << SYS_ACMP0CR_VNSEL_Pos) |		//VPX 作为 VN 输入
+					(0 << SYS_ACMP0CR_VPSEL_Pos) |
+					(1 << SYS_ACMP0CR_VPXEN_Pos);		//VP0/VP1/VP2星形连接,中心点作为VPX
 
 	while(1==1)
 	{
-		printf("ACMP0->OUT = %d   ACMP1->OUT = %d   ACMP2->OUT = %d\n", (SYS->ACMPSR & SYS_ACMPSR_CMP0OUT_Msk) ? 1 : 0,
-																		(SYS->ACMPSR & SYS_ACMPSR_CMP1OUT_Msk) ? 1 : 0,
-																		(SYS->ACMPSR & SYS_ACMPSR_CMP2OUT_Msk) ? 1 : 0);
+		printf("ACMP0->OUT = %d\n", (SYS->ACMPSR & SYS_ACMPSR_CMP0OUT_Msk) ? 1 : 0);
 		
 		for(int i = 0; i < SystemCoreClock/32; i++) __NOP();
 	}
