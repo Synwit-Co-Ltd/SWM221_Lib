@@ -19,7 +19,7 @@ int main(void)
 	PORT_Init(PORTB, PIN4, PORTB_PIN4_QEI_A,   1);
 	PORT_Init(PORTB, PIN5, PORTB_PIN5_QEI_B,   1);
 	PORT_Init(PORTB, PIN6, PORTB_PIN6_QEI_Z,   1);
-	PORT_Init(PORTM, PIN9, PORTM_PIN9_QEI_DIR, 0);
+	PORT_Init(PORTB, PIN7, PORTB_PIN7_QEI_DIR, 0);
 	
 	QEI_initStruct.mode   = QEI_MODE_X4;
 	QEI_initStruct.maxcnt = 10000;

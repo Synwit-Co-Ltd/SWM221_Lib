@@ -37,22 +37,6 @@ int main(void)
 	
 	printf("\r\nAfter Write: \r\n");
 	for(i = 0; i < 20; i++) printf("0x%02X, ", RdBuff[i]);
-	
-#ifdef CHIP_SWM221
-	/* 4Ïß¶Á */
-	memset(RdBuff, 0x00, 20);
-	GD25Q21_ReadData_4bit(EEPROM_ADDR, RdBuff, 20);
-	
-	printf("\r\nQuad Read: \r\n");
-	for(i = 0; i < 20; i++) printf("0x%02X, ", RdBuff[i]);
-
-	/* 4Ïß¶Á£¨DMA£© */
-	memset(RdBuff, 0x00, 20);
-	GD25Q21_ReadData_4bit_DMA(EEPROM_ADDR, RdBuff, 20);
-	
-	printf("\r\nQuad DMA Read: \r\n");
-	for(i = 0; i < 20; i++) printf("0x%02X, ", RdBuff[i]);
-#endif
 
 	while(1==1)
 	{

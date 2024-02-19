@@ -3,7 +3,6 @@
 
 int main(void)
 {
-	uint32_t i;
 	PWM_InitStructure  PWM_initStruct;
 	
 	SystemInit();
@@ -16,9 +15,9 @@ int main(void)
 	PORT_Init(PORTA, PIN7, PORTA_PIN7_PWM0BN, 0);
 	
 	PORT_Init(PORTA, PIN5, PORTA_PIN5_PWM1A,  0);
-	PORT_Init(PORTM, PIN4, PORTM_PIN4_PWM1AN, 0);
-	PORT_Init(PORTA, PIN4, PORTA_PIN4_PWM1B,  0);
-	PORT_Init(PORTM, PIN5, PORTM_PIN5_PWM1BN, 0);
+	PORT_Init(PORTA, PIN4, PORTA_PIN4_PWM1AN, 0);
+	PORT_Init(PORTA, PIN1, PORTA_PIN1_PWM1B,  0);
+	PORT_Init(PORTA, PIN0, PORTA_PIN0_PWM1BN, 0);
 	
 	PWM_initStruct.Mode = PWM_EDGE_ALIGNED;
 	PWM_initStruct.Clkdiv = 6;					//F_PWM = 60M/6 = 10M
@@ -48,43 +47,36 @@ int main(void)
 	
 	/* 刹车（Brake）功能演示 */
 #if 0
+#if 1
 	PORT_Init(PORTB, PIN14, PORTB_PIN14_PWM_BRK0, 1);	//PB14切换为PWM_BRK0功能
 	PORTB->PULLU |= (1 << PIN14);
 	PORT_Init(PORTB, PIN6, PORTB_PIN6_PWM_BRK1, 1);		//PB6 切换为PWM_BRK1功能
 	PORTB->PULLU |= (1 << PIN6);
+#else	// 比较器输出作为刹车信号
+	PORT_Init(PORTB, PIN6,  PORTB_PIN6_ACMP0_INP,  0);
+	PORT_Init(PORTB, PIN3,  PORTB_PIN3_ACMP0_INN,  0);
+	PORT_Init(PORTB, PIN5,  PORTB_PIN5_ACMP1_INP,  0);
+	PORT_Init(PORTA, PIN12, PORTA_PIN12_ACMP1_INN, 0);
 	
+	SYS->ACMP0CR |= (1 << SYS_ACMP0CR_EN_Pos)    |
+				    (1 << SYS_ACMP0CR_HYS_Pos)   |
+					(1 << SYS_ACMP0CR_VNSEL_Pos) |
+				    (1 << SYS_ACMP0CR_TOPWM_Pos);
+					
+	SYS->ACMP1CR |= (1 << SYS_ACMP1CR_EN_Pos)    |
+				    (1 << SYS_ACMP1CR_HYS_Pos)   |
+					(1 << SYS_ACMP1CR_VNSEL_Pos) |
+				    (1 << SYS_ACMP1CR_TOPWM_Pos);
+	
+	SYS->ACMPCR = (1   << SYS_ACMPCR_DACEN_Pos) |
+				  (0   << SYS_ACMPCR_DACVR_Pos) |
+				  (100 << SYS_ACMPCR_DACDR_Pos);	// Vout = 100 / 255 * VDD
+#endif
 	PWM_BrkInPolarity(PWM_BRK0 | PWM_BRK1 | PWM_BRK2, 0);			//PWM_BRK0、PWM_BRK1、PWM_BRK2 低电平刹车
 	
 	PWM_BrkConfig(PWM0, PWM_CH_A, PWM_BRK0 | PWM_BRK1, 0, 1, 1, 0);	//PWM0通道A 受刹车输入 PWM_BRK0和PWM_BRK1 控制
 	PWM_BrkConfig(PWM0, PWM_CH_B, PWM_BRK0 | PWM_BRK1, 0, 1, 1, 0);	//PWM0通道B 受刹车输入 PWM_BRK0和PWM_BRK1 控制
 	PWM_BrkConfig(PWM1, PWM_CH_A, PWM_BRK2, 0, 1, 1, 0);			//PWM1通道A 受刹车输入 PWM_BRK2 控制
-	
-	/* ACMP3_OUT => PWM_BRK2 */
-#if 1
-	PORT_Init(PORTA, PIN14, PORTA_PIN14_ACMP3_INP, 0);
-// 	PORT_Init(PORTB, PIN14, PORTB_PIN14_ACMP3_INN, 0);
-	
-	SYS->ACMPCR |= (1 << SYS_ACMPCR_CMP3ON_Pos)  | 
-				   (1 << SYS_ACMPCR_CMP3HYS_Pos) | 
-			       (0 << SYS_ACMPCR_CMP3IE_Pos);	//开启迟滞、关闭中断
-
-	SYS->DACCR = (1 << SYS_DACCR_EN_Pos) |
-				 (100 << SYS_DACCR_DATA_Pos);		//内部VREF电压：SYS->DACCR.DATA / 255 * 5V
-	SYS->ACMPCR2 |= (1 << SYS_ACMPCR2_3NVR_Pos);	//ACMP3 N输入端接内部VREF
-	
-#if 0	//ACMP3输出宽度低于 1/12us * 4096 = 340us 的脉冲视作毛刺，过滤掉
-	IOFILT_Init(1, IOFILT1_ACMP3, IOFILT_WIDTH_4096);
-	
-	while(1)	// 将 PA8 与 PA14 连接，当低脉冲宽度大于 340us 时会出现刹车，否则不出现刹车
-	{
-		GPIO_ClrBit(GPIOA, PIN8);
-		for(i = 0; i < CyclesPerUs*65; i++) __NOP();
-		
-		GPIO_SetBit(GPIOA, PIN8);
-		for(i = 0; i < CyclesPerUs*1000; i++) __NOP();
-	}
-#endif
-#endif
 	
 	/* 刹车（Brake）中断功能演示 */
 #if 0
@@ -103,12 +95,12 @@ int main(void)
 		GPIO_SetBit(GPIOA, PIN8);
 		PWMG->SWBRK |= (PWMG_SWBRK_PWM0A_Msk |		//软件触发PWM0A和PWM0B的刹车动作
 						PWMG_SWBRK_PWM0B_Msk);
-		for(i = 0; i < 300000; i++) __NOP();
+		for(int i = 0; i < 300000; i++) {}
 		
 		GPIO_ClrBit(GPIOA, PIN8);
 		PWMG->SWBRK &=~(PWMG_SWBRK_PWM0A_Msk |		//撤销PWM0A和PWM0B的软件刹车，恢复正常输出
 						PWMG_SWBRK_PWM0B_Msk);
-		for(i = 0; i < 900000; i++) __NOP();
+		for(int i = 0; i < 900000; i++) {}
 	}
 #endif
 

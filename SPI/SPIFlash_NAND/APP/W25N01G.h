@@ -61,7 +61,6 @@ uint32_t W25N01G_ReadJEDEC(void);
 void W25N01G_Erase(uint32_t addr, uint8_t wait);
 void W25N01G_Write(uint32_t addr, uint8_t buff[2048]);
 void W25N01G_Read(uint32_t addr, uint8_t buff[2048]);
-void W25N01G_Read_4bit_DMA(uint32_t addr, uint8_t buff[2048]);
 
 bool W25N01G_FlashBusy(void);
 void W25N01G_FlashProtect(uint8_t protect);

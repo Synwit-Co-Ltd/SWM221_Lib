@@ -14,28 +14,24 @@ int main(void)
 	PORT_Init(PORTA, PIN13, PORTA_PIN13_OPA1_INN, 0);
 	PORT_Init(PORTA, PIN9,  PORTA_PIN9_OPA1_INP,  0);
 	PORT_Init(PORTA, PIN8,  PORTA_PIN8_OPA1_OUT,  0);
-	PORT_Init(PORTA, PIN12, PORTA_PIN12_OPA2_INN, 0);
-	PORT_Init(PORTA, PIN10, PORTA_PIN10_OPA2_INP, 0);
-	PORT_Init(PORTA, PIN11, PORTA_PIN11_OPA2_OUT, 0);
-	PORT_Init(PORTM, PIN5,  PORTM_PIN5_OPA3_INN,  0);
-	PORT_Init(PORTM, PIN6,  PORTM_PIN6_OPA3_INP,  0);
-	PORT_Init(PORTM, PIN9,  PORTM_PIN9_OPA3_OUT,  0);
+	PORT_Init(PORTB, PIN0,  PORTB_PIN0_OPA2_INN,  0);
+	PORT_Init(PORTB, PIN1,  PORTB_PIN1_OPA2_INP,  0);
+	PORT_Init(PORTB, PIN2,  PORTB_PIN2_OPA2_OUT,  0);
 	
-	SYS->OPACR |= (1 << SYS_OPACR_OPA0ON_Pos) |
-				  (1 << SYS_OPACR_OPA1ON_Pos) |
-				  (1 << SYS_OPACR_OPA2ON_Pos) |
-				  (1 << SYS_OPACR_OPA3ON_Pos) |
-				  (1 << SYS_OPACR_VREFON_Pos) |		// PGA1/2/3的正输入端接内部VREF
-				  (1 << SYS_OPACR_OPA1MD_Pos) |		// OPA1工作于PGA模式
-				  (1 << SYS_OPACR_OPA2MD_Pos) |		// OPA2工作于PGA模式
-				  (1 << SYS_OPACR_OPA3MD_Pos);		// OPA3工作于PGA模式
+	SYS->PGA0CR = (1 << SYS_PGA0CR_EN_Pos) |
+				  (1 << SYS_PGA0CR_MODE_Pos) |
+				  (2 << SYS_PGA0CR_GAIN_Pos) |		// PGA 增益选择：0 x1   1 x5   2 x10   3 x10
+				  (2 << SYS_PGA0CR_ROUT_Pos);		// 输出电阻选择：0 open   1 100   2 1k   3 10k
 	
-	SYS->PGACR = (0 << SYS_PGACR_OPA1GN_Pos) |		// PGA1增益反馈电阻：10K
-				 (0 << SYS_PGACR_OPA2GN_Pos) |		// PGA2增益反馈电阻：10K
-				 (0 << SYS_PGACR_OPA3GN_Pos) |		// PGA3增益反馈电阻：10K
-				 (0 << SYS_PGACR_OPA1SW_Pos) |		// PGA1输出滤波电阻：1K
-				 (0 << SYS_PGACR_OPA2SW_Pos) |		// PGA2输出滤波电阻：1K
-				 (0 << SYS_PGACR_OPA3SW_Pos);		// PGA3输出滤波电阻：1K
+	SYS->PGA1CR = (1 << SYS_PGA1CR_EN_Pos) |
+				  (1 << SYS_PGA1CR_MODE_Pos) |
+				  (2 << SYS_PGA1CR_GAIN_Pos) |
+				  (2 << SYS_PGA1CR_ROUT_Pos);
+	
+	SYS->PGA2CR = (1 << SYS_PGA2CR_EN_Pos) |
+				  (1 << SYS_PGA2CR_MODE_Pos) |
+				  (2 << SYS_PGA2CR_GAIN_Pos) |
+				  (2 << SYS_PGA2CR_ROUT_Pos);
 	
 	while(1==1)
 	{

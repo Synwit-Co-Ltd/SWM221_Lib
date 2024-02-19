@@ -44,14 +44,6 @@ int main(void)
 	
 	printf("\n\nAfter Write: \n");
 	for(int i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
-	
-#ifdef CHIP_SWM221
-	memset(RdBuff, 0x00, N_DATA);
-	W25N01G_Read_4bit_DMA(EEPROM_ADDR, RdBuff);
-	
-	printf("\n\nQuad Read: \n");
-	for(int i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
-#endif
 
 	while(1==1)
 	{

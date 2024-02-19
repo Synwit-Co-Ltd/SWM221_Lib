@@ -4,7 +4,6 @@ void SerialInit(void);
 
 int main(void)
 {	
-	uint32_t i;
 	uint32_t rxdata, txdata = 0x23;
 	SPI_InitStructure SPI_initStruct;
 	
@@ -12,15 +11,10 @@ int main(void)
 	
 	SerialInit();
 	
-	PORT_Init(PORTM, PIN7,  PORTM_PIN7_SPI0_SSEL,  0);
-	PORT_Init(PORTM, PIN8,  PORTM_PIN8_SPI0_SCLK,  0);
-	PORT_Init(PORTM, PIN9,  PORTM_PIN9_SPI0_MOSI,  0);	//将MOSI与MISO连接，自发、自收、然后打印
-	PORT_Init(PORTM, PIN10, PORTM_PIN10_SPI0_MISO, 1);
-	
-	PORT_Init(PORTB, PIN10, PORTB_PIN10_SPI1_SCLK, 0);
-	PORT_Init(PORTB, PIN13, PORTB_PIN13_SPI1_MOSI, 0);
-	PORT_Init(PORTB, PIN14, PORTB_PIN14_SPI1_MISO, 1);
-	PORT_Init(PORTB, PIN15, PORTB_PIN15_SPI1_SSEL, 0);
+	PORT_Init(PORTB, PIN15, PORTB_PIN15_SPI0_SSEL, 0);
+	PORT_Init(PORTB, PIN10, PORTB_PIN10_SPI0_SCLK, 0);
+	PORT_Init(PORTB, PIN13, PORTB_PIN13_SPI0_MOSI, 0);	//将MOSI与MISO连接，自发、自收、然后打印
+	PORT_Init(PORTB, PIN14, PORTB_PIN14_SPI0_MISO, 1);
 
 	SPI_initStruct.clkDiv = SPI_CLKDIV_4;
 	SPI_initStruct.FrameFormat = SPI_FORMAT_SPI;
@@ -43,7 +37,7 @@ int main(void)
 		
 		printf("rxdata: 0x%X\r\n", rxdata);
 		
-		for(i = 0; i < SystemCoreClock/10; i++);
+		for(int i = 0; i < SystemCoreClock/10; i++);
 	}
 }
 

@@ -18,14 +18,9 @@ void W25N01G_Init(void)
 #define W25N01G_Deassert()	GPIO_SetBit(GPIOB, PIN15)
 	W25N01G_Deassert();
 	
-	PORT_Init(PORTM, PIN8,  PORTM_PIN8_SPI0_SCLK,  0);
-	PORT_Init(PORTM, PIN9,  PORTM_PIN9_SPI0_MOSI,  1);	// 注意：MOSI的输入使能必须开启，因为QSPI模式下需要使用此线读取
-	PORT_Init(PORTM, PIN10, PORTM_PIN10_SPI0_MISO, 1);
-	
-	/* for QSPI */
-	PORT_Init(PORTB, PIN0,  PORTB_PIN0_SPI0_DATA2, 1);
-	PORT_Init(PORTB, PIN1,  PORTB_PIN1_SPI0_DATA3, 1);
-	PORTB->PULLU |= (1 << PIN1);						// 注意：/HOLD 引脚为低电平会导致芯片完全没有反应
+	PORT_Init(PORTB, PIN10, PORTB_PIN10_SPI0_SCLK, 0);
+	PORT_Init(PORTB, PIN13, PORTB_PIN13_SPI0_MOSI, 0);
+	PORT_Init(PORTB, PIN14, PORTB_PIN14_SPI0_MISO, 1);
 
 	SPI_initStruct.clkDiv = SPI_CLKDIV_32;
 	SPI_initStruct.FrameFormat = SPI_FORMAT_SPI;
@@ -193,85 +188,6 @@ void W25N01G_Read(uint32_t addr, uint8_t buff[2048])
 	}
 	
 	W25N01G_Deassert();
-}
-
-
-void W25N01G_Read_4bit_DMA(uint32_t addr, uint8_t buff[2048])
-{
-	static bool dma_initialized = false;
-	uint32_t page_addr = addr >> 12;
-	
-	/* Transfer the data of specified page into the 2112-Byte Data Buffer */
-	W25N01G_Assert();
-	
-	SPI_ReadWrite(SPI0, W25N_CMD_PAGE_READ);
-	SPI_ReadWrite(SPI0, (page_addr >> 16) & 0xFF);
-	SPI_ReadWrite(SPI0, (page_addr >>  8) & 0xFF);
-	SPI_ReadWrite(SPI0, (page_addr >>  0) & 0xFF);
-	
-	W25N01G_Deassert();
-	
-	while(W25N01G_FlashBusy()) __NOP();
-	
-	
-	if(!dma_initialized)
-	{
-		DMA_InitStructure DMA_initStruct;
-		
-		// SPI0 RX DMA
-		DMA_initStruct.Mode = DMA_MODE_SINGLE;
-		DMA_initStruct.Unit = DMA_UNIT_BYTE;
-		DMA_initStruct.Count = 2048;
-		DMA_initStruct.SrcAddr = (uint32_t)&SPI0->DATA;
-		DMA_initStruct.SrcAddrInc = 0;
-		DMA_initStruct.DstAddr = (uint32_t)buff;
-		DMA_initStruct.DstAddrInc = 1;
-		DMA_initStruct.Handshake = DMA_CH1_SPI0RX;
-		DMA_initStruct.Priority = DMA_PRI_LOW;
-		DMA_initStruct.INTEn = 0;
-		DMA_CH_Init(DMA_CH1, &DMA_initStruct);
-		DMA_CH_Open(DMA_CH1);
-		
-		dma_initialized = true;
-	}
-	else
-	{
-		DMA_CH_SetDstAddress(DMA_CH1, (uint32_t)buff);
-		DMA_CH_Open(DMA_CH1);
-	}
-	
-	SPI_Close(SPI0);
-	SPI0->CTRL &= ~SPI_CTRL_FFS_Msk;
-	SPI0->CTRL |= (3 << SPI_CTRL_FFS_Pos);
-	SPI0->SPIMCR = (1 << SPI_SPIMCR_EN_Pos) |
-				   ((2048 - 1) << SPI_SPIMCR_RDLEN_Pos) |
-				   ((8 - 1)   << SPI_SPIMCR_DUMMY_Pos);
-	SPI_Open(SPI0);
-	
-	W25N01G_Assert();
-	
-	__disable_irq();
-	
-	SPI_Write(SPI0, (W25N_CMD_FAST_READ_4bit << 24) | 0x000000);
-	while(SPI_IsRXEmpty(SPI0)) __NOP();
-	buff[0] = SPI_Read(SPI0);
-	
-	SPI0->CTRL |= (1 << SPI_CTRL_DMARXEN_Pos);
-	
-	__enable_irq();
-	
-	while(DMA_CH_INTStat(DMA_CH1, DMA_IT_DONE) == 0) __NOP();
-	DMA_CH_INTClr(DMA_CH1, DMA_IT_DONE);
-	
-	W25N01G_Deassert();
-	
-	SPI0->CTRL &= ~(1 << SPI_CTRL_DMARXEN_Pos);
-	
-	SPI_Close(SPI0);
-	SPI0->SPIMCR = 0;
-	SPI0->CTRL &= ~SPI_CTRL_FFS_Msk;
-	SPI0->CTRL |= (0 << SPI_CTRL_FFS_Pos);
-	SPI_Open(SPI0);
 }
 
 

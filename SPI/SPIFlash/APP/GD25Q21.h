@@ -13,8 +13,6 @@ void GD25Q21_ReadData(uint32_t addr, uint8_t buff[], uint32_t cnt);
 void GD25Q21_WritePage(uint32_t addr, uint8_t data[], uint16_t cnt);
 
 void GD25Q21_QuadSwitch(uint32_t on);
-void GD25Q21_ReadData_4bit(uint32_t addr, uint8_t buff[], uint32_t cnt);
-void GD25Q21_ReadData_4bit_DMA(uint32_t addr, uint8_t buff[], uint32_t cnt);
 
 
 #define GD25Q21_STATUS_WIP_Pos		0		// Write In Progress

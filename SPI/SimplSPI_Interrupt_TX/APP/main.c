@@ -10,7 +10,6 @@ void SPIMstSend(uint16_t buff[], uint32_t cnt);
 
 int main(void)
 {	
-	uint32_t i;
 	uint16_t buff[16] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};
 	
 	SystemInit();
@@ -25,7 +24,7 @@ int main(void)
 	{
 		SPIMstSend(buff, 16);
 		
-		for(i = 0; i < SystemCoreClock/10; i++) __NOP();
+		for(int i = 0; i < SystemCoreClock/10; i++) __NOP();
 	}
 }
 
@@ -39,9 +38,9 @@ void SPIMstInit(void)
 #define SPI_CS_High()	GPIO_SetBit(GPIOB, PIN15)
 	SPI_CS_High();
 	
-	PORT_Init(PORTM, PIN8,  PORTM_PIN8_SPI0_SCLK,  0);
-	PORT_Init(PORTM, PIN9,  PORTM_PIN9_SPI0_MOSI,  0);
-	PORT_Init(PORTM, PIN10, PORTM_PIN10_SPI0_MISO, 1);
+	PORT_Init(PORTB, PIN10, PORTB_PIN10_SPI0_SCLK, 0);
+	PORT_Init(PORTB, PIN13, PORTB_PIN13_SPI0_MOSI, 0);
+	PORT_Init(PORTB, PIN14, PORTB_PIN14_SPI0_MISO, 1);
 	
 	SPI_initStruct.clkDiv = SPI_CLKDIV_32;
 	SPI_initStruct.FrameFormat = SPI_FORMAT_SPI;

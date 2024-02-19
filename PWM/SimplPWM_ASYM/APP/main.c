@@ -3,20 +3,19 @@
 
 int main(void)
 {
-	uint32_t i;
 	PWM_InitStructure  PWM_initStruct;
 	
 	SystemInit();
-		
+	
 	PORT_Init(PORTA, PIN3, PORTA_PIN3_PWM0A,  0);
 	PORT_Init(PORTA, PIN2, PORTA_PIN2_PWM0AN, 0);
 	PORT_Init(PORTA, PIN6, PORTA_PIN6_PWM0B,  0);
 	PORT_Init(PORTA, PIN7, PORTA_PIN7_PWM0BN, 0);
 	
 	PORT_Init(PORTA, PIN5, PORTA_PIN5_PWM1A,  0);
-	PORT_Init(PORTM, PIN4, PORTM_PIN4_PWM1AN, 0);
-	PORT_Init(PORTA, PIN4, PORTA_PIN4_PWM1B,  0);
-	PORT_Init(PORTM, PIN5, PORTM_PIN5_PWM1BN, 0);
+	PORT_Init(PORTA, PIN4, PORTA_PIN4_PWM1AN, 0);
+	PORT_Init(PORTA, PIN1, PORTA_PIN1_PWM1B,  0);
+	PORT_Init(PORTA, PIN0, PORTA_PIN0_PWM1BN, 0);
 	
 	PWM_initStruct.Mode = PWM_ASYM_CENTER_ALIGNED;
 	PWM_initStruct.Clkdiv = 6;					//F_PWM = 60M/6 = 10M
@@ -84,7 +83,7 @@ int main(void)
 #endif
 		PWMG->RELOADEN = 0x3F;
 		
-		for(i = 0; i < SystemCoreClock / 32; i++) __NOP();
+		for(int i = 0; i < SystemCoreClock / 32; i++) __NOP();
 	}
 }
 

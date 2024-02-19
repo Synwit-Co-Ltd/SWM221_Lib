@@ -27,9 +27,9 @@ int main(void)
 
 void XTALSTOP_Handler(void)
 {
-	/* 若不执行 switchTo12MHz()，晶振恢复振荡时系统时钟会自动切换回外部晶振，
+	/* 若不执行 switchTo8MHz()，晶振恢复振荡时系统时钟会自动切换回外部晶振，
 	   若外部晶振不稳定，在振荡和不振荡间来回切换，则系统时钟也会在内部时钟和外部时钟之间来回切换 */
-	switchTo12MHz();
+	switchTo8MHz();
 	
 	SystemCoreClockUpdate();
 	

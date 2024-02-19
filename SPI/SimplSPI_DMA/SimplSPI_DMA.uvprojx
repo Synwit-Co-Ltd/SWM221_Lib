@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>SWM221x8</Device>
           <Vendor>Synwit</Vendor>
-          <PackID>Synwit.SWM32_DFP.2.0.8</PackID>
+          <PackID>Synwit.SWM32_New.0.1.9</PackID>
           <PackURL>http://www.synwit.com/pack</PackURL>
           <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M0") ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -452,11 +452,6 @@
               <FileName>SWM221_can.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\SWM221_StdPeriph_Driver\CSL\SWM221_StdPeriph_Driver\SWM221_can.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM221_cordic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM221_StdPeriph_Driver\CSL\SWM221_StdPeriph_Driver\SWM221_cordic.c</FilePath>
             </File>
             <File>
               <FileName>SWM221_div.c</FileName>

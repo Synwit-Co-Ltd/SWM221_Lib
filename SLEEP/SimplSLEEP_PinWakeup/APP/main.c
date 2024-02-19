@@ -19,7 +19,7 @@ int main(void)
 	GPIO_Init(GPIOA, PIN4, 0, 1, 0, 0);						//接按键，上拉使能
 	SYS->PAWKEN |= (1 << PIN4);								//开启PA4引脚低电平唤醒
 	
-	SYS->LRCCR |= 0x01;										//休眠模式使用低频时钟
+	SYS->RCCR |= SYS_RCCR_LON_Msk;							//休眠模式使用低频时钟
 	
 	while(1==1)
 	{
@@ -27,7 +27,7 @@ int main(void)
 		for(i = 0; i < SystemCoreClock/8; i++) __NOP();
 		GPIO_ClrBit(GPIOA, PIN5);							//熄灭LED
 		
-		switchTo12MHz();	//休眠前切换到内部RC时钟
+		switchTo8MHz();	//休眠前切换到内部RC时钟
 		
 		EnterSleepMode();
 		

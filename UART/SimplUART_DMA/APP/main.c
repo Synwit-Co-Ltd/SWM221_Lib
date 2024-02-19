@@ -52,27 +52,27 @@ int main(void)
 	DMA_initStruct.Mode = DMA_MODE_CIRCLE;
 	DMA_initStruct.Unit = DMA_UNIT_WORD;
 	DMA_initStruct.Count = RX_LEN;
-	DMA_initStruct.SrcAddr = (uint32_t)&UART0->DATA;
-	DMA_initStruct.SrcAddrInc = 0;
-	DMA_initStruct.DstAddr = (uint32_t)RX_Buffer;
-	DMA_initStruct.DstAddrInc = 1;
-	DMA_initStruct.Handshake = DMA_CH0_UART0RX;
+	DMA_initStruct.PeripheralAddr = (uint32_t)&UART0->DATA;
+	DMA_initStruct.PeripheralAddrInc = 0;
+	DMA_initStruct.MemoryAddr = (uint32_t)RX_Buffer;
+	DMA_initStruct.MemoryAddrInc = 1;
+	DMA_initStruct.Handshake = DMA_CH1_UART0RX;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = 0;
-	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
-	DMA_CH_Open(DMA_CH0);
+	DMA_CH_Init(DMA_CH1, &DMA_initStruct);
+	DMA_CH_Open(DMA_CH1);
 	
 	DMA_initStruct.Mode = DMA_MODE_SINGLE;
 	DMA_initStruct.Unit = DMA_UNIT_BYTE;
 	DMA_initStruct.Count = strlen(TX_Buffer);
-	DMA_initStruct.SrcAddr = (uint32_t)TX_Buffer;
-	DMA_initStruct.SrcAddrInc = 1;
-	DMA_initStruct.DstAddr = (uint32_t)&UART0->DATA;
-	DMA_initStruct.DstAddrInc = 0;
-	DMA_initStruct.Handshake = DMA_CH1_UART0TX;
+	DMA_initStruct.MemoryAddr = (uint32_t)TX_Buffer;
+	DMA_initStruct.MemoryAddrInc = 1;
+	DMA_initStruct.PeripheralAddr = (uint32_t)&UART0->DATA;
+	DMA_initStruct.PeripheralAddrInc = 0;
+	DMA_initStruct.Handshake = DMA_CH0_UART0TX;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = 0;
-	DMA_CH_Init(DMA_CH1, &DMA_initStruct);
+	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
 	
 	while(1==1)
 	{
@@ -97,15 +97,14 @@ void UART0_Handler(void)
 	{
 		UART_INTClr(UART0, UART_IT_RX_TOUT);
 		
-		int str_len = (RX_LEN + RX_LEN - DMA_CH_GetRemaining(DMA_CH0) - RX_Start) % RX_LEN;
+		int str_len = (RX_LEN + RX_LEN - DMA_CH_GetRemaining(DMA_CH1) - RX_Start) % RX_LEN;
 		for(int i = 0; i < str_len; i++)
 			TX_Buffer[i] = RX_Buffer[(RX_Start + i) % RX_LEN];
 		
 		RX_Start += str_len;
 		
-		DMA_CH_SetSrcAddress(DMA_CH1, (uint32_t)TX_Buffer);
-		DMA_CH_SetCount(DMA_CH1, str_len);
-		DMA_CH_Open(DMA_CH1);
+		DMA_CH_SetAddrAndCount(DMA_CH0, (uint32_t)TX_Buffer, str_len);
+		DMA_CH_Open(DMA_CH0);
 	}
 }
 

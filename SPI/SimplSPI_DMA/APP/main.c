@@ -17,10 +17,10 @@ int main(void)
 	
 	SerialInit();
 	
-	PORT_Init(PORTM, PIN7,  PORTM_PIN7_SPI0_SSEL,  0);
-	PORT_Init(PORTM, PIN8,  PORTM_PIN8_SPI0_SCLK,  0);
-	PORT_Init(PORTM, PIN9,  PORTM_PIN9_SPI0_MOSI,  0);	//将MOSI与MISO连接，自发、自收、然后打印
-	PORT_Init(PORTM, PIN10, PORTM_PIN10_SPI0_MISO, 1);
+	PORT_Init(PORTB, PIN15, PORTB_PIN15_SPI0_SSEL, 0);
+	PORT_Init(PORTB, PIN10, PORTB_PIN10_SPI0_SCLK, 0);
+	PORT_Init(PORTB, PIN13, PORTB_PIN13_SPI0_MOSI, 0);	//将MOSI与MISO连接，自发、自收、然后打印
+	PORT_Init(PORTB, PIN14, PORTB_PIN14_SPI0_MISO, 1);
 	
 	SPI_initStruct.clkDiv = SPI_CLKDIV_32;
 	SPI_initStruct.FrameFormat = SPI_FORMAT_SPI;
@@ -42,10 +42,10 @@ int main(void)
 	DMA_initStruct.Mode = DMA_MODE_SINGLE;
 	DMA_initStruct.Unit = DMA_UNIT_BYTE;
 	DMA_initStruct.Count = BUF_SIZE;
-	DMA_initStruct.SrcAddr = (uint32_t)&SPI0->DATA;
-	DMA_initStruct.SrcAddrInc = 0;
-	DMA_initStruct.DstAddr = (uint32_t)RX_Buffer;
-	DMA_initStruct.DstAddrInc = 1;
+	DMA_initStruct.PeripheralAddr = (uint32_t)&SPI0->DATA;
+	DMA_initStruct.PeripheralAddrInc = 0;
+	DMA_initStruct.MemoryAddr = (uint32_t)RX_Buffer;
+	DMA_initStruct.MemoryAddrInc = 1;
 	DMA_initStruct.Handshake = DMA_CH1_SPI0RX;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = DMA_IT_DONE;
@@ -58,10 +58,10 @@ int main(void)
 	DMA_initStruct.Mode = DMA_MODE_SINGLE;
 	DMA_initStruct.Unit = DMA_UNIT_BYTE;
 	DMA_initStruct.Count = strlen(TX_Buffer);
-	DMA_initStruct.SrcAddr = (uint32_t)TX_Buffer;
-	DMA_initStruct.SrcAddrInc = 1;
-	DMA_initStruct.DstAddr = (uint32_t)&SPI0->DATA;
-	DMA_initStruct.DstAddrInc = 0;
+	DMA_initStruct.MemoryAddr = (uint32_t)TX_Buffer;
+	DMA_initStruct.MemoryAddrInc = 1;
+	DMA_initStruct.PeripheralAddr = (uint32_t)&SPI0->DATA;
+	DMA_initStruct.PeripheralAddrInc = 0;
 	DMA_initStruct.Handshake = DMA_CH0_SPI0TX;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
 	DMA_initStruct.INTEn = DMA_IT_DONE;

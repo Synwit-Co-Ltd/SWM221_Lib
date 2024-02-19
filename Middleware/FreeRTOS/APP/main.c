@@ -34,55 +34,59 @@ int main(void)
 void TaskADC(void *arg)
 {
 	ADC_InitStructure ADC_initStruct;
+	ADC_SEQ_InitStructure ADC_SEQ_initStruct;
 	
 	PORT_Init(PORTA, PIN14, PORTA_PIN14_ADC0_CH0, 0);		//PA.14 => ADC0.CH0
 	PORT_Init(PORTA, PIN11, PORTA_PIN11_ADC0_CH1, 0);		//PA.11 => ADC0.CH1
 	PORT_Init(PORTA, PIN8,  PORTA_PIN8_ADC0_CH2,  0);		//PA.8  => ADC0.CH2
 	PORT_Init(PORTB, PIN9,  PORTB_PIN9_ADC0_CH3,  0);		//PB.9  => ADC0.CH3
-	PORT_Init(PORTB, PIN7,  PORTB_PIN7_ADC0_CH5,  0);		//PB.7  => ADC0.CH5
-	PORT_Init(PORTB, PIN6,  PORTB_PIN6_ADC0_CH6,  0);		//PB.6  => ADC0.CH6
-	PORT_Init(PORTB, PIN5,  PORTB_PIN5_ADC0_CH7,  0);		//PB.5  => ADC0.CH7
-	PORT_Init(PORTB, PIN4,  PORTB_PIN4_ADC0_CH8,  0);		//PB.4  => ADC0.CH8
-	PORT_Init(PORTB, PIN3,  PORTB_PIN3_ADC0_CH9,  0);		//PB.3  => ADC0.CH9
-	PORT_Init(PORTM, PIN9,  PORTM_PIN9_ADC0_CH10, 0);		//PM.9  => ADC0.CH10
+//	PORT_Init(PORTB, PIN7,  PORTB_PIN7_ADC0_CH5,  0);		//PB.7  => ADC0.CH5
+//	PORT_Init(PORTB, PIN6,  PORTB_PIN6_ADC0_CH6,  0);		//PB.6  => ADC0.CH6
+//	PORT_Init(PORTB, PIN5,  PORTB_PIN5_ADC0_CH7,  0);		//PB.5  => ADC0.CH7
+//	PORT_Init(PORTB, PIN4,  PORTB_PIN4_ADC0_CH8,  0);		//PB.4  => ADC0.CH8
+//	PORT_Init(PORTB, PIN3,  PORTB_PIN3_ADC0_CH9,  0);		//PB.3  => ADC0.CH9
+//	PORT_Init(PORTM, PIN9,  PORTM_PIN9_ADC0_CH10, 0);		//PM.9  => ADC0.CH10
 	
-	ADC_initStruct.clk_src = ADC_CLKSRC_HRC_DIV2;
-	ADC_initStruct.clk_div = 6;
-
-	ADC_initStruct.ref_src = ADC_REFSRC_3V6;
-	ADC_initStruct.channels = ADC_CH3;
+	ADC_initStruct.clkdiv = 4;
 	ADC_initStruct.samplAvg = ADC_AVG_SAMPLE1;
-	ADC_initStruct.trig_src = ADC_TRIGGER_SW;
-	ADC_initStruct.Continue = 0;						//非连续模式，即单次模式
-	ADC_initStruct.EOC_IEn = ADC_CH3;	
-	ADC_initStruct.OVF_IEn = 0;
-	ADC_Init(ADC0, &ADC_initStruct);					//配置ADC
+	ADC_Init(ADC0, &ADC_initStruct);
 	
-	NVIC_SetPriority(ADC0_IRQn, 2);
+	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_SW;
+	ADC_SEQ_initStruct.samp_tim = 6;
+	ADC_SEQ_initStruct.conv_cnt = 1;
+	ADC_SEQ_initStruct.EOCIntEn = 1;
+	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH3, 0 };
+	ADC_SEQ_Init(ADC0, ADC_SEQ0, &ADC_SEQ_initStruct);
+		
+	NVIC_SetPriority(ADC_IRQn, 2);
 	
-	ADC_Open(ADC0);										//使能ADC
+	ADC_Open(ADC0);
 	
 	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);					//调试指示信号
 	
 	while(1)
 	{
-		ADC_Start(ADC0);
+		ADC_Start(ADC_SEQ0, 0);
 		
 		vTaskDelay(200);
 	}
 }
 
-void ADC0_Handler(void)
+
+void ADC_Handler(void)
 {
 	uint16_t val;
 	
-	ADC0->IF = (1 << ADC_IF_CH3EOC_Pos);
+	if(ADC_INTStat(ADC0, ADC_SEQ0, ADC_IT_EOC))
+	{
+		ADC_INTClr(ADC0, ADC_SEQ0, ADC_IT_EOC);
+		
+		val = ADC_Read(ADC0, ADC_CH3);
+		
+		xQueueSendFromISR(queueADC, &val, 0);
 	
-	val = ADC_Read(ADC0, ADC_CH3);
-	
-	xQueueSendFromISR(queueADC, &val, 0);
-	
-	GPIO_InvBit(GPIOA, PIN5);
+		GPIO_InvBit(GPIOA, PIN5);
+	}
 }
 
 
