@@ -40,10 +40,7 @@ void ADC_Init(ADC_TypeDef * ADCx, ADC_InitStructure * initStruct)
 	
 	ADC_Close(ADCx);		//一些关键寄存器只能在ADC关闭时设置
 	
-	ADCx->CR &= ~ADC_CR_PWDN_Msk;
-	for(int i = 0; i < CyclesPerUs; i++) __NOP();
-	
-	ADCx->CR &= ~(ADC_CR_AVG_Msk | ADC_CR_CLKDIV_Msk);
+	ADCx->CR &= ~(ADC_CR_CLKDIV_Msk | ADC_CR_AVG_Msk | ADC_CR_BITS_Pos);
 	ADCx->CR |= (initStruct->clkdiv   << ADC_CR_CLKDIV_Pos) |
 				(initStruct->samplAvg << ADC_CR_AVG_Pos)    |
 				(0					  << ADC_CR_BITS_Pos);
@@ -160,6 +157,7 @@ void ADC_CMP_Init(ADC_TypeDef * ADCx, uint32_t seq, ADC_CMP_InitStructure * init
 ******************************************************************************************************************************************/
 void ADC_Open(ADC_TypeDef * ADCx)
 {
+	ADCx->CR &= ~ADC_CR_PWDN_Msk;
 }
 
 /****************************************************************************************************************************************** 
@@ -171,6 +169,7 @@ void ADC_Open(ADC_TypeDef * ADCx)
 ******************************************************************************************************************************************/
 void ADC_Close(ADC_TypeDef * ADCx)
 {
+	ADCx->CR |=  ADC_CR_PWDN_Msk;
 }
 
 /****************************************************************************************************************************************** 

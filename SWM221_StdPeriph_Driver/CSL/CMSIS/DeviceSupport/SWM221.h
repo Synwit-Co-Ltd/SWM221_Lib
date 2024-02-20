@@ -1064,7 +1064,7 @@ typedef struct {
 
 #define ADC_CR_PWDN_Pos				0		//1 Power Down   0 正常工作模式，写 0 后需等待 32 个采样周期
 #define ADC_CR_PWDN_Msk				(0x01 << ADC_CR_PWDN_Pos)
-#define ADC_CR_RESET_Pos			1		//硬件自动清零
+#define ADC_CR_RESET_Pos			1		//模拟IP内部逻辑复位，硬件自动清零
 #define ADC_CR_RESET_Msk			(0x01 << ADC_CR_RESET_Pos)
 #define ADC_CR_BITS_Pos				2 		//转换结果位数：0 12-bit   1 10-bit   2 8-bit   3 6-bit
 #define ADC_CR_BITS_Msk				(0x03 << ADC_CR_BITS_Pos)
