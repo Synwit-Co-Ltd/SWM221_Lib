@@ -34,7 +34,7 @@ void DIV_Init(DIV_TypeDef * DIVx)
 	switch((uint32_t)DIVx)
 	{
 	case ((uint32_t)DIV):
-		SYS->CLKEN0 |= (0x01u<< SYS_CLKEN0_DIV_Pos);
+		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_DIV_Pos);
 		break;
 	}
 }

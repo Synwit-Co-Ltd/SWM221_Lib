@@ -2313,7 +2313,7 @@ typedef struct {
 
 #define DIV					((DIV_TypeDef  *) DIV_BASE)
 
-#define CRC					((CRC_TypeDef  *) DIV_BASE)
+#define CRC					((CRC_TypeDef  *) CRC_BASE)
 
 #define DMA					((DMA_TypeDef  *) DMA_BASE)
 
