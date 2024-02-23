@@ -389,14 +389,14 @@
               <FilePath>.\app\main.c</FilePath>
             </File>
             <File>
-              <FileName>NT35510.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\APP\NT35510.c</FilePath>
-            </File>
-            <File>
               <FileName>ugui.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\APP\ugui.c</FilePath>
+            </File>
+            <File>
+              <FileName>ST7789.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\ST7789.c</FilePath>
             </File>
           </Files>
         </Group>

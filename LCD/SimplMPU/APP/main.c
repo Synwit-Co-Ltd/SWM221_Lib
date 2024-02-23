@@ -1,28 +1,28 @@
 #include "SWM221.h"
 
 #include "ugui.h"
-#include "NT35510.h"
+#include "ST7789.h"
 
 UG_GUI gui;
 
-void MPULCDInit(void);
+void SerialInit(void);
 
 int main(void)
-{	
+{
 	SystemInit();
-		
-	MPULCDInit();
 	
-	NT35510_Init();
+	SerialInit();
+	
+	ST7789_Init();
 	
 #if 0
-	NT35510_Clear(C_RED);
+	ST7789_Clear(C_RED);
 #else
-	NT35510_DMAClear(C_RED);
-	while(!NT35510_Done()) __NOP();
+	ST7789_DMAClear(C_RED);
+	while(!ST7789_DMADone()) __NOP();
 #endif
 	
-	UG_Init(&gui,(void(*)(UG_S16,UG_S16,UG_COLOR))NT35510_DrawPoint, 480, 800);
+	UG_Init(&gui,(void(*)(UG_S16,UG_S16,UG_COLOR))ST7789_DrawPoint, 480, 800);
 	
 	UG_DrawLine(0, 68, 480, 68, C_GREEN);
 	UG_DrawLine(0, 136, 480, 136, C_GREEN);
@@ -39,38 +39,40 @@ int main(void)
 }
 
 
-void MPULCDInit(void)
+void SerialInit(void)
 {
-	uint32_t i;
-	MPU_InitStructure MPU_initStruct;
+	UART_InitStructure UART_initStruct;
 	
-	GPIO_Init(GPIOB, PIN2, 1, 0, 0, 0);		//屏幕背光
-	GPIO_SetBit(GPIOB, PIN2);
-	GPIO_Init(GPIOB, PIN3, 1, 0, 0, 0);		//屏幕复位
-	GPIO_ClrBit(GPIOB, PIN3);
-	for(i = 0; i < 1000000; i++) __NOP();
-	GPIO_SetBit(GPIOB, PIN3);
-	for(i = 0; i < 1000000; i++) __NOP();
+	PORT_Init(PORTA, PIN0, PORTA_PIN0_UART0_RX, 1);	//GPIOA.0配置为UART0 RXD
+	PORT_Init(PORTA, PIN1, PORTA_PIN1_UART0_TX, 0);	//GPIOA.1配置为UART0 TXD
+ 	
+ 	UART_initStruct.Baudrate = 57600;
+	UART_initStruct.DataBits = UART_DATA_8BIT;
+	UART_initStruct.Parity = UART_PARITY_NONE;
+	UART_initStruct.StopBits = UART_STOP_1BIT;
+	UART_initStruct.RXThreshold = 3;
+	UART_initStruct.RXThresholdIEn = 0;
+	UART_initStruct.TXThreshold = 3;
+	UART_initStruct.TXThresholdIEn = 0;
+	UART_initStruct.TimeoutTime = 10;
+	UART_initStruct.TimeoutIEn = 0;
+ 	UART_Init(UART0, &UART_initStruct);
+	UART_Open(UART0);
+}
+
+/****************************************************************************************************************************************** 
+* 函数名称: fputc()
+* 功能说明: printf()使用此函数完成实际的串口打印动作
+* 输    入: int ch		要打印的字符
+*			FILE *f		文件句柄
+* 输    出: 无
+* 注意事项: 无
+******************************************************************************************************************************************/
+int fputc(int ch, FILE *f)
+{
+	UART_WriteByte(UART0, ch);
 	
-	PORT_Init(PORTA, PIN8,  PORTA_PIN8_MPU_D0,  1);
-	PORT_Init(PORTA, PIN9,  PORTA_PIN9_MPU_D1,  1);
-	PORT_Init(PORTA, PIN10, PORTA_PIN10_MPU_D2, 1);
-	PORT_Init(PORTA, PIN11, PORTA_PIN11_MPU_D3, 1);
-	PORT_Init(PORTA, PIN12, PORTA_PIN12_MPU_D4, 1);
-	PORT_Init(PORTA, PIN13, PORTA_PIN13_MPU_D5, 1);
-	PORT_Init(PORTA, PIN14, PORTA_PIN14_MPU_D6, 1);
-	PORT_Init(PORTA, PIN0,  PORTA_PIN0_MPU_D7,  1);
-	
-	PORT_Init(PORTB, PIN4,  PORTB_PIN4_MPU_CS,  0);
-	PORT_Init(PORTB, PIN5,  PORTB_PIN5_MPU_RS,  0);
-	PORT_Init(PORTB, PIN6,  PORTB_PIN6_MPU_WR,  0);
-	PORT_Init(PORTB, PIN9,  PORTB_PIN9_MPU_RD,  0);
-	
-	MPU_initStruct.RDHoldTime = 2;
-	MPU_initStruct.WRHoldTime = 2;
-	MPU_initStruct.CSFall_WRFall = 1;
-	MPU_initStruct.WRRise_CSRise = 1;
-	MPU_initStruct.RDCSRise_Fall = 2;
-	MPU_initStruct.WRCSRise_Fall = 2;
-	MPU_Init(MPU, &MPU_initStruct);
+	while(UART_IsTXBusy(UART0));
+ 	
+	return ch;
 }

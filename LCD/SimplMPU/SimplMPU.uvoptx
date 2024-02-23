@@ -226,8 +226,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\APP\NT35510.c</PathWithFileName>
-      <FilenameWithoutPath>NT35510.c</FilenameWithoutPath>
+      <PathWithFileName>.\APP\ugui.c</PathWithFileName>
+      <FilenameWithoutPath>ugui.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -238,8 +238,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\APP\ugui.c</PathWithFileName>
-      <FilenameWithoutPath>ugui.c</FilenameWithoutPath>
+      <PathWithFileName>.\APP\ST7789.c</PathWithFileName>
+      <FilenameWithoutPath>ST7789.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
