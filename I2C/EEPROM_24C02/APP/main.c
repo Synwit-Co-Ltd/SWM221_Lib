@@ -93,7 +93,7 @@ int main(void)
 
 nextloop:
 		I2C_Stop(I2C0, 1);
-		for(i = 0; i < 10000000; i++) ;
+		for(i = 0; i < SystemCoreClock/4; i++) ;
 	}
 }
 

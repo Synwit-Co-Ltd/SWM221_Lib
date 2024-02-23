@@ -13,7 +13,6 @@ int main(void)
 	
 	TIMR_Start(TIMR0);
 	
-#if defined(CHIP_SWM221)
 	PORT_Init(PORTA, PIN6, PORTA_PIN6_BTIMR0_OUT, 0);
 	
 	TIMR_Init(BTIMR0, TIMR_MODE_OC, CyclesPerUs, 10000, 0);
@@ -21,7 +20,6 @@ int main(void)
 	TIMR_OC_Init(BTIMR0, 7500, 0, 1);
 	
 	TIMR_Start(BTIMR0);
-#endif
 	
 	while(1==1)
 	{

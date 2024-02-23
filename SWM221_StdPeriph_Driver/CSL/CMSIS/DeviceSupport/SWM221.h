@@ -1738,13 +1738,6 @@ typedef struct {
 		 uint32_t RESERVED[3];
 	
 	__IO uint32_t SSTRIM;					//Sample Shift Trim
-	
-	__IO uint32_t CACHE;
-	
-	struct {
-		__I  uint32_t SADDR;				//Start Address
-		__I  uint32_t WCOUNT;				//Word Count
-	} CLINE[16];							//Cache Line
 } QSPI_TypeDef;
 
 
@@ -1754,20 +1747,13 @@ typedef struct {
 #define QSPI_CR_ABORT_Msk			(0x01 << QSPI_CR_ABORT_Pos)
 #define QSPI_CR_DMAEN_Pos			2
 #define QSPI_CR_DMAEN_Msk			(0x01 << QSPI_CR_DMAEN_Pos)
-#define QSPI_CR_TOEN_Pos			3		//Time-Out Enable, 0：通过内存映射读后，nCS 一直保持为低
-											//				   1：通过内存映射读后，TIMEOUT[15:0] 个周期未访问 Flash，nCS 自动拉高
-#define QSPI_CR_TOEN_Msk			(0x01 << QSPI_CR_TOEN_Pos)
 #define QSPI_CR_SSHIFT_Pos			4		//Sample shift, 0 No shift   1 1/2 cycle shift
 #define QSPI_CR_SSHIFT_Msk			(0x01 << QSPI_CR_SSHIFT_Pos)
 #define QSPI_CR_BIDI_Pos			5		//单线双向工模式：0 IO0输出，IO1输入    1 IO0负责输入输出
 #define QSPI_CR_BIDI_Msk			(0x01 << QSPI_CR_BIDI_Pos)
-#define QSPI_CR_DUAL_Pos			6		//Dual Flash mode
-#define QSPI_CR_DUAL_Msk			(0x01 << QSPI_CR_DUAL_Pos)
-#define QSPI_CR_BANK_Pos			7		//QSPI Bank Select
-#define QSPI_CR_BANK_Msk			(0x01 << QSPI_CR_BANK_Pos)
 #define QSPI_CR_FFTHR_Pos			8		//FIFO Threshold，indirect read  模式下，FIFO 中数据个数 ≥ CR.FFTHR+1 时，SR.FFTHR 置位
 											//				  indirect write 模式下，FIFO 中空位个数 ≥ CR.FFTHR+1 时，SR.FFTHR 置位
-#define QSPI_CR_FFTHR_Msk			(0x1F << QSPI_CR_FFTHR_Pos)
+#define QSPI_CR_FFTHR_Msk			(0x0F << QSPI_CR_FFTHR_Pos)
 #define QSPI_CR_ERRIE_Pos			16		//Transfer Error Interrupt Enable
 #define QSPI_CR_ERRIE_Msk			(0x01 << QSPI_CR_ERRIE_Pos)
 #define QSPI_CR_DONEIE_Pos			17		//Transfer Done/Complete Interrupt Enable
@@ -1776,8 +1762,6 @@ typedef struct {
 #define QSPI_CR_FFTHRIE_Msk			(0x01 << QSPI_CR_FFTHRIE_Pos)
 #define QSPI_CR_PSMATIE_Pos			19		//Polling Status Match Interrupt Enable
 #define QSPI_CR_PSMATIE_Msk			(0x01 << QSPI_CR_PSMATIE_Pos)
-#define QSPI_CR_TOIE_Pos			20		//Time-Out Interrupt Enable
-#define QSPI_CR_TOIE_Msk			(0x01 << QSPI_CR_TOIE_Pos)
 #define QSPI_CR_PSSTPMOD_Pos		22		//Polling Status Stop Mode，0 always polling until abort or QSPI disabled   1 stop polling as soon as match
 #define QSPI_CR_PSSTPMOD_Msk		(0x01 << QSPI_CR_PSSTPMOD_Pos)
 #define QSPI_CR_PSMATMOD_Pos		23		//Polling Status Match Mode，0 AND，match when all unmasked bits received from Flash match PSMAT register   1 OR
@@ -1805,7 +1789,7 @@ typedef struct {
 #define QSPI_SR_BUSY_Pos			5		//Set when operation is on going, Clear when operation done and FIFO emtpy
 #define QSPI_SR_BUSY_Msk			(0x01 << QSPI_SR_BUSY_Pos)
 #define QSPI_SR_FFLVL_Pos			8		//FIFO Level
-#define QSPI_SR_FFLVL_Msk			(0x3F << QSPI_SR_FFLVL_Pos)
+#define QSPI_SR_FFLVL_Msk			(0x1F << QSPI_SR_FFLVL_Pos)
 
 #define QSPI_FCR_ERR_Pos			0
 #define QSPI_FCR_ERR_Msk			(0x01 << QSPI_FCR_ERR_Pos)
@@ -1813,8 +1797,6 @@ typedef struct {
 #define QSPI_FCR_DONE_Msk			(0x01 << QSPI_FCR_DONE_Pos)
 #define QSPI_FCR_PSMAT_Pos			3
 #define QSPI_FCR_PSMAT_Msk			(0x01 << QSPI_FCR_PSMAT_Pos)
-#define QSPI_FCR_TO_Pos				4
-#define QSPI_FCR_TO_Msk				(0x01 << QSPI_FCR_TO_Pos)
 
 #define QSPI_CCR_CODE_Pos			0		//Insruction Code
 #define QSPI_CCR_CODE_Msk			(0xFF << QSPI_CCR_CODE_Pos)
@@ -1832,15 +1814,10 @@ typedef struct {
 #define QSPI_CCR_DUMMY_Msk			(0x1F << QSPI_CCR_DUMMY_Pos)
 #define QSPI_CCR_DMODE_Pos			24		//0 No Data   1 Data on D0   2 on D0-1   3 on D0-3
 #define QSPI_CCR_DMODE_Msk			(0x03 << QSPI_CCR_DMODE_Pos)
-#define QSPI_CCR_MODE_Pos			26		//0 Indirect write mode   1 Indirect read mode   2 Automatic polling mode   3 Memory-mapped mode
+#define QSPI_CCR_MODE_Pos			26		//0 Indirect write mode   1 Indirect read mode   2 Automatic polling mode
 #define QSPI_CCR_MODE_Msk			(0x03 << QSPI_CCR_MODE_Pos)
 #define QSPI_CCR_SIOO_Pos			28		//Send Instruction Only Once
 #define QSPI_CCR_SIOO_Msk			(0x01 << QSPI_CCR_SIOO_Pos)
-
-#define QSPI_CACHE_CLR_Pos			0		//Cache Clear, 完成后自动清零
-#define QSPI_CACHE_CLR_Msk			(0x01 << QSPI_CACHE_CLR_Pos)
-#define QSPI_CACHE_BLKSZ_Pos		1		//Cache Block Size, 0 64-byte   1 128-byte   2 256-byte   3 512-byte
-#define QSPI_CACHE_BLKSZ_Msk		(0x01 << QSPI_CACHE_BLKSZ_Pos)
 
 
 
@@ -2261,7 +2238,7 @@ typedef struct {
 
 #define PORTA_BASE			(APB1_BASE + 0x6000)
 #define PORTB_BASE			(APB1_BASE + 0x6010)
-#define PORTC_BASE			(APB1_BASE + 0x6080)
+#define PORTC_BASE			(APB1_BASE + 0x6020)
 
 #define WDT_BASE			(APB1_BASE + 0x6800)
 

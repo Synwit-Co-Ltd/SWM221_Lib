@@ -61,7 +61,7 @@ void GPIO_Init(GPIO_TypeDef * GPIOx, uint32_t n, uint32_t dir, uint32_t pull_up,
 	
 	PORT_Init(PORTx, n, 0, 1);			//PORTx.PINn引脚配置为GPIO功能，数字输入开启
 	if(dir == 1)
-	{			
+	{
 		GPIOx->DIR |= (0x01 << n);
 	}
 	else

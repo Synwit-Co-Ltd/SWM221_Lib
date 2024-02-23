@@ -48,9 +48,7 @@ void QSPI_Init(QSPI_TypeDef * QSPIx, QSPI_InitStructure * initStruct)
 	
 	QSPI_Close(QSPIx);
 	
-	QSPIx->CR = (1 								<< QSPI_CR_TOEN_Pos)   |
-				((initStruct->SampleShift >> 4)	<< QSPI_CR_SSHIFT_Pos) |
-				(0 								<< QSPI_CR_DUAL_Pos)   |
+	QSPIx->CR = ((initStruct->SampleShift >> 4)	<< QSPI_CR_SSHIFT_Pos) |
 				(15 							<< QSPI_CR_FFTHR_Pos)  |
 				(initStruct->IntEn 				<< QSPI_CR_ERRIE_Pos)  |
 				((initStruct->ClkDiv - 1) 		<< QSPI_CR_CLKDIV_Pos);
@@ -59,8 +57,7 @@ void QSPI_Init(QSPI_TypeDef * QSPIx, QSPI_InitStructure * initStruct)
 				 (3						<< QSPI_DCR_CSHIGH_Pos) |
 				 (initStruct->Size		<< QSPI_DCR_FLSIZE_Pos);
 	
-	/* 双 Flash 时，Size 指两个 Flash 的总大小，地址宽度需按照单个 Flash 的大小来计算 */
-	AddressSize = (initStruct->Size - ((QSPIx->CR & QSPI_CR_DUAL_Msk) ? 1 : 0)) / 8;
+	AddressSize = initStruct->Size / 8;
 	
 	QSPIx->SSTRIM = initStruct->SampleShift & 0x0F;
 	
@@ -197,7 +194,7 @@ void QSPI_Erase(QSPI_TypeDef * QSPIx, uint8_t cmd, uint32_t addr, uint8_t wait)
 *			uint32_t count			要写入 SPI Flash 的数据个数，最大 256，且写入数据不能跨页
 *			uint8_t data_width		写入使用的数据线个数，有效值包括 1、4
 * 输    出: 无
-* 注意事项: 双 Bank 模式下，count 必须为偶数
+* 注意事项: 无
 ******************************************************************************************************************************************/
 void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t count, uint8_t data_width)
 {
@@ -275,7 +272,7 @@ void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t c
 *			uint8_t addr_width		读取使用的地址线个数，有效值包括 1、2、4
 *			uint8_t data_width		读取使用的数据线个数，有效值包括 1、2、4
 * 输    出: 无
-* 注意事项: 双 Bank 模式下，count 必须为偶数
+* 注意事项: 无
 ******************************************************************************************************************************************/
 void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t count, uint8_t addr_width, uint8_t data_width)
 {
@@ -386,14 +383,9 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 ******************************************************************************************************************************************/
 bool QSPI_FlashBusy(QSPI_TypeDef * QSPIx)
 {
-	bool dual_flash = QSPIx->CR & QSPI_CR_DUAL_Msk;
-	
-	uint16_t reg = QSPI_ReadReg(QSPIx, QSPI_CMD_READ_STATUS_REG1, dual_flash ? 2 : 1);
+	uint16_t reg = QSPI_ReadReg(QSPIx, QSPI_CMD_READ_STATUS_REG1, 1);
 	
 	bool busy = (reg & (1 << QSPI_STATUS_REG1_BUSY_Pos));
-	
-	if(dual_flash)
-		busy = busy || ((reg >> 8) & (1 << QSPI_STATUS_REG1_BUSY_Pos));
 	
 	return busy;
 }

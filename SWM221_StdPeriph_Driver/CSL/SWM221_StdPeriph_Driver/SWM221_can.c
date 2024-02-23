@@ -31,8 +31,8 @@
 * 注意事项: 无
 ******************************************************************************************************************************************/
 void CAN_Init(CAN_TypeDef * CANx, CAN_InitStructure * initStruct)
-{	
-	uint32_t brp = (SystemCoreClock/2)/2/initStruct->Baudrate/(1 + (initStruct->CAN_bs1 + 1) + (initStruct->CAN_bs2 + 1)) - 1;
+{
+	uint32_t brp = SystemCoreClock/2/initStruct->Baudrate/(1 + (initStruct->CAN_bs1 + 1) + (initStruct->CAN_bs2 + 1)) - 1;
 	
 	switch((uint32_t)CANx)
 	{

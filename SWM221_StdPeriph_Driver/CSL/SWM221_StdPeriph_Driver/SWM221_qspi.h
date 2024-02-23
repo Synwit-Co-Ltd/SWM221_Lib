@@ -3,7 +3,7 @@
 
 
 typedef struct {
-	uint16_t Size;			// Flash 大小，双 Flash 时指两个 Flash 的总大小，取值 QSPI_Size_1MB、...、QSPI_Size_512MB
+	uint16_t Size;			// Flash 大小
 	uint16_t ClkDiv;		// 可取值 2--256
 	uint8_t  ClkMode;		// 可取值 QSPI_ClkMode_0、QSPI_ClkMode_3
 	uint8_t  SampleShift;	// 可取值 QSPI_SampleShift_None、QSPI_SampleShift_Half_SPICLK、QSPI_SampleShift_1_SYSCLK、...
@@ -71,7 +71,6 @@ typedef struct {
 #define QSPI_Mode_IndirectWrite		0
 #define QSPI_Mode_IndirectRead		1
 #define QSPI_Mode_AutoPolling		2
-#define QSPI_Mode_MemoryMapped		3
 
 
 #define QSPI_CMD_READ_JEDEC			0x9F
@@ -157,23 +156,12 @@ static inline uint32_t QSPI_FIFOCount(QSPI_TypeDef * QSPIx)
 
 static inline uint32_t QSPI_FIFOSpace(QSPI_TypeDef * QSPIx)
 {
-	return 32 - QSPI_FIFOCount(QSPIx);
+	return 16 - QSPI_FIFOCount(QSPIx);
 }
 
 static inline bool QSPI_FIFOEmpty(QSPI_TypeDef * QSPIx)
 {
 	return QSPI_FIFOCount(QSPIx) == 0;
-}
-
-static inline void QSPI_BankSwitch(QSPI_TypeDef * QSPIx, uint8_t bank)
-{
-	QSPIx->CR &= ~(QSPI_CR_DUAL_Msk | QSPI_CR_BANK_Msk);
-	QSPIx->CR |=  (bank << QSPI_CR_DUAL_Pos);
-}
-
-static inline void QSPI_CacheClear(QSPI_TypeDef * QSPIx)
-{
-	QSPIx->CACHE = QSPI_CACHE_CLR_Msk;
 }
 
 void QSPI_INTEn(QSPI_TypeDef * QSPIx, uint32_t it);
