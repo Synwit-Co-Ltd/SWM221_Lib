@@ -3,10 +3,6 @@
 #include "ST7789.h"
 
 
-#define LCD_VPIX  320
-#define LCD_HPIX  240
-
-
 /****************************************************************************************************************************************** 
 * 函数名称:	ST7789_Init()
 * 功能说明: TFT液晶屏初始化，TFT使用ST7789驱动，分辨率320*240，使用 ZJY320P1600TG11 测试
@@ -48,13 +44,16 @@ void ST7789_Init(void)
 	GPIO_SetBit(GPIOB, PIN3);
 	for(int i = 0; i < 1000000; i++) __NOP();
 	
-	MPU_WR_REG(MPU, 0x04);
 	
-	uint32_t id = MPU->DR;
-	
-	id =  MPU->DR;
-	id = (MPU->DR <<  8) | id;
-	id = (MPU->DR << 16) | id;
+	uint32_t id = MPU_ReadReg(MPU, 0x04);	// dummy read
+	id = 0;
+	id |= MPU->DR << 16;
+	id |= MPU->DR <<  8;
+	id |= MPU->DR <<  0;
+	if(id != 0x858552)
+	{
+		printf("ID = %06X, not ST7789V\n", id);
+	}
 	
 	MPU_WR_REG(MPU, 0x11);		// Sleep out
 	

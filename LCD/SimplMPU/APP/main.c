@@ -15,23 +15,23 @@ int main(void)
 	
 	ST7789_Init();
 	
-#if 0
+#if 1
 	ST7789_Clear(C_RED);
 #else
 	ST7789_DMAClear(C_RED);
 	while(!ST7789_DMADone()) __NOP();
 #endif
 	
-	UG_Init(&gui,(void(*)(UG_S16,UG_S16,UG_COLOR))ST7789_DrawPoint, 480, 800);
+	UG_Init(&gui,(void(*)(UG_S16,UG_S16,UG_COLOR))ST7789_DrawPoint, LCD_HPIX, LCD_VPIX);
 	
-	UG_DrawLine(0, 68, 480, 68, C_GREEN);
-	UG_DrawLine(0, 136, 480, 136, C_GREEN);
-	UG_DrawLine(0, 204, 480, 204, C_GREEN);
+	UG_DrawLine(0, 100, LCD_HPIX, 100, C_GREEN);
+	UG_DrawLine(0, 150, LCD_HPIX, 150, C_GREEN);
+	UG_DrawLine(0, 200, LCD_HPIX, 200, C_GREEN);
 	
- 	UG_FillFrame(120, 69, 360, 135, C_BLACK);
+ 	UG_FillFrame(0, 101, LCD_HPIX, 149, C_BLACK);
  	
   	UG_FontSelect(&FONT_12X20);
-	UG_PutString(120, 80, "Hi from Synwit");
+	UG_PutString(20, 110, "Hi from Synwit");
    	
 	while(1==1)
 	{
