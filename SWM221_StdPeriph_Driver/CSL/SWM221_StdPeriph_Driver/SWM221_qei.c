@@ -90,7 +90,7 @@ void QEI_Stop(QEI_TypeDef * QEIx)
 * 函数名称: QEI_IntEn()
 * 功能说明: QEI中断使能
 * 输    入: QEI_TypeDef * QEIx		指定要被设置的正交编码器接口，有效值包括QEI
-*			uint32_t it				interrupt type，取值QEI_INT_INDEX、QEI_INT_MATCH、QEI_INT_CNTOV、QEI_INT_ERROR 及其或
+*			uint32_t it				interrupt type，取值QEI_IT_INDEX、QEI_IT_MATCH、QEI_IT_CNTOV、QEI_IT_ERROR 及其或
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
@@ -110,7 +110,7 @@ void QEI_IntEn(QEI_TypeDef * QEIx, uint32_t it)
 * 函数名称: QEI_IntDis()
 * 功能说明: QEI中断关闭
 * 输    入: QEI_TypeDef * QEIx		指定要被设置的正交编码器接口，有效值包括QEI
-*			uint32_t it				interrupt type，取值QEI_INT_INDEX、QEI_INT_MATCH、QEI_INT_CNTOV、QEI_INT_ERROR 及其或
+*			uint32_t it				interrupt type，取值QEI_IT_INDEX、QEI_IT_MATCH、QEI_IT_CNTOV、QEI_IT_ERROR 及其或
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
@@ -123,7 +123,7 @@ void QEI_IntDis(QEI_TypeDef * QEIx, uint32_t it)
 * 函数名称: QEI_IntClr()
 * 功能说明: QEI中断标志清除
 * 输    入: QEI_TypeDef * QEIx		指定要被设置的正交编码器接口，有效值包括QEI
-*			uint32_t it				interrupt type，取值QEI_INT_INDEX、QEI_INT_MATCH、QEI_INT_CNTOV、QEI_INT_ERROR 及其或
+*			uint32_t it				interrupt type，取值QEI_IT_INDEX、QEI_IT_MATCH、QEI_IT_CNTOV、QEI_IT_ERROR 及其或
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
@@ -136,7 +136,7 @@ void QEI_IntClr(QEI_TypeDef * QEIx, uint32_t it)
 * 函数名称: QEI_IntStat()
 * 功能说明: QEI中断状态查询
 * 输    入: QEI_TypeDef * QEIx		指定要被设置的正交编码器接口，有效值包括QEI
-*			uint32_t it				interrupt type，取值QEI_INT_INDEX、QEI_INT_MATCH、QEI_INT_CNTOV、QEI_INT_ERROR 及其或
+*			uint32_t it				interrupt type，取值QEI_IT_INDEX、QEI_IT_MATCH、QEI_IT_CNTOV、QEI_IT_ERROR 及其或
 * 输    出: uint32_t				0 没有中断发生    非0值 有中断发生
 * 注意事项: 无
 ******************************************************************************************************************************************/

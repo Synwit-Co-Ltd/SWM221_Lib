@@ -15,10 +15,10 @@ typedef struct {
 #define QEI_MODE_X2			0
 #define QEI_MODE_X4			1
 
-#define QEI_INT_INDEX		(1 << 0)
-#define QEI_INT_MATCH		(1 << 1)
-#define QEI_INT_CNTOV		(1 << 2)
-#define QEI_INT_ERROR		(1 << 3)
+#define QEI_IT_INDEX		(1 << 0)
+#define QEI_IT_MATCH		(1 << 1)
+#define QEI_IT_CNTOV		(1 << 2)
+#define QEI_IT_ERROR		(1 << 3)
 
 
 void QEI_Init(QEI_TypeDef * QEIx, QEI_InitStructure * initStruct);		//QEI³õÊ¼»¯

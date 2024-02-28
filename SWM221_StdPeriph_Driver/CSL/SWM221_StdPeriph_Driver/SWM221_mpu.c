@@ -40,6 +40,8 @@ void MPU_Init(MPU_TypeDef * MPUx, MPU_InitStructure * initStruct)
 		break;
 	}
 	
+	MPUx->SR = initStruct->ByteOrder << MPU_SR_ENDIAN_Pos;
+	
 	MPUx->CR = ((initStruct->RDHoldTime    - 1) << MPU_CR_RDHOLD_Pos) |
 			   ((initStruct->WRHoldTime    - 1) << MPU_CR_WRHOLD_Pos) |
 			   ((initStruct->CSFall_WRFall - 1) << MPU_CR_CS0WR0_Pos) |
@@ -55,28 +57,34 @@ static uint32_t MPU_IsBusy(MPU_TypeDef * MPUx)
 }
 
 
-void MPU_WR_REG(MPU_TypeDef * MPUx, uint8_t reg)
+void MPU_WR_REG8(MPU_TypeDef * MPUx, uint8_t reg)
 {
-	MPUx->IR = reg;
+	MPUx->IRB = reg;
 	while(MPU_IsBusy(MPUx)) {}
 }
 
-void MPU_WR_DATA(MPU_TypeDef * MPUx, uint8_t val)
+void MPU_WR_DATA8(MPU_TypeDef * MPUx, uint8_t val)
 {
-	MPUx->DR = val;
+	MPUx->DRB = val;
+	while(MPU_IsBusy(MPUx)) {}
+}
+
+void MPU_WR_DATA16(MPU_TypeDef * MPUx, uint16_t val)
+{
+	MPUx->DRH = val;
 	while(MPU_IsBusy(MPUx)) {}
 }
 
 void MPU_WriteReg(MPU_TypeDef * MPUx, uint8_t reg, uint8_t val)
 {
-	MPU_WR_REG(MPUx, reg);
+	MPU_WR_REG8(MPUx, reg);
 	
-	MPU_WR_DATA(MPUx, val);
+	MPU_WR_DATA8(MPUx, val);
 }
 
 uint8_t MPU_ReadReg(MPU_TypeDef * MPUx, uint8_t reg)
 {
-	MPU_WR_REG(MPUx, reg);
+	MPU_WR_REG8(MPUx, reg);
 	
-	return MPUx->DR;
+	return MPUx->DRB;
 }

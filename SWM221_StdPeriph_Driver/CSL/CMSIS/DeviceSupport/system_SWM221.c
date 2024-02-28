@@ -43,21 +43,13 @@
 
 
 /********************************** PLL 设定 **********************************************
- * VCO输出频率 = PLL输入时钟 / INDIV * 4 * FBDIV
- * PLL输出频率 = PLL输入时钟 / INDIV * 4 * FBDIV / OUTDIV = VCO输出频率 / OUTDIV         
+ * PLL输出频率 = PLL输入时钟 / INDIV * FBDIV
  *****************************************************************************************/ 
-#define SYS_PLL_SRC   	SYS_CLK_XTAL	//可取值SYS_CLK_8MHz、SYS_CLK_XTAL
+#define SYS_PLL_SRC   	SYS_CLK_8MHz	//可取值SYS_CLK_8MHz、SYS_CLK_XTAL
 
-#define PLL_IN_DIV		3
+#define PLL_IN_DIV		2
 
-#define PLL_FB_DIV		30
-
-
-#define PLL_OUT_DIV8	0
-#define PLL_OUT_DIV4	1
-#define PLL_OUT_DIV2	2
-
-#define PLL_OUT_DIV		PLL_OUT_DIV8
+#define PLL_FB_DIV		15
 
 
 uint32_t SystemCoreClock  = __HSI;   				//System Clock Frequency (Core Clock)
@@ -95,7 +87,7 @@ void SystemCoreClockUpdate(void)
 				SystemCoreClock = __HSE;
 			}
 			
-			SystemCoreClock = SystemCoreClock / PLL_IN_DIV * PLL_FB_DIV * 4 / (2 << (2 - PLL_OUT_DIV));
+			SystemCoreClock = SystemCoreClock / PLL_IN_DIV * PLL_FB_DIV;
 			break;
 		
 		case 3:
@@ -251,11 +243,11 @@ void switchTo32KHz(void)
 void PLLInit(void)
 {	
 	if(SYS_PLL_SRC == SYS_CLK_8MHz)
-	{		
+	{
 		SYS->RCCR |= (1 << SYS_RCCR_HON_Pos);
 	}
 	else if(SYS_PLL_SRC == SYS_CLK_XTAL)
-	{		
+	{
 		PORTB->PULLU &= ~((1 << PIN11) | (1 << PIN12));
 		PORTB->PULLD &= ~((1 << PIN11) | (1 << PIN12));
 		PORT_Init(PORTB, PIN11, PORTB_PIN11_XTAL_IN,  0);

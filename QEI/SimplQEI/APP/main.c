@@ -71,7 +71,7 @@ void testSignal(void)
 }
 
 void BTIMR0_Handler(void)
-{	
+{
 	static uint32_t i = 0;
 	
 	TIMR_INTClr(BTIMR0);

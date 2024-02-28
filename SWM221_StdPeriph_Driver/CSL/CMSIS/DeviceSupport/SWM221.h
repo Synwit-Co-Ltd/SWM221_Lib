@@ -117,8 +117,8 @@ typedef struct {
 	__IO uint32_t PRSTEN;					//外设复位使能，只有当PRSTEN的值为0x55时，才能写PRSTR0、PRSTR1
 	__IO uint32_t PRSTR0;
 
-    //Analog Control: 0x400AA000
-         uint32_t RESERVED8[(0x400AA000-0x40000724)/4-1];
+    //Analog Control: 0x40045800
+         uint32_t RESERVED8[(0x40045800-0x40000724)/4-1];
 	
 	__IO uint32_t PMUCR;
 	
@@ -2058,9 +2058,21 @@ typedef struct {
 	
 	__IO uint32_t CR;
 	
-	__IO uint32_t IR;
+	union {
+		__IO uint8_t  IRB;
+		
+		__IO uint16_t IRH;
+		
+		__IO uint32_t RESERVED2;
+	};
 	
-	__IO uint32_t DR;
+	union {
+		__IO uint8_t  DRB;
+		
+		__IO uint16_t DRH;
+		
+		__IO uint32_t RESERVED3;
+	};
 } MPU_TypeDef;
 
 
@@ -2068,6 +2080,8 @@ typedef struct {
 #define MPU_SR_BUSY_Msk				(0x01 << MPU_SR_BUSY_Pos)
 #define MPU_SR_DMAEN_Pos			1
 #define MPU_SR_DMAEN_Msk			(0x01 << MPU_SR_DMAEN_Pos)
+#define MPU_SR_ENDIAN_Pos			2		//0 小端   1 大端
+#define MPU_SR_ENDIAN_Msk			(0x01 << MPU_SR_ENDIAN_Pos)
 
 #define MPU_CR_RCS1_0_Pos			0		//读操作时，CS上升沿到下降沿时间间隔，0  1个时钟中期
 #define MPU_CR_RCS1_0_Msk			(0x1F << MPU_CR_RCS1_0_Pos)
@@ -2123,7 +2137,7 @@ typedef struct {
 #define FMC_CACHE_CCLR_Msk			(0x01u<< FMC_CACHE_CCLR_Pos)
 
 #define FMC_CFG0_WREN_Pos			9
-#define FMC_CFG0_WREN_Mskk			(0x01 << FMC_CFG0_WREN_Pos)
+#define FMC_CFG0_WREN_Msk			(0x01 << FMC_CFG0_WREN_Pos)
 
 #define FMC_STAT_ERASEBUSY_Pos		0
 #define FMC_STAT_ERASEBUSY_Msk		(0x01 << FMC_STAT_ERASEBUSY_Pos)
@@ -2210,6 +2224,8 @@ typedef struct {
 #define UART0_BASE			(APB1_BASE + 0x0000)
 #define UART1_BASE			(APB1_BASE + 0x0800)
 
+#define QEI_BASE			(APB1_BASE + 0x1000)
+
 #define SPI0_BASE			(APB1_BASE + 0x1800)
 
 #define I2C0_BASE			(APB1_BASE + 0x2000)
@@ -2241,8 +2257,6 @@ typedef struct {
 #define PORTC_BASE			(APB1_BASE + 0x6020)
 
 #define WDT_BASE			(APB1_BASE + 0x6800)
-
-#define QEI_BASE			(APB1_BASE + 0x7000)
 
 
 /******************************************************************************/

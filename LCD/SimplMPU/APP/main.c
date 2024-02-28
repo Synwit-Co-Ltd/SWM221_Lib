@@ -18,7 +18,9 @@ int main(void)
 #if 1
 	ST7789_Clear(C_RED);
 #else
-	ST7789_DMAClear(C_RED);
+	ST7789_DMAClear(0, 0, C_RED, LCD_HPIX * LCD_VPIX / 2);
+	while(!ST7789_DMADone()) __NOP();
+	ST7789_DMAClear(0, LCD_VPIX / 2, C_RED, LCD_HPIX * LCD_VPIX / 2);
 	while(!ST7789_DMADone()) __NOP();
 #endif
 	

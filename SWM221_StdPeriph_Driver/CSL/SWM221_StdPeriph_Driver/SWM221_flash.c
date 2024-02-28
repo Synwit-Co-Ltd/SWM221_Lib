@@ -85,12 +85,7 @@ void Flash_Param_at_xMHz(uint32_t x)
 {	
 	__disable_irq();
 	
-	if(x < 33)				// 无需等待周期
-		IAP_Flash_Param(0x89241, 0x0B11FFAC);
-	else if(x < 66)			// 1 个等待周期
-		IAP_Flash_Param(0x89241, 0x0B11FFAC);
-	else					// 2 个等待周期
-		IAP_Flash_Param(0x8A241, 0x0B11FFAC);
+	IAP_Flash_Param(1000 / x, 0x0B11FFAC);
 	
 	__enable_irq();
 }
