@@ -19,14 +19,16 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define PORTA_PIN1_PWM1B        4
 
 #define PORTA_PIN2_GPIO         0
-#define PORTA_PIN2_PWM1AN       1
-#define PORTA_PIN2_PWM0AN       2
-#define PORTA_PIN2_PWM1A        3
+#define PORTA_PIN2_USART0_TX	1
+#define PORTA_PIN2_PWM1AN       2
+#define PORTA_PIN2_PWM0AN       3
+#define PORTA_PIN2_PWM1A        4
 
 #define PORTA_PIN3_GPIO         0
-#define PORTA_PIN3_PWM0A        1
-#define PORTA_PIN3_PWM1AN       2
-#define PORTA_PIN3_PWM0AN       3
+#define PORTA_PIN3_USART0_RX	1
+#define PORTA_PIN3_PWM0A        2
+#define PORTA_PIN3_PWM1AN       3
+#define PORTA_PIN3_PWM0AN       4
 
 #define PORTA_PIN4_GPIO         0
 #define PORTA_PIN4_UART1_TX     1
