@@ -14,13 +14,13 @@ extern void SystemInit(void);
 
 extern void SystemCoreClockUpdate (void);
 
-extern void PLLInit(void);
+extern void switchToHRC(void);
+extern void switchToDIV(uint32_t src, uint32_t div);
 
-extern void switchTo8MHz(void);
-extern void switchTo1MHz(void);
-extern void switchToXTAL(uint32_t div8);
-extern void switchToPLL(uint32_t div8);
-extern void switchTo32KHz(void);
+extern void switchOnHRC(void);
+extern void switchOnXTAL(void);
+extern void switchOnPLL(uint32_t src, uint32_t indiv, uint32_t fbdiv);
+extern void switchOn32KHz(void);
 
 
 #ifdef __cplusplus

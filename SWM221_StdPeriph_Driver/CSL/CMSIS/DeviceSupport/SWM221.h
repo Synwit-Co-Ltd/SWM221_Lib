@@ -157,10 +157,10 @@ typedef struct {
 
 #define SYS_CLKSEL_SYS_Pos			0		//系统时钟选择	1 HRC	0 CLK_DIVx
 #define SYS_CLKSEL_SYS_Msk			(0x01 << SYS_CLKSEL_SYS_Pos)
-#define SYS_CLKSEL_CLK_DIVx_Pos		1		//选择CLK_DIVx  0 CLK_DIV1   1 CLK_DIV8
-#define SYS_CLKSEL_CLK_DIVx_Msk		(0x01 << SYS_CLKSEL_CLK_DIVx_Pos)
-#define SYS_CLKSEL_CLK_Pos			2		//Clock Source  0 LRC   1 PLL   2 XTAL   3 HRC
-#define SYS_CLKSEL_CLK_Msk			(0x07 << SYS_CLKSEL_CLK_Pos)
+#define SYS_CLKSEL_CLK_DIVx_Pos		1		//选择CLK_DIVx  0 CLK_DIV1   1 CLK_DIV2   2 CLK_DIV4   3 CLK_DIV8
+#define SYS_CLKSEL_CLK_DIVx_Msk		(0x03 << SYS_CLKSEL_CLK_DIVx_Pos)
+#define SYS_CLKSEL_CLK_Pos			3		//Clock Source  0 LRC   1 PLL   2 XTAL   3 HRC
+#define SYS_CLKSEL_CLK_Msk			(0x03 << SYS_CLKSEL_CLK_Pos)
 #define SYS_CLKSEL_IOFILT_Pos		5		//IO Filter时钟选择，0 HRC   2 XTAL   3 LRC
 #define SYS_CLKSEL_IOFILT_Msk		(0x03 << SYS_CLKSEL_IOFILT_Pos)
 #define SYS_CLKSEL_WDT_Pos			7		//看门狗时钟选择  0 HRC   1 XTAL   2 LRC
