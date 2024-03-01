@@ -7,7 +7,6 @@ void testSignal(void);
 
 int main(void)
 {
-	uint32_t i;
 	QEI_InitStructure  QEI_initStruct;
 	
  	SystemInit();
@@ -39,7 +38,7 @@ int main(void)
 	{
 		printf("speed = %+d\r\n", Speed);
 		
-		for(i = 0; i < CyclesPerUs*100; i++) __NOP();
+		for(int i = 0; i < CyclesPerUs*100; i++) __NOP();
 	}
 }
 
