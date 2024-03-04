@@ -41,9 +41,9 @@ void ADC_Init(ADC_TypeDef * ADCx, ADC_InitStructure * initStruct)
 	ADC_Close(ADCx);		//一些关键寄存器只能在ADC关闭时设置
 	
 	ADCx->CR &= ~(ADC_CR_CLKDIV_Msk | ADC_CR_AVG_Msk | ADC_CR_BITS_Pos);
-	ADCx->CR |= (initStruct->clkdiv   << ADC_CR_CLKDIV_Pos) |
-				(initStruct->samplAvg << ADC_CR_AVG_Pos)    |
-				(0					  << ADC_CR_BITS_Pos);
+	ADCx->CR |= ((initStruct->clkdiv - 1) << ADC_CR_CLKDIV_Pos) |
+				(initStruct->samplAvg	  << ADC_CR_AVG_Pos)    |
+				(0					 	  << ADC_CR_BITS_Pos);
 }
 
 static uint32_t ADC_seq2pos(uint32_t seq)
@@ -114,7 +114,11 @@ void ADC_SEQ_Init(ADC_TypeDef * ADCx, uint32_t seq, ADC_SEQ_InitStructure * init
 	for(int i = 0; i < 8; i++)
 	{
 		if(initStruct->channels[i] == 0)
+		{
+			*SEQxCHN |= 0xF << (i * 4);
+			
 			break;
+		}
 		
 		*SEQxCHN |= ADC_chn2idx(initStruct->channels[i]) << (i * 4);
 	}
@@ -158,6 +162,10 @@ void ADC_CMP_Init(ADC_TypeDef * ADCx, uint32_t seq, ADC_CMP_InitStructure * init
 void ADC_Open(ADC_TypeDef * ADCx)
 {
 	ADCx->CR &= ~ADC_CR_PWDN_Msk;
+	
+	int clkdiv = (ADCx->CR & ADC_CR_CLKDIV_Msk) >> ADC_CR_CLKDIV_Pos;
+	
+	for(int i = 0; i < clkdiv * 32 / 2; i++) {}	// 退出 Powerdown 32 个采样时钟周期后才能工作
 }
 
 /****************************************************************************************************************************************** 
