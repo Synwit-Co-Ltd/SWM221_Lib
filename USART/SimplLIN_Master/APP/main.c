@@ -65,7 +65,7 @@ retry:
 }
 
 
-void GPIOA1_GPIOC1_USART0_Handler(void)
+void USART0_Handler(void)
 {
 	if(USART_INTStat(USART0, USART_IT_LIN_ID))	// ID ÒÑ·¢ËÍ
 	{

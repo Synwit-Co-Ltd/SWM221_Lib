@@ -26,7 +26,7 @@ typedef enum IRQn
   PWM0_IRQn                 = 7,
   QSPI0_IRQn                = 8,
   PWMBRK_IRQn               = 9,
-  QSPI1_IRQn                = 10,
+  USART0_IRQn               = 10,
   WDT_IRQn                  = 11,
   I2C0_IRQn                 = 12,
   XTALSTOP_IRQn             = 13,
@@ -40,7 +40,7 @@ typedef enum IRQn
   GPIOB_IRQn                = 21,
   GPIOC_IRQn                = 22,
   GPIOA0_GPIOC0_IRQn        = 23,
-  GPIOA1_GPIOC1_USART0_IRQn = 24,
+  GPIOA1_GPIOC1_IRQn		= 24,
   GPIOA2_GPIOC2_MPU_IRQn    = 25,
   GPIOA3_GPIOC3_BOD_IRQn    = 26,
   GPIOB0_GPIOA8_TIMR2_IRQn  = 27,
@@ -205,11 +205,9 @@ typedef struct {
 #define SYS_CLKEN0_CAN0_Msk			(0x01 << SYS_CLKEN0_CAN0_Pos)
 #define SYS_CLKEN0_WDT_Pos			18
 #define SYS_CLKEN0_WDT_Msk			(0x01 << SYS_CLKEN0_WDT_Pos)
-#define SYS_CLKEN0_QSPI1_Pos		19
-#define SYS_CLKEN0_QSPI1_Msk		(0x01 << SYS_CLKEN0_QSPI1_Pos)
-#define SYS_CLKEN0_MPU_Pos			20
+#define SYS_CLKEN0_MPU_Pos			19
 #define SYS_CLKEN0_MPU_Msk			(0x01 << SYS_CLKEN0_MPU_Pos)
-#define SYS_CLKEN0_QEI_Pos			21
+#define SYS_CLKEN0_QEI_Pos			20
 #define SYS_CLKEN0_QEI_Msk			(0x01 << SYS_CLKEN0_QEI_Pos)
 
 #define SYS_SLEEP_SLEEP_Pos			0		//将该位置1后，系统将进入SLEEP模式
@@ -265,11 +263,9 @@ typedef struct {
 #define SYS_PRSTR0_IOFILT_Msk		(0x01 <<SYS_PRSTR0_IOFILT_Pos)
 #define SYS_PRSTR0_WDT_Pos			18
 #define SYS_PRSTR0_WDT_Msk			(0x01 <<SYS_PRSTR0_WDT_Pos)
-#define SYS_PRSTR0_QSPI1_Pos		19
-#define SYS_PRSTR0_QSPI1_Msk		(0x01 <<SYS_PRSTR0_QSPI1_Pos)
-#define SYS_PRSTR0_MPU_Pos			20
+#define SYS_PRSTR0_MPU_Pos			19
 #define SYS_PRSTR0_MPU_Msk			(0x01 <<SYS_PRSTR0_MPU_Pos)
-#define SYS_PRSTR0_QEI_Pos			21
+#define SYS_PRSTR0_QEI_Pos			20
 #define SYS_PRSTR0_QEI_Msk			(0x01 << SYS_PRSTR0_QEI_Pos)
 
 #define SYS_RCCR_HON_Pos			0		//High speed RC ON
@@ -2673,8 +2669,6 @@ typedef struct {
 
 #define QSPI0_BASE			(AHB_BASE + 0x01800)
 
-#define QSPI1_BASE			(AHB_BASE + 0x02000)
-
 #define CRC_BASE			(AHB_BASE + 0x02800)
 
 #define DIV_BASE			(AHB_BASE + 0x03000)
@@ -2757,7 +2751,6 @@ typedef struct {
 #define USART0				((USART_TypeDef *)USART0_BASE)
 
 #define QSPI0				((QSPI_TypeDef *) QSPI0_BASE)
-#define QSPI1				((QSPI_TypeDef *) QSPI1_BASE)
 
 #define SPI0				((SPI_TypeDef  *) SPI0_BASE)
 

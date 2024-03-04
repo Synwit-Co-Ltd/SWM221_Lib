@@ -41,7 +41,7 @@ int main(void)
 }
 
 
-void GPIOA1_GPIOC1_USART0_Handler(void)
+void USART0_Handler(void)
 {
 	uint8_t chr;
 	

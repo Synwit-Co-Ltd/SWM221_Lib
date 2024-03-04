@@ -74,7 +74,7 @@ __Vectors       DCD     __initial_sp               ; Top of Stack
 				DCD    PWM0_Handler
 				DCD    QSPI0_Handler
 				DCD    PWMBRK_Handler
-				DCD    QSPI1_Handler
+				DCD    USART0_Handler
 				DCD    WDT_Handler
 				DCD    I2C0_Handler
 				DCD    XTALSTOP_Handler
@@ -88,7 +88,7 @@ __Vectors       DCD     __initial_sp               ; Top of Stack
 				DCD    GPIOB_Handler
 				DCD    GPIOC_Handler
 				DCD    GPIOA0_GPIOC0_Handler
-				DCD    GPIOA1_GPIOC1_USART0_Handler
+				DCD    GPIOA1_GPIOC1_Handler
 				DCD    GPIOA2_GPIOC2_MPU_Handler
 				DCD    GPIOA3_GPIOC3_BOD_Handler
 				DCD    GPIOB0_GPIOA8_TIMR2_Handler
@@ -189,8 +189,8 @@ PWMBRK_Handler  PROC
 				B       .
 				ENDP
 
-QSPI1_Handler  PROC
-				EXPORT  QSPI1_Handler                [WEAK]
+USART0_Handler  PROC
+				EXPORT  USART0_Handler                [WEAK]
 				B       .
 				ENDP
 
@@ -259,8 +259,8 @@ GPIOA0_GPIOC0_Handler  PROC
 				B       .
 				ENDP
 
-GPIOA1_GPIOC1_USART0_Handler  PROC
-				EXPORT  GPIOA1_GPIOC1_USART0_Handler [WEAK]
+GPIOA1_GPIOC1_Handler  PROC
+				EXPORT  GPIOA1_GPIOC1_Handler		 [WEAK]
 				B       .
 				ENDP
 

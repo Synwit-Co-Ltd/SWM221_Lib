@@ -61,7 +61,7 @@ void USART_Init(USART_TypeDef * USARTx, USART_InitStructure * initStruct)
 	{
 		switch((uint32_t)USARTx)
 		{
-		case ((uint32_t)USART0): NVIC_EnableIRQ(GPIOA1_GPIOC1_USART0_IRQn); break;
+		case ((uint32_t)USART0): NVIC_EnableIRQ(USART0_IRQn); break;
 		}
 	}
 }

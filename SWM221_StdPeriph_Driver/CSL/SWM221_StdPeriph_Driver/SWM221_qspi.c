@@ -28,7 +28,7 @@ static uint8_t AddressSize;
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_Init()
 * 功能说明:	QSPI 初始化
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 *			QSPI_InitStructure * initStruct		包含QSPI接口相关设定值的结构体
 * 输    出: 无
 * 注意事项: 无
@@ -39,10 +39,6 @@ void QSPI_Init(QSPI_TypeDef * QSPIx, QSPI_InitStructure * initStruct)
 	{
 	case ((uint32_t)QSPI0):
 		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_QSPI0_Pos);
-		break;
-	
-	case ((uint32_t)QSPI1):
-		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_QSPI1_Pos);
 		break;
 	}
 	
@@ -69,7 +65,6 @@ void QSPI_Init(QSPI_TypeDef * QSPIx, QSPI_InitStructure * initStruct)
 		switch((uint32_t)QSPIx)
 		{
 		case ((uint32_t)QSPI0):	NVIC_EnableIRQ(QSPI0_IRQn); break;
-		case ((uint32_t)QSPI1):	NVIC_EnableIRQ(QSPI1_IRQn); break;
 		}
 	}
 }
@@ -78,7 +73,7 @@ void QSPI_Init(QSPI_TypeDef * QSPIx, QSPI_InitStructure * initStruct)
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_Open()
 * 功能说明:	QSPI接口打开
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
@@ -91,7 +86,7 @@ void QSPI_Open(QSPI_TypeDef * QSPIx)
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_Close()
 * 功能说明:	QSPI接口关闭
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
@@ -121,7 +116,7 @@ void QSPI_CmdStructClear(QSPI_CmdStructure * cmdStruct)
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_Command()
 * 功能说明:	QSPI命令执行
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 *			QSPI_CmdStructure * cmdStruct	要执行命令的内容
 * 输    出: 无
 * 注意事项: 无
@@ -153,7 +148,7 @@ void QSPI_Command(QSPI_TypeDef * QSPIx, uint8_t cmdMode, QSPI_CmdStructure * cmd
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_Erase()
 * 功能说明:	QSPI Flash 擦除
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 *			uint8_t cmd				擦除命令 ，有效值包括 QSPI_CMD_ERASE_SECTOR、QSPI_CMD_ERASE_BLOCK32KB、QSPI_CMD_ERASE_BLOCK64KB
 *			uint32_t addr			要擦除的 SPI Flash 地址
 *			uint8_t wait			是否等待 SPI Flash 完成操作操作，1 等待完成   0 立即返回
@@ -188,7 +183,7 @@ void QSPI_Erase(QSPI_TypeDef * QSPIx, uint8_t cmd, uint32_t addr, uint8_t wait)
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_Write_()
 * 功能说明:	QSPI Flash 写入
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 *			uint32_t addr			要写入到的 SPI Flash 地址
 *			uint8_t buff[]			要写入 SPI Flash 的数据
 *			uint32_t count			要写入 SPI Flash 的数据个数，最大 256，且写入数据不能跨页
@@ -265,7 +260,7 @@ void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t c
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_Read_()
 * 功能说明:	QSPI Flash 读取
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 *			uint32_t addr			要读取自的 SPI Flash 地址
 *			uint8_t buff[]			读取到的数据写入此数组中
 *			uint32_t count			要读取数据的个数
@@ -377,7 +372,7 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_FlashBusy()
 * 功能说明:	QSPI Flash 忙查询
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 * 输    出: bool					SPI Flash 是否正在执行内部擦、写操作
 * 注意事项: 无
 ******************************************************************************************************************************************/
@@ -394,7 +389,7 @@ bool QSPI_FlashBusy(QSPI_TypeDef * QSPIx)
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_QuadState()
 * 功能说明:	QSPI Flash QE 查询
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 * 输    出: uint8_t					1 QE 使能   0 QE 禁止
 * 注意事项: 不同品牌 SPI Flash 中，QE 在 Status Register 中的位置可能不同
 ******************************************************************************************************************************************/
@@ -409,7 +404,7 @@ uint8_t QSPI_QuadState(QSPI_TypeDef * QSPIx)
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_QuadSwitch()
 * 功能说明:	QSPI Flash QE 开关
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 *			uint8_t on				1 QE 使能   0 QE 禁止
 * 输    出: 无
 * 注意事项: 不同品牌 SPI Flash 中，QE 在 Status Register 中的位置可能不同
@@ -434,7 +429,7 @@ void QSPI_QuadSwitch(QSPI_TypeDef * QSPIx, uint8_t on)
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_SendCmd()
 * 功能说明:	QSPI 命令发送，适用于只有命令阶段的情况
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 *			uint8_t cmd				要发送的命令
 * 输    出: 无
 * 注意事项: 无
@@ -460,7 +455,7 @@ void QSPI_SendCmd(QSPI_TypeDef * QSPIx, uint8_t cmd)
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_ReadReg()
 * 功能说明:	QSPI Flash 寄存器读取，适用于只有命令、数据阶段，且数据不多于4字节的情况
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 *			uint8_t cmd				寄存器读取命令
 *			uint8_t n_bytes			要读取的字节数，可取值 1、2、3、4
 * 输    出: uint32_t				读取到的数据，MSB
@@ -494,7 +489,7 @@ uint32_t QSPI_ReadReg(QSPI_TypeDef * QSPIx, uint8_t cmd, uint8_t n_bytes)
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_WriteReg()
 * 功能说明:	QSPI Flash 寄存器写入，适用于只有命令、数据阶段，且数据不多于4字节的情况
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 *			uint8_t cmd				寄存器写入命令
 *			uint32_t data			要写入寄存器的数据，MSB
 *			uint8_t n_bytes			要写入寄存器的字节数，可取值 1、2、3、4
@@ -526,7 +521,7 @@ void QSPI_WriteReg(QSPI_TypeDef * QSPIx, uint8_t cmd, uint32_t data, uint8_t n_b
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_INTEn()
 * 功能说明:	中断使能
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 * 			uint32_t it				interrupt type，可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_FFTHR、QSPI_IT_PSMAT、QSPI_IT_TO 及其“或”
 * 输    出: 无
 * 注意事项: 无
@@ -539,7 +534,7 @@ void QSPI_INTEn(QSPI_TypeDef * QSPIx, uint32_t it)
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_INTDis()
 * 功能说明:	中断禁止
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 * 			uint32_t it				interrupt type，可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_FFTHR、QSPI_IT_PSMAT、QSPI_IT_TO 及其“或”
 * 输    出: 无
 * 注意事项: 无
@@ -552,7 +547,7 @@ void QSPI_INTDis(QSPI_TypeDef * QSPIx, uint32_t it)
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_INTClr()
 * 功能说明:	中断标志清除
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 * 			uint32_t it				interrupt type，可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_PSMAT、QSPI_IT_TO 及其“或”
 * 输    出: 无
 * 注意事项: 无
@@ -565,7 +560,7 @@ void QSPI_INTClr(QSPI_TypeDef * QSPIx, uint32_t it)
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_INTStat()
 * 功能说明:	中断状态查询
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0、QSPI1
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 * 			uint32_t it				interrupt type，可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_FFTHR、QSPI_IT_PSMAT、QSPI_IT_TO 及其“或”
 * 输    出: uint32_t				0 中断未发生    非0 中断已发生
 * 注意事项: 无
