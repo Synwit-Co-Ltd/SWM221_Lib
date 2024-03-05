@@ -1,7 +1,7 @@
 #include "SWM221.h"
 
 
-#define ADC_USE_INT  0
+#define ADC_USE_INT  1
 
 
 void SerialInit(void);
@@ -15,29 +15,30 @@ int main(void)
 	
 	SerialInit();
 	
-	PORT_Init(PORTA, PIN14, PORTA_PIN14_ADC0_CH0, 0);		//PA.14 => ADC0.CH0
-	PORT_Init(PORTA, PIN11, PORTA_PIN11_ADC0_CH1, 0);		//PA.11 => ADC0.CH1
-	PORT_Init(PORTA, PIN8,  PORTA_PIN8_ADC0_CH2,  0);		//PA.8  => ADC0.CH2
-	PORT_Init(PORTB, PIN6,  PORTB_PIN6_ADC0_CH5,  0);		//PB.6  => ADC0.CH5
-	PORT_Init(PORTB, PIN5,  PORTB_PIN5_ADC0_CH6,  0);		//PB.5  => ADC0.CH6
-	PORT_Init(PORTB, PIN4,  PORTB_PIN4_ADC0_CH7,  0);		//PB.4  => ADC0.CH7
-	PORT_Init(PORTB, PIN2,  PORTB_PIN2_ADC0_CH8,  0);		//PB.2  => ADC0.CH8
+	PORT_Init(PORTA, PIN12, PORTA_PIN12_ADC1_CH0, 0);		//PA.12 => ADC1.CH0
+	PORT_Init(PORTA, PIN10, PORTA_PIN10_ADC1_CH1, 0);		//PA.10 => ADC1.CH1
+	PORT_Init(PORTB, PIN9,  PORTB_PIN9_ADC1_CH2,  0);		//PB.9  => ADC1.CH2
+	PORT_Init(PORTB, PIN7,  PORTB_PIN7_ADC1_CH3,  0);		//PB.7  => ADC1.CH3
+	PORT_Init(PORTB, PIN0,  PORTB_PIN0_ADC1_CH6,  0);		//PB.0  => ADC1.CH6
+	PORT_Init(PORTC, PIN0,  PORTC_PIN0_ADC1_CH7,  0);		//PC.0  => ADC1.CH7
+	PORT_Init(PORTB, PIN15, PORTB_PIN15_ADC1_CH8, 0);		//PB.15 => ADC1.CH8
+	PORT_Init(PORTB, PIN14, PORTB_PIN14_ADC1_CH9, 0);		//PB.14 => ADC1.CH9
 	
 	ADC_initStruct.clkdiv = 4;
 	ADC_initStruct.samplAvg = ADC_AVG_SAMPLE1;
-	ADC_Init(ADC0, &ADC_initStruct);
+	ADC_Init(ADC1, &ADC_initStruct);
 	
 	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_SW;
 	ADC_SEQ_initStruct.samp_tim = 6;
 	ADC_SEQ_initStruct.conv_cnt = 1;
 	ADC_SEQ_initStruct.EOCIntEn = ADC_USE_INT;
-	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH0, 0 };
-	ADC_SEQ_Init(ADC0, ADC_SEQ0, &ADC_SEQ_initStruct);
+	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH1, 0 };
+	ADC_SEQ_Init(ADC1, ADC_SEQ0, &ADC_SEQ_initStruct);
 	
-	ADC_Open(ADC0);
+	ADC_Open(ADC1);
 	
 #if ADC_USE_INT
-	ADC_Start(ADC_SEQ0, 0);
+	ADC_Start(0, ADC_SEQ0);
 	
 	while(1==1)
 	{
@@ -45,9 +46,9 @@ int main(void)
 #else
 	while(1==1)
 	{
-		ADC_Start(ADC_SEQ0, 0);
-		while(ADC_DataAvailable(ADC0, ADC_CH0) == 0);
-		printf("%4d,", ADC_Read(ADC0, ADC_CH0));
+		ADC_Start(0, ADC_SEQ0);
+		while(ADC_DataAvailable(ADC1, ADC_CH1) == 0);
+		printf("%4d,", ADC_Read(ADC1, ADC_CH1));
 	}
 #endif
 }
@@ -55,13 +56,13 @@ int main(void)
 
 void ADC_Handler(void)
 {
-	if(ADC_INTStat(ADC0, ADC_SEQ0, ADC_IT_EOC))
+	if(ADC_INTStat(ADC1, ADC_SEQ0, ADC_IT_EOC))
 	{
-		ADC_INTClr(ADC0, ADC_SEQ0, ADC_IT_EOC);
+		ADC_INTClr(ADC1, ADC_SEQ0, ADC_IT_EOC);
 		
-		printf("%4d,", ADC_Read(ADC0, ADC_CH0));
+		printf("%4d,", ADC_Read(ADC1, ADC_CH1));
 		
-		ADC_Start(ADC_SEQ0, 0);
+		ADC_Start(0, ADC_SEQ0);
 	}
 }
 
@@ -72,7 +73,7 @@ void SerialInit(void)
 	
 	PORT_Init(PORTA, PIN0, PORTA_PIN0_UART0_RX, 1);	//GPIOA.0ÅäÖÃÎªUART0 RXD
 	PORT_Init(PORTA, PIN1, PORTA_PIN1_UART0_TX, 0);	//GPIOA.1ÅäÖÃÎªUART0 TXD
- 	
+ 	PORT_Init(PORTB, PIN11,PORTB_PIN11_UART0_TX,0);
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;
 	UART_initStruct.Parity = UART_PARITY_NONE;
