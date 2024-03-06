@@ -53,12 +53,10 @@ typedef struct {
 #define DMA_CH0_UART0TX		(0 | DMA_HS_MRD)
 #define DMA_CH0_SPI0TX		(1 | DMA_HS_MRD)
 #define DMA_CH0_QSPI0TX		(2 | DMA_HS_MRD)
-#define DMA_CH0_ADC0SEQ0	(3 | DMA_HS_MRD)
 
 #define DMA_CH1_USART0TX	(0 | DMA_HS_MRD)
 #define DMA_CH1_UART1TX		(1 | DMA_HS_MRD)
 #define DMA_CH1_MPUTX		(2 | DMA_HS_MRD)
-#define DMA_CH1_ADC1SEQ0	(3 | DMA_HS_MRD)
 
 // memory write handshake signal
 #define DMA_CH0_USART0RX	(0 | DMA_HS_MWR)

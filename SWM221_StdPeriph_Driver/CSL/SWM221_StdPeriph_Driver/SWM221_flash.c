@@ -25,9 +25,9 @@ typedef int  (*IAP_Flash_Erase_t)(uint32_t sector, uint32_t flag);
 typedef int  (*IAP_Flash_Write_t)(uint32_t flash_addr, uint32_t ram_addr, uint32_t count, uint32_t flag);
 
 
-IAP_Flash_Param_t IAP_Flash_Param = (IAP_Flash_Param_t)0x110004D1;
-IAP_Flash_Erase_t IAP_Flash_Erase = (IAP_Flash_Erase_t)0x11000401;
-IAP_Flash_Write_t IAP_Flash_Write = (IAP_Flash_Write_t)0x11000461;
+IAP_Flash_Param_t IAP_Flash_Param = (IAP_Flash_Param_t)0x010004D1;
+IAP_Flash_Erase_t IAP_Flash_Erase = (IAP_Flash_Erase_t)0x01000401;
+IAP_Flash_Write_t IAP_Flash_Write = (IAP_Flash_Write_t)0x01000461;
 
 
 /****************************************************************************************************************************************** 

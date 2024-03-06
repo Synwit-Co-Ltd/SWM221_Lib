@@ -71,6 +71,7 @@ void ADC_Open(ADC_TypeDef * ADCx);							//ADC¿ªÆô£¬¿ÉÒÔÈí¼þÆô¶¯¡¢»òÓ²¼þ´¥·¢ADC×
 void ADC_Close(ADC_TypeDef * ADCx);							//ADC¹Ø±Õ£¬ÎÞ·¨Èí¼þÆô¶¯¡¢»òÓ²¼þ´¥·¢ADC×ª»»
 void ADC_Start(uint32_t ADC0_seq, uint32_t ADC1_seq);		//Æô¶¯Ö¸¶¨ADC£¬¿ªÊ¼Ä£Êý×ª»»
 void ADC_Stop(uint32_t ADC0_seq, uint32_t ADC1_seq);		//¹Ø±ÕÖ¸¶¨ADC£¬Í£Ö¹Ä£Êý×ª»»
+bool ADC_Busy(ADC_TypeDef * ADCx);
 
 uint32_t ADC_Read(ADC_TypeDef * ADCx, uint32_t chn);		//´ÓÖ¸¶¨Í¨µÀ¶ÁÈ¡×ª»»½á¹û
 uint32_t ADC_DataAvailable(ADC_TypeDef * ADCx, uint32_t chn);			//Ö¸¶¨Í¨µÀÊÇ·ñÓÐÊý¾Ý¿É¶ÁÈ¡

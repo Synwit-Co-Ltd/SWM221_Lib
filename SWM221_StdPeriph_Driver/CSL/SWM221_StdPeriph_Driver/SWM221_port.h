@@ -44,13 +44,17 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 
 #define PORTA_PIN6_GPIO         0
 #define PORTA_PIN6_I2C0_SCL     1
-#define PORTA_PIN6_PWM0B        2
-#define PORTA_PIN6_BTIMR0_OUT	3
+#define PORTA_PIN6_USART0_TX	2
+#define PORTA_PIN6_CAN0_RX		3
+#define PORTA_PIN6_PWM0B        4
+#define PORTA_PIN6_BTIMR0_OUT	5
 
 #define PORTA_PIN7_GPIO         0
 #define PORTA_PIN7_I2C0_SDA     1
-#define PORTA_PIN7_PWM0BN       2
-#define PORTA_PIN7_BTIMR1_OUT	3
+#define PORTA_PIN7_USART0_RX	2
+#define PORTA_PIN7_CAN0_TX		3
+#define PORTA_PIN7_PWM0BN       4
+#define PORTA_PIN7_BTIMR1_OUT	5
 
 #define PORTA_PIN8_GPIO         0
 #define PORTA_PIN8_MPU_D0		1
@@ -61,14 +65,16 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 
 #define PORTA_PIN9_GPIO         0
 #define PORTA_PIN9_MPU_D1		1
-#define PORTA_PIN9_SPI0_MOSI	2
-#define PORTA_PIN9_QSPI0_MOSI	3
+#define PORTA_PIN9_USART0_TX	2
+#define PORTA_PIN9_SPI0_MOSI	3
+#define PORTA_PIN9_QSPI0_MOSI	4
 #define PORTA_PIN9_OPA1_INP     7
 
 #define PORTA_PIN10_GPIO        0
 #define PORTA_PIN10_MPU_D2		1
-#define PORTA_PIN10_SPI0_MISO	2
-#define PORTA_PIN10_QSPI0_MISO	3
+#define PORTA_PIN10_USART0_RX	2
+#define PORTA_PIN10_SPI0_MISO	3
+#define PORTA_PIN10_QSPI0_MISO	4
 #define PORTA_PIN10_ADC1_CH1    7
 
 #define PORTA_PIN11_GPIO        0
@@ -141,7 +147,8 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define PORTB_PIN4_MPU_CS		1
 #define PORTB_PIN4_QEI_A		2
 #define PORTB_PIN4_I2C0_SCL     3
-#define PORTB_PIN4_HALL_IN0     4
+#define PORTB_PIN4_QSPI0_MOSI	4
+#define PORTB_PIN4_HALL_IN0     5
 #define PORTB_PIN4_ADC0_CH7     7
 #define PORTB_PIN4_ACMP0_INP2   7
 
@@ -168,13 +175,15 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define PORTB_PIN7_GPIO         0
 #define PORTB_PIN7_QEI_DIR		1
 #define PORTB_PIN7_UART1_TX     2
-#define PORTB_PIN7_TIMR2_IN     3
-#define PORTB_PIN7_TIMR2_OUT    4
+#define PORTB_PIN7_CAN0_RX		3
+#define PORTB_PIN7_TIMR2_IN     4
+#define PORTB_PIN7_TIMR2_OUT    5
 #define PORTB_PIN7_ADC1_CH3     7
 #define PORTB_PIN7_OPA0_INP     7
 
 #define PORTB_PIN8_GPIO         0
 #define PORTB_PIN8_UART1_RX     1
+#define PORTB_PIN8_CAN0_TX		2
 #define PORTB_PIN8_OPA0_INN     7
 
 #define PORTB_PIN9_GPIO         0
@@ -190,16 +199,18 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 
 #define PORTB_PIN11_GPIO        0
 #define PORTB_PIN11_UART0_TX    1
-#define PORTB_PIN11_PWM0BN      2
-#define PORTB_PIN11_TIMR1_IN    3
-#define PORTB_PIN11_TIMR1_OUT   4
+#define PORTB_PIN11_SPI0_SCLK	2
+#define PORTB_PIN11_PWM0BN      3
+#define PORTB_PIN11_TIMR1_IN    4
+#define PORTB_PIN11_TIMR1_OUT   5
 #define PORTB_PIN11_XTAL_IN     7
 
 #define PORTB_PIN12_GPIO        0
 #define PORTB_PIN12_UART0_RX    1
-#define PORTB_PIN12_PWM0B       2
-#define PORTB_PIN12_TIMR2_IN    3
-#define PORTB_PIN12_TIMR2_OUT   4
+#define PORTB_PIN12_SPI0_MOSI	2
+#define PORTB_PIN12_PWM0B       3
+#define PORTB_PIN12_TIMR2_IN    4
+#define PORTB_PIN12_TIMR2_OUT   5
 #define PORTB_PIN12_XTAL_OUT    7
 
 #define PORTB_PIN13_GPIO        0
@@ -207,17 +218,19 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define PORTB_PIN13_PWM0A       2
 
 #define PORTB_PIN14_GPIO        0
-#define PORTB_PIN14_UART0_TX    1
-#define PORTB_PIN14_SPI0_MISO	2
-#define PORTB_PIN14_PWM_BRK0    3
+#define PORTB_PIN14_USART0_TX	1
+#define PORTB_PIN14_UART0_TX    2
+#define PORTB_PIN14_SPI0_MISO	3
+#define PORTB_PIN14_PWM_BRK0    4
 #define PORTB_PIN14_BTIMR2_OUT	5
 #define PORTB_PIN14_ADC1_CH9   	7
 
 #define PORTB_PIN15_GPIO        0
-#define PORTB_PIN15_UART0_RX    1
-#define PORTB_PIN15_SPI0_SSEL	2
-#define PORTB_PIN15_BTIMR3_OUT	3
-#define PORTB_PIN15_TIMR0_IN	4
+#define PORTB_PIN15_USART0_RX	1
+#define PORTB_PIN15_UART0_RX    2
+#define PORTB_PIN15_SPI0_SSEL	3
+#define PORTB_PIN15_BTIMR3_OUT	4
+#define PORTB_PIN15_TIMR0_IN	5
 #define PORTB_PIN15_TIMR0_OUT	5
 #define PORTB_PIN15_ADC1_CH8	7
 
