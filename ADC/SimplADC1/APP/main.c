@@ -73,7 +73,7 @@ void SerialInit(void)
 	
 	PORT_Init(PORTA, PIN0, PORTA_PIN0_UART0_RX, 1);	//GPIOA.0ÅäÖÃÎªUART0 RXD
 	PORT_Init(PORTA, PIN1, PORTA_PIN1_UART0_TX, 0);	//GPIOA.1ÅäÖÃÎªUART0 TXD
- 	PORT_Init(PORTB, PIN11,PORTB_PIN11_UART0_TX,0);
+ 	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;
 	UART_initStruct.Parity = UART_PARITY_NONE;

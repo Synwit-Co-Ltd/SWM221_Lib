@@ -1,6 +1,10 @@
+#include <string.h>
 #include "SWM221.h"
 
-#define ADC_SIZE  250
+#define ADC_LIMIT_MIN	400
+#define ADC_LIMIT_MAX	3600
+
+#define ADC_SIZE  16
 uint16_t ADC_Result[ADC_SIZE] = {0};
 
 
@@ -8,9 +12,10 @@ void SerialInit(void);
 
 int main(void)
 {
+	DMA_InitStructure DMA_initStruct;
 	ADC_InitStructure ADC_initStruct;
 	ADC_SEQ_InitStructure ADC_SEQ_initStruct;
-	DMA_InitStructure DMA_initStruct;
+	ADC_CMP_InitStructure ADC_CMP_initStruct;
 	
 	SystemInit();
 	
@@ -28,18 +33,24 @@ int main(void)
 	ADC_initStruct.samplAvg = ADC_AVG_SAMPLE1;
 	ADC_Init(ADC0, &ADC_initStruct);
 	
-	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_SW;
+	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_TIMER2;
 	ADC_SEQ_initStruct.samp_tim = 6;
 	ADC_SEQ_initStruct.conv_cnt = ADC_SIZE;
 	ADC_SEQ_initStruct.EOCIntEn = 0;
 	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH0, 0 };
 	ADC_SEQ_Init(ADC0, ADC_SEQ1, &ADC_SEQ_initStruct);
 	
+	ADC_CMP_initStruct.LowerLimit = ADC_LIMIT_MIN;
+	ADC_CMP_initStruct.LowerLimitIEn = 1;
+	ADC_CMP_initStruct.UpperLimit = ADC_LIMIT_MAX;
+	ADC_CMP_initStruct.UpperLimitIEn = 1;
+	ADC_CMP_Init(ADC0, ADC_SEQ1, &ADC_CMP_initStruct);
+	
 	ADC0->CR |= (1 << ADC_CR_SEQ1DMAEN_Pos);
 	
 	ADC_Open(ADC0);
 	
-	DMA_initStruct.Mode = DMA_MODE_SINGLE;
+	DMA_initStruct.Mode = DMA_MODE_CIRCLE;
 	DMA_initStruct.Unit = DMA_UNIT_HALFWORD;
 	DMA_initStruct.Count = ADC_SIZE;
 	DMA_initStruct.PeripheralAddr = (uint32_t)&ADC0->SEQ1DMA;
@@ -48,11 +59,12 @@ int main(void)
 	DMA_initStruct.MemoryAddrInc = 1;
 	DMA_initStruct.Handshake = DMA_CH0_ADC0SEQ1;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
-	DMA_initStruct.INTEn = DMA_IT_DONE;
+	DMA_initStruct.INTEn = 0;
 	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
 	DMA_CH_Open(DMA_CH0);
 	
-	ADC_Start(ADC_SEQ1, 0);
+	TIMR_Init(TIMR2, TIMR_MODE_TIMER, CyclesPerUs, 1000, 0);
+	TIMR_Start(TIMR2);
 	
 	while(1==1)
 	{
@@ -60,28 +72,32 @@ int main(void)
 }
 
 
-void GPIOB1_GPIOA9_DMA_Handler(void)
+void ADC_Handler(void)
 {
-	uint32_t chn;
+	uint16_t adc_result[ADC_SIZE];
 	
-	if(DMA_CH_INTStat(DMA_CH0, DMA_IT_DONE))
+	if(ADC_INTStat(ADC0, ADC_SEQ1, ADC_IT_CMP_MAX))
 	{
-		DMA_CH_INTClr(DMA_CH0, DMA_IT_DONE);
+		ADC_INTClr(ADC0, ADC_SEQ1, ADC_IT_CMP_MAX);
 		
+		memcpy(adc_result, ADC_Result, sizeof(ADC_Result));
+		
+		printf("ADC Value > %d found:\n", ADC_LIMIT_MAX);
 		for(int i = 0; i < ADC_SIZE; i++)
-		{
-			chn = (ADC_Result[i] & ADC_SEQ1DMA_CHNUM_Msk) >> ADC_SEQ1DMA_CHNUM_Pos;
-			switch(chn)
-			{
-			case 0:
-				printf("%4d,", ADC_Result[i] & ADC_SEQ1DMA_DATA_Msk);
-				break;
-			}
-		}
+			printf("%d, ", adc_result[i]);
+		printf("\n\n");
+	}
+	
+	if(ADC_INTStat(ADC0, ADC_SEQ1, ADC_IT_CMP_MIN))
+	{
+		ADC_INTClr(ADC0, ADC_SEQ1, ADC_IT_CMP_MIN);
 		
-		DMA_CH_Open(DMA_CH0);	// 重新开始，再次搬运
+		memcpy(adc_result, ADC_Result, sizeof(ADC_Result));
 		
-		ADC_Start(ADC_SEQ1, 0);
+		printf("ADC Value < %d found:\n", ADC_LIMIT_MIN);
+		for(int i = 0; i < ADC_SIZE; i++)
+			printf("%d, ", adc_result[i]);
+		printf("\n\n");
 	}
 }
 

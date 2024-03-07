@@ -21,7 +21,7 @@ int main(void)
 	PORT_Init(PORTB, PIN5,  PORTB_PIN5_ADC0_CH6,  0);		//PB.5  => ADC0.CH6
 	PORT_Init(PORTB, PIN4,  PORTB_PIN4_ADC0_CH7,  0);		//PB.4  => ADC0.CH7
 	PORT_Init(PORTB, PIN2,  PORTB_PIN2_ADC0_CH8,  0);		//PB.2  => ADC0.CH8
-
+	
 	ADC_initStruct.clkdiv = 4;
 	ADC_initStruct.samplAvg = ADC_AVG_SAMPLE1;
 	ADC_Init(ADC0, &ADC_initStruct);
@@ -46,8 +46,11 @@ int main(void)
 	
 	while(1==1)
 	{
-		ADC_Start(ADC_SEQ1, 0);		// 若 ADC 正在转换，此操作会被忽略
-		for(int i = 0; i < CyclesPerUs * 10; i++) {}
+		/* 1、若 ADC 正在执行 SEQ0 转换，则此软件启动被忽略，不会产生 SEQ1 转换结果
+		 * 2、若 ADC 正在执行 SEQ1 转换，新到来的 PWM 触发会打断、并终止软件启动的 SEQ1 转换，不会产生 SEQ1 转换结果
+		*/
+		ADC_Start(ADC_SEQ1, 0);
+		while(ADC_Busy(ADC0)) __NOP();
 		if(ADC_DataAvailable(ADC0, ADC_CH1))
 		{
 			printf("%d,", ADC_Read(ADC0, ADC_CH1));
@@ -66,7 +69,7 @@ void ADC_Handler(void)
 	{
 		ADC_INTClr(ADC0, ADC_SEQ0, ADC_IT_EOC);
 		
-		printf("%d,", ADC_Read(ADC0, ADC_CH0));
+//		printf("%d,", ADC_Read(ADC0, ADC_CH0));
 	}
 }
 
@@ -80,17 +83,17 @@ void PWM0AInit(void)
 	PORT_Init(PORTA, PIN6, PORTA_PIN6_PWM0B,  0);
 	PORT_Init(PORTA, PIN7, PORTA_PIN7_PWM0BN, 0);
 	
-	PWM_initStruct.Mode = PWM_CENTER_ALIGNED;
-	PWM_initStruct.Clkdiv = 6;					//F_PWM = 30M/6 = 5M
-	PWM_initStruct.Period = 50000;				//5M/50000 = 100Hz，中心对称模式下频率降低到50Hz
-	PWM_initStruct.HdutyA = 12500;				//12500/50000 = 25%
-	PWM_initStruct.DeadzoneA = 50;				//50/5M = 10us
+	PWM_initStruct.Mode = PWM_EDGE_ALIGNED;
+	PWM_initStruct.Clkdiv = 6;					//F_PWM = 60M/6 = 10M
+	PWM_initStruct.Period = 10000;				//10M/10000 = 1000Hz，中心对称模式下频率降低到500Hz
+	PWM_initStruct.HdutyA =  2500;				//2500/10000 = 25%
+	PWM_initStruct.DeadzoneA = 50;
 	PWM_initStruct.IdleLevelA = 0;
 	PWM_initStruct.IdleLevelAN= 0;
 	PWM_initStruct.OutputInvA = 0;
 	PWM_initStruct.OutputInvAN= 0;
-	PWM_initStruct.HdutyB = 25000;				//25000/50000 = 50%
-	PWM_initStruct.DeadzoneB = 50;				//50/5M = 10us
+	PWM_initStruct.HdutyB =  5000;				//5000/10000 = 50%
+	PWM_initStruct.DeadzoneB = 50;
 	PWM_initStruct.IdleLevelB = 0;
 	PWM_initStruct.IdleLevelBN= 0;
 	PWM_initStruct.OutputInvB = 0;
@@ -110,8 +113,8 @@ void PWM0AInit(void)
 	/* Mask */
 	PWM_CmpTrigger(PWM0, 1500, PWM_DIR_UP, 64, PWM_TRG_1, 0);	//PWM0向上计数计数值等于1500时发出一个触发信号，触发信号发送到 trigger1
 	
-// 	PWM_OutMask(PWM0, PWM_CH_A, PWM_EVT_1, 0, PWM_EVT_1, 1);	//PWM0A和PWM0AN在event1为高时分别输出0和1
-// 	PWM_OutMask(PWM0, PWM_CH_B, PWM_EVT_1, 0, PWM_EVT_1, 1);	//PWM0B和PWM0BN在event1为高时分别输出0和1
+ 	PWM_OutMask(PWM0, PWM_CH_A, PWM_EVT_1, 0, PWM_EVT_1, 1);	//PWM0A和PWM0AN在event1为高时分别输出0和1
+ 	PWM_OutMask(PWM0, PWM_CH_B, PWM_EVT_1, 0, PWM_EVT_1, 1);	//PWM0B和PWM0BN在event1为高时分别输出0和1
 }
 
 

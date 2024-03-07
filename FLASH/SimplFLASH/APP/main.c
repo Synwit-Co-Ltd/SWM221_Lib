@@ -13,22 +13,20 @@ uint32_t WrBuff[20] = {0x14141414, 0x15151515, 0x16161616, 0x17171717, 0x1818181
 void SerialInit(void);
 
 int main(void)
-{	
-	uint32_t i;
-	
+{
 	SystemInit();
 	
 	SerialInit();
-		
+	
 	printf("\r\nAfter Erase: \r\n");
 	
 	FLASH_Erase(EEPROM_ADDR);
-	for(i = 0; i < 20; i++) printf("0x%08X, ", EEPROM_Ptr[i]);
+	for(int i = 0; i < 20; i++) printf("0x%08X, ", EEPROM_Ptr[i]);
 	
 	printf("\r\nAfter Write: \r\n");
    	
 	FLASH_Write(EEPROM_ADDR, WrBuff, 20);
-	for(i = 0; i < 20; i++) printf("0x%08X, ", EEPROM_Ptr[i]);
+	for(int i = 0; i < 20; i++) printf("0x%08X, ", EEPROM_Ptr[i]);
    	
 	while(1==1)
 	{
