@@ -203,6 +203,8 @@ typedef struct {
 #define SYS_CLKEN0_ADC0_Msk			(0x01 << SYS_CLKEN0_ADC0_Pos)
 #define SYS_CLKEN0_CAN0_Pos			16
 #define SYS_CLKEN0_CAN0_Msk			(0x01 << SYS_CLKEN0_CAN0_Pos)
+#define SYS_CLKEN0_IOFILT_Pos		17
+#define SYS_CLKEN0_IOFILT_Msk		(0x01 << SYS_CLKEN0_IOFILT_Pos)
 #define SYS_CLKEN0_WDT_Pos			18
 #define SYS_CLKEN0_WDT_Msk			(0x01 << SYS_CLKEN0_WDT_Pos)
 #define SYS_CLKEN0_MPU_Pos			19
@@ -222,8 +224,14 @@ typedef struct {
 #define SYS_IOFILT_TIM_Msk			(0x0F << SYS_IOFILT_TIM_Pos)
 #define SYS_IOFILT_CLKDIV_Pos		4		//0 时钟不分频   1 时钟32分频
 #define SYS_IOFILT_CLKDIV_Msk		(0x01 << SYS_IOFILT_CLKDIV_Pos)
-#define SYS_IOFILT_IOSEL_Pos		5		//被滤波IO选择，每个IOFILT可为四个IO中的一个进行滤波
-#define SYS_IOFILT_IOSEL_Msk		(0x03 << SYS_IOFILT_IOSEL_Pos)
+#define SYS_IOFILT_IO0EN_Pos		5		//IO0 滤波使能
+#define SYS_IOFILT_IO0EN_Msk		(0x01 << SYS_IOFILT_IO0EN_Pos)
+#define SYS_IOFILT_IO1EN_Pos		6
+#define SYS_IOFILT_IO1EN_Msk		(0x01 << SYS_IOFILT_IO1EN_Pos)
+#define SYS_IOFILT_IO2EN_Pos		7
+#define SYS_IOFILT_IO2EN_Msk		(0x01 << SYS_IOFILT_IO2EN_Pos)
+#define SYS_IOFILT_IO3EN_Pos		8
+#define SYS_IOFILT_IO3EN_Msk		(0x01 << SYS_IOFILT_IO3EN_Pos)
 
 #define SYS_PRSTR0_GPIOA_Pos		0		//1 复位GPIOA    0 不复位
 #define SYS_PRSTR0_GPIOA_Msk		(0x01 <<SYS_PRSTR0_GPIOA_Pos)
@@ -589,8 +597,10 @@ typedef struct {
 		 uint32_t RESERVED2[2];
 	
 	__IO uint32_t HALLSR;
+	
+	__IO uint32_t ICSR;						//Input Capture Pin Status
 		
-		 uint32_t RESERVED3[8];
+		 uint32_t RESERVED3[7];
 	
 	__IO uint32_t EN;
 } TIMRG_TypeDef;
@@ -609,6 +619,13 @@ typedef struct {
 #define TIMRG_HALLSR_IN1_Msk		(0x01 << TIMRG_HALLSR_IN1_Pos)
 #define TIMRG_HALLSR_IN2_Pos		2
 #define TIMRG_HALLSR_IN2_Msk		(0x01 << TIMRG_HALLSR_IN2_Pos)
+
+#define TIMRG_ICSR_TIMR0_Pos		0
+#define TIMRG_ICSR_TIMR0_Msk		(0x01 << TIMRG_ICSR_TIMR0_Pos)
+#define TIMRG_ICSR_TIMR1_Pos		1
+#define TIMRG_ICSR_TIMR1_Msk		(0x01 << TIMRG_ICSR_TIMR1_Pos)
+#define TIMRG_ICSR_TIMR2_Pos		2
+#define TIMRG_ICSR_TIMR2_Msk		(0x01 << TIMRG_ICSR_TIMR2_Pos)
 
 #define TIMRG_EN_TIMR0_Pos			0
 #define TIMRG_EN_TIMR0_Msk			(0x01 << TIMRG_EN_TIMR0_Pos)
@@ -1743,6 +1760,14 @@ typedef struct {
 #define PWM_OCR_INVAN_Msk			(0x01 << PWM_OCR_INVAN_Pos)
 #define PWM_OCR_INVBN_Pos			7		//BN路输出是否取反
 #define PWM_OCR_INVBN_Msk			(0x01 << PWM_OCR_INVBN_Pos)
+#define PWM_OCR_FORCEA_Pos			8		//A路强制输出使能，强制电平由 IDLEA 设定
+#define PWM_OCR_FORCEA_Msk			(0x01 << PWM_OCR_FORCEA_Pos)
+#define PWM_OCR_FORCEB_Pos			9
+#define PWM_OCR_FORCEB_Msk			(0x01 << PWM_OCR_FORCEB_Pos)
+#define PWM_OCR_FORCEAN_Pos			10
+#define PWM_OCR_FORCEAN_Msk			(0x01 << PWM_OCR_FORCEAN_Pos)
+#define PWM_OCR_FORCEBN_Pos			11
+#define PWM_OCR_FORCEBN_Msk			(0x01 << PWM_OCR_FORCEBN_Pos)
 
 #define PWM_BRKCR_OUTA_Pos			0		//刹车状态下A路输出电平
 #define PWM_BRKCR_OUTA_Msk			(0x01 << PWM_BRKCR_OUTA_Pos)
@@ -1758,8 +1783,10 @@ typedef struct {
 #define PWM_BRKCR_OUTBN_Msk			(0x01 << PWM_BRKCR_OUTBN_Pos)
 #define PWM_BRKCR_STPCNT_Pos		10		//刹车状态下是否停止计数器，1 停止计数器   0 继续计数
 #define PWM_BRKCR_STPCNT_Msk		(0x01 << PWM_BRKCR_STPCNT_Pos)
-#define PWM_BRKCR_ACTIVE_Pos		17		//当前是否处于刹车状态
-#define PWM_BRKCR_ACTIVE_Msk		(0x01 << PWM_BRKCR_ACTIVE_Pos)
+#define PWM_BRKCR_SWHALT_Pos		16		//当前是否处于软件刹车状态
+#define PWM_BRKCR_SWHALT_Msk		(0x01 << PWM_BRKCR_SWHALT_Pos)
+#define PWM_BRKCR_HWHALT_Pos		17		//当前是否处于硬件刹车状态
+#define PWM_BRKCR_HWHALT_Msk		(0x01 << PWM_BRKCR_HWHALT_Pos)
 
 #define PWM_BRKIN_BRK0A_Pos			0		//A路是否受刹车输入PWM_BRK0影响
 #define PWM_BRKIN_BRK0A_Msk			(0x01 << PWM_BRKIN_BRK0A_Pos)

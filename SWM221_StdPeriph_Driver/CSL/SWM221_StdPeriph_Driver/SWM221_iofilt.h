@@ -3,15 +3,13 @@
 
 
 /* 选择对哪个信号进行滤波 */
-#define IOFILT0_PB14	0
-#define IOFILT0_PB4		1
-#define IOFILT0_PB5		2
-#define IOFILT0_PB6		3
+#define IOFILT0_PB14	1
+#define IOFILT0_PB4		2
+#define IOFILT0_PB5		4
+#define IOFILT0_PB6		8
 
-#define IOFILT1_ACMP0	0	// 对 ACMP0_OUT 滤波，注意：ACMP0 的状态（SYS->ACMPSR.CMP0OUT）和中断（SYS->ACMPSR.CMP0IF）没有被滤波
-#define IOFILT1_ACMP1	1	//							ACMP0 的输出作为刹车信号、HALL 输入使用时被滤波了
-#define IOFILT1_ACMP2	2
-#define IOFILT1_ACMP3	3
+#define IOFILT1_ACMP0	1	// 对 ACMP0_OUT 滤波，ACMP0 的状态（SYS->ACMPSR.CMP0OUT）、中断（SYS->ACMPSR.CMP0IF）、作为 PWM 刹车信号均被滤波
+#define IOFILT1_ACMP1	2
 
 
 #define IOFILT_WIDTH_2		1

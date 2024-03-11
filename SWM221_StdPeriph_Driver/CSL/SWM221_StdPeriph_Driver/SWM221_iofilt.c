@@ -29,7 +29,7 @@ static uint32_t Width[2];
 * 函数名称:	IOFILT_Init()
 * 功能说明:	IO滤波器初始化
 * 输    入: uint32_t IOFILTn	要初始化的滤波器，可取值 0-1
-*			uint32_t signal		要对哪个信号进行滤波操作，可取值 IOFILT0_PB14、IOFILT0_PB4、...
+*			uint32_t signal		要对哪些信号进行滤波，对于 IOFILT0，可取值 IOFILT0_PB14、IOFILT0_PB4、IOFILT0_PB5、IOFILT0_PB6 及其“或”
 *			uint32_t width		被选信号上宽度小于 width 个 HRC 时钟周期的脉冲被视作毛刺，过滤掉，可取值 IOFILT_WIDTH_2、IOFILT_WIDTH_4、...
 * 输    出: 无
 * 注意事项: 无
@@ -38,8 +38,11 @@ void IOFILT_Init(uint32_t IOFILTn, uint32_t signal, uint32_t width)
 {
 	SYS->CLKSEL &= ~SYS_CLKSEL_IOFILT_Msk;
 	SYS->CLKSEL |= (0 << SYS_CLKSEL_IOFILT_Pos);	//滤波器时钟源：HRC
-		
-	*(&SYS->IOFILT0 + IOFILTn) = (signal << SYS_IOFILT_IOSEL_Pos)  |
+	
+	SYS->CLKEN0 |= SYS_CLKEN0_IOFILT_Msk;
+	for(int i = 0; i < 10; i++)  __NOP();
+	
+	*(&SYS->IOFILT0 + IOFILTn) = (signal << SYS_IOFILT_IO0EN_Pos)  |
 								 (0      << SYS_IOFILT_CLKDIV_Pos) |
 								 (width  << SYS_IOFILT_TIM_Pos);
 	

@@ -20,7 +20,7 @@ int main(void)
 	
 	GPIO_Init(GPIOB, PIN5, 1, 0, 0, 0);
 	
-	IOFILT_Init(0, IOFILT0_PB4, IOFILT_WIDTH_32);
+	IOFILT_Init(0, IOFILT0_PB4, IOFILT_WIDTH_256);
    	
 	while(1==1)
 	{
