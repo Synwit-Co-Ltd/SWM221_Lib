@@ -30,15 +30,11 @@
 #define SYS_CLK_PLL			1		//锁相环输出
 #define SYS_CLK_32KHz		0		//内部低频32KHz RC振荡器
 
-#define SYS_CLK   SYS_CLK_PLL
+#define SYS_CLK   	SYS_CLK_PLL
 
 
-#define SYS_CLK_DIV_1		0
-#define SYS_CLK_DIV_2		1
-#define SYS_CLK_DIV_4		2
-#define SYS_CLK_DIV_8		3
+#define SYS_CLK_DIV	SYS_CLK_DIV_1	//SYS_CLK 选择的时钟，经过 SYS_CLK_DIV 分频后用作系统时钟
 
-#define SYS_CLK_DIV		SYS_CLK_DIV_1	//SYS_CLK 选择的时钟，经过 SYS_CLK_DIV 分频后用作系统时钟
 
 
 #define __HSI		( 8000000UL)		//高速内部时钟
@@ -55,6 +51,7 @@
 #define PLL_IN_DIV		2
 
 #define PLL_FB_DIV		15
+
 
 
 uint32_t SystemCoreClock  = __HSI;   				//System Clock Frequency (Core Clock)
@@ -93,11 +90,11 @@ void SystemCoreClockUpdate(void)
 			
 			if(SYS->PLLCR & SYS_PLLCR_INSEL_Msk)
 			{
-				SystemCoreClock = __HSE / indiv * fbdiv;
+				SystemCoreClock = __HSE * fbdiv / indiv;
 			}
 			else
 			{
-				SystemCoreClock = __HSI / indiv * fbdiv;
+				SystemCoreClock = __HSI * fbdiv / indiv;
 			}
 			break;
 		}
@@ -150,7 +147,7 @@ void SystemInit(void)
 	
 	switchToDIV(SYS_CLK, SYS_CLK_DIV);
 	
-	Flash_Param_at_xMHz(SystemCoreClock/1000000);
+	Flash_Param_at_xMHz(CyclesPerUs);
 	
 	FMC->CACHE = (1 << FMC_CACHE_CEN_Pos) | FMC_CACHE_CCLR_Msk;	// 清除 Cache
 	__NOP(); __NOP(); __NOP(); __NOP(); __NOP(); __NOP(); __NOP();
@@ -180,7 +177,7 @@ void switchToDIV(uint32_t src, uint32_t div)
 	SYS->CLKDIVx_ON = 1;
 	
 	for(int i = 0; i < CyclesPerUs; i++) {}
-		
+	
 	SYS->CLKSEL &=~(1 << SYS_CLKSEL_SYS_Pos);		//SYS <= CLK_DIVx
 	
 	SystemCoreClockUpdate();
