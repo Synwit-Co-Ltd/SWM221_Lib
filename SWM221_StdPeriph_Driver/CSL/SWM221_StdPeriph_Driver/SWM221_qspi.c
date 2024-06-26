@@ -142,6 +142,8 @@ void QSPI_Command(QSPI_TypeDef * QSPIx, uint8_t cmdMode, QSPI_CmdStructure * cmd
 	
 	if(cmdStruct->AddressMode != QSPI_PhaseMode_None)
 		QSPIx->AR = cmdStruct->Address;
+	
+	for(int i = 0; i < 3; i++) __NOP();
 }
 
 
@@ -200,12 +202,12 @@ void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t c
 	switch(data_width)
 	{
 	case 1:
-		instruction = QSPI_CMD_PAGE_PROGRAM;
+		instruction = (AddressSize == QSPI_PhaseSize_32bit) ? QSPI_C4B_PAGE_PROGRAM      : QSPI_CMD_PAGE_PROGRAM;
 		dataMode 	= QSPI_PhaseMode_1bit;
 		break;
 	
 	case 4:
-		instruction = QSPI_CMD_PAGE_PROGRAM_4bit;
+		instruction = (AddressSize == QSPI_PhaseSize_32bit) ? QSPI_C4B_PAGE_PROGRAM_4bit : QSPI_CMD_PAGE_PROGRAM_4bit;
 		dataMode 	= QSPI_PhaseMode_4bit;
 		break;
 	}
@@ -279,7 +281,7 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 	switch((addr_width << 4) | data_width)
 	{
 	case 0x11:
-		instruction 	   = QSPI_CMD_FAST_READ;
+		instruction 	   = (AddressSize == QSPI_PhaseSize_32bit) ? QSPI_C4B_FAST_READ        : QSPI_CMD_FAST_READ;
 		addressMode 	   = QSPI_PhaseMode_1bit;
 		alternateBytesMode = QSPI_PhaseMode_None;
 		alternateBytesSize = 0;
@@ -288,7 +290,7 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 		break;
 	
 	case 0x12:
-		instruction 	   = QSPI_CMD_FAST_READ_2bit;
+		instruction 	   = (AddressSize == QSPI_PhaseSize_32bit) ? QSPI_C4B_FAST_READ_2bit   : QSPI_CMD_FAST_READ_2bit;
 		addressMode 	   = QSPI_PhaseMode_1bit;
 		alternateBytesMode = QSPI_PhaseMode_None;
 		alternateBytesSize = 0;
@@ -297,7 +299,7 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 		break;
 	
 	case 0x22:
-		instruction 	   = QSPI_CMD_FAST_READ_IO2bit;
+		instruction 	   = (AddressSize == QSPI_PhaseSize_32bit) ? QSPI_C4B_FAST_READ_IO2bit : QSPI_CMD_FAST_READ_IO2bit;
 		addressMode 	   = QSPI_PhaseMode_2bit;
 		alternateBytesMode = QSPI_PhaseMode_2bit;
 		alternateBytesSize = QSPI_PhaseSize_8bit;
@@ -307,7 +309,7 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 		break;
 	
 	case 0x14:
-		instruction 	   = QSPI_CMD_FAST_READ_4bit;
+		instruction 	   = (AddressSize == QSPI_PhaseSize_32bit) ? QSPI_C4B_FAST_READ_4bit   : QSPI_CMD_FAST_READ_4bit;
 		addressMode 	   = QSPI_PhaseMode_1bit;
 		alternateBytesMode = QSPI_PhaseMode_None;
 		alternateBytesSize = 0;
@@ -316,7 +318,7 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 		break;
 	
 	case 0x44:
-		instruction 	   = QSPI_CMD_FAST_READ_IO4bit;
+		instruction 	   = (AddressSize == QSPI_PhaseSize_32bit) ? QSPI_C4B_FAST_READ_IO4bit : QSPI_CMD_FAST_READ_IO4bit;
 		addressMode 	   = QSPI_PhaseMode_4bit;
 		alternateBytesMode = QSPI_PhaseMode_4bit;
 		alternateBytesSize = QSPI_PhaseSize_8bit;

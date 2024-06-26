@@ -98,8 +98,22 @@ typedef struct {
 #define QSPI_CMD_4BYTE_ADDR_ENTER	0xB7
 #define QSPI_CMD_4BYTE_ADDR_EXIT	0xE9
 
+/* Command with 4-byte address */
+#define QSPI_C4B_FAST_READ			0x0C
+#define QSPI_C4B_FAST_READ_2bit		0x3C
+#define QSPI_C4B_FAST_READ_IO2bit	0xBC
+#define QSPI_C4B_FAST_READ_4bit		0x6C
+#define QSPI_C4B_FAST_READ_IO4bit	0xEC
+#define QSPI_C4B_PAGE_PROGRAM		0x12
+#define QSPI_C4B_PAGE_PROGRAM_4bit	0x34
+#define QSPI_C4B_ERASE_SECTOR 		0x21
+#define QSPI_C4B_ERASE_BLOCK64KB	0xDC
+
+
 #define QSPI_STATUS_REG1_BUSY_Pos	0
 #define QSPI_STATUS_REG2_QUAD_Pos	1
+#define QSPI_STATUS_REG3_ADS_Pos	0		// Current Address Mode, Status Only
+#define QSPI_STATUS_REG3_ADP_Pos	1		// PowerUp Address Mode, Non-Volatile Writable
 
 
 /* Interrupt Type */
