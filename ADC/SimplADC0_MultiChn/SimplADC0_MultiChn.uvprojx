@@ -14,9 +14,9 @@
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
-          <Device>SWM221x8</Device>
+          <Device>SWM221xB</Device>
           <Vendor>Synwit</Vendor>
-          <PackID>Synwit.SWM32_New.0.1.9</PackID>
+          <PackID>Synwit.SWM32_New.0.2.2</PackID>
           <PackURL>http://www.synwit.com/pack</PackURL>
           <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M0") ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -52,7 +52,7 @@
           <OutputName>SimplADC0_MultiChn</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>0</CreateHexFile>
+          <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\out\</ListingPath>

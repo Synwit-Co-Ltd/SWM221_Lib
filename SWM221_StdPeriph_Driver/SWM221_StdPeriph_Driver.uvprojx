@@ -14,16 +14,16 @@
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
-          <Device>SWM221x8</Device>
+          <Device>SWM221xB</Device>
           <Vendor>Synwit</Vendor>
-          <PackID>Synwit.SWM32_New.0.1.9</PackID>
+          <PackID>Synwit.SWM32_New.0.2.2</PackID>
           <PackURL>http://www.synwit.com/pack</PackURL>
-          <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M0") CLOCK(12000000) ESEL ELITTLE</Cpu>
+          <Cpu>IRAM(0x20000000,0x2000) IROM(0x00000000,0x20000) CPUTYPE("Cortex-M0") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000)</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0SWM221xB -FS00 -FL020000 -FP0($$Device:SWM221xB$Flash\SWM221xB.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
-          <RegisterFile>$$Device:ARMCM0$Device\ARM\ARMCM0\Include\ARMCM0.h</RegisterFile>
+          <RegisterFile>$$Device:SWM221xB$CSL\SWM221\CMSIS\DeviceSupport\SWM221.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -33,7 +33,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:SWM221x8$SVD\SWM221.svd</SFDFile>
+          <SFDFile>$$Device:SWM221xB$SVD\SWM221.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -190,7 +190,7 @@
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
             <useUlib>1</useUlib>
-            <EndSel>1</EndSel>
+            <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
             <RoSelD>3</RoSelD>
@@ -246,12 +246,12 @@
               <IRAM>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x20000</Size>
+                <Size>0x2000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x40000</Size>
+                <Size>0x20000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -276,7 +276,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0x20000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -493,6 +493,11 @@
               <FileType>1</FileType>
               <FilePath>.\CSL\SWM221_StdPeriph_Driver\SWM221_crc.c</FilePath>
             </File>
+            <File>
+              <FileName>SWM221_usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CSL\SWM221_StdPeriph_Driver\SWM221_usart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -519,5 +524,14 @@
     <components/>
     <files/>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>SWM221_StdPeriph_Driver</LayName>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>
