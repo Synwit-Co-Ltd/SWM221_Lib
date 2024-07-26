@@ -1,6 +1,9 @@
 #include "SWM221.h"
+#include "CircleBuffer.h"
 
-#define ADC_SIZE  250
+CircleBuffer_t CirBuf;
+
+#define ADC_SIZE  250	// ADC 最多连续转换 256 次
 uint16_t ADC_Result[ADC_SIZE] = {0};
 
 
@@ -8,9 +11,9 @@ void SerialInit(void);
 
 int main(void)
 {
+	DMA_InitStructure DMA_initStruct;
 	ADC_InitStructure ADC_initStruct;
 	ADC_SEQ_InitStructure ADC_SEQ_initStruct;
-	DMA_InitStructure DMA_initStruct;
 	
 	SystemInit();
 	
@@ -23,8 +26,8 @@ int main(void)
 	PORT_Init(PORTB, PIN5,  PORTB_PIN5_ADC0_CH6,  0);		//PB.5  => ADC0.CH6
 	PORT_Init(PORTB, PIN4,  PORTB_PIN4_ADC0_CH7,  0);		//PB.4  => ADC0.CH7
 	PORT_Init(PORTB, PIN2,  PORTB_PIN2_ADC0_CH8,  0);		//PB.2  => ADC0.CH8
-
-	ADC_initStruct.clkdiv = 4;
+	
+	ADC_initStruct.clkdiv = 3;
 	ADC_initStruct.samplAvg = ADC_AVG_SAMPLE1;
 	ADC_Init(ADC0, &ADC_initStruct);
 	
@@ -39,7 +42,7 @@ int main(void)
 	
 	ADC_Open(ADC0);
 	
-	DMA_initStruct.Mode = DMA_MODE_SINGLE;
+	DMA_initStruct.Mode = DMA_MODE_CIRCLE;
 	DMA_initStruct.Unit = DMA_UNIT_HALFWORD;
 	DMA_initStruct.Count = ADC_SIZE;
 	DMA_initStruct.PeripheralAddr = (uint32_t)&ADC0->SEQ1DMA;
@@ -48,7 +51,7 @@ int main(void)
 	DMA_initStruct.MemoryAddrInc = 1;
 	DMA_initStruct.Handshake = DMA_CH0_ADC0SEQ1;
 	DMA_initStruct.Priority = DMA_PRI_LOW;
-	DMA_initStruct.INTEn = DMA_IT_DONE;
+	DMA_initStruct.INTEn = DMA_IT_HALF | DMA_IT_DONE;
 	DMA_CH_Init(DMA_CH0, &DMA_initStruct);
 	DMA_CH_Open(DMA_CH0);
 	
@@ -56,32 +59,37 @@ int main(void)
 	
 	while(1==1)
 	{
+		while(CirBuf_Full(&CirBuf) == 0) __NOP();
+		
+		for(int i = 0; i < 2000; i++)
+		{
+			uint16_t data;
+			
+			CirBuf_Read(&CirBuf, &data, 1);
+			
+			printf("%4d,", data & ADC_SEQ1DMA_DATA_Msk);
+		}
+		
+		CirBuf_Clear(&CirBuf);	// 打印过程中存入 CirBuf 中的数据来自不连续的点
 	}
 }
 
 
 void GPIOB1_GPIOA9_DMA_Handler(void)
 {
-	uint32_t chn;
-	
-	if(DMA_CH_INTStat(DMA_CH0, DMA_IT_DONE))
+	if(DMA_CH_INTStat(DMA_CH0, DMA_IT_HALF))
+	{
+		DMA_CH_INTClr(DMA_CH0, DMA_IT_HALF);
+		
+		CirBuf_Write(&CirBuf, &ADC_Result[0], ADC_SIZE/2);
+	}
+	else if(DMA_CH_INTStat(DMA_CH0, DMA_IT_DONE))
 	{
 		DMA_CH_INTClr(DMA_CH0, DMA_IT_DONE);
 		
-		for(int i = 0; i < ADC_SIZE; i++)
-		{
-			chn = (ADC_Result[i] & ADC_SEQ1DMA_CHNUM_Msk) >> ADC_SEQ1DMA_CHNUM_Pos;
-			switch(chn)
-			{
-			case 0:
-				printf("%4d,", ADC_Result[i] & ADC_SEQ1DMA_DATA_Msk);
-				break;
-			}
-		}
+		ADC_Start(ADC_SEQ1, 0);		// 转换 250 次后停止，需重新启动
 		
-		DMA_CH_Open(DMA_CH0);	// 重新开始，再次搬运
-		
-		ADC_Start(ADC_SEQ1, 0);
+		CirBuf_Write(&CirBuf, &ADC_Result[ADC_SIZE/2], ADC_SIZE - ADC_SIZE/2);
 	}
 }
 

@@ -31,13 +31,13 @@ int main(void)
 	ADC_SEQ_Init(ADC0, ADC_SEQ0, &ADC_SEQ_initStruct);
 	
 	ADC_Open(ADC0);
-
-	TIMR_Init(TIMR1, TIMR_MODE_TIMER, CyclesPerUs, 10000, 0);	//100Hz
+	
+	TIMR_Init(TIMR1, TIMR_MODE_TIMER, CyclesPerUs, 2000, 0);	// 500Hz
 	TIMR_Start(TIMR1);
 	
 	while(1==1)
 	{
-		while(ADC_DataAvailable(ADC0, ADC_CH0) == 0) {}
+		while(ADC_DataAvailable(ADC0, ADC_CH0) == 0) __NOP();
 		printf("%4d,", ADC_Read(ADC0, ADC_CH0));
 	}
 }

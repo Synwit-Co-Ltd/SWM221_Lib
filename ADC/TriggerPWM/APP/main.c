@@ -33,11 +33,11 @@ int main(void)
 	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH0, 0 };
 	ADC_SEQ_Init(ADC0, ADC_SEQ0, &ADC_SEQ_initStruct);
 	
-	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_SW;		// 软件 启动 ADC 通道 1 转换，不产生中断
+	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_SW;		// 软件 启动 ADC 通道 2 转换，不产生中断
 	ADC_SEQ_initStruct.samp_tim = 6;
 	ADC_SEQ_initStruct.conv_cnt = 1;
 	ADC_SEQ_initStruct.EOCIntEn = 0;
-	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH1, 0 };
+	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH2, 0 };
 	ADC_SEQ_Init(ADC0, ADC_SEQ1, &ADC_SEQ_initStruct);
 	
 	ADC_Open(ADC0);
@@ -51,9 +51,9 @@ int main(void)
 		*/
 		ADC_Start(ADC_SEQ1, 0);
 		while(ADC_Busy(ADC0)) __NOP();
-		if(ADC_DataAvailable(ADC0, ADC_CH1))
+		if(ADC_DataAvailable(ADC0, ADC_CH2))
 		{
-			printf("%d,", ADC_Read(ADC0, ADC_CH1));
+			printf("%d,", ADC_Read(ADC0, ADC_CH2));
 		}
 		
 		for(int i = 0; i < SystemCoreClock/1000; i++) {}

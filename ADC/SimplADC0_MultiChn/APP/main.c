@@ -40,6 +40,7 @@ int main(void)
 		printf("%4d\t%4d\t%4d\t%4d\r\n", ADC_Read(ADC0, ADC_CH0), ADC_Read(ADC0, ADC_CH1), ADC_Read(ADC0, ADC_CH2), ADC_Read(ADC0, ADC_CH3));
 #else
 		printf("%4d,", ADC_Read(ADC0, ADC_CH0));
+		ADC_Read(ADC0, ADC_CH3);	// clear available flag
 #endif
 	}
 }
