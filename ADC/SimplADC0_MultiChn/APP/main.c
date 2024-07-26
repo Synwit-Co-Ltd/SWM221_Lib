@@ -18,7 +18,7 @@ int main(void)
 	PORT_Init(PORTB, PIN5,  PORTB_PIN5_ADC0_CH6,  0);		//PB.5  => ADC0.CH6
 	PORT_Init(PORTB, PIN4,  PORTB_PIN4_ADC0_CH7,  0);		//PB.4  => ADC0.CH7
 	PORT_Init(PORTB, PIN2,  PORTB_PIN2_ADC0_CH8,  0);		//PB.2  => ADC0.CH8
-
+	
 	ADC_initStruct.clkdiv = 4;
 	ADC_initStruct.samplAvg = ADC_AVG_SAMPLE1;
 	ADC_Init(ADC0, &ADC_initStruct);
@@ -27,7 +27,7 @@ int main(void)
 	ADC_SEQ_initStruct.samp_tim = 6;
 	ADC_SEQ_initStruct.conv_cnt = 1;
 	ADC_SEQ_initStruct.EOCIntEn = 0;
-	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH1, ADC_CH0, ADC_CH2, ADC_CH3, 0 };	// 可以任意指定通道顺序
+	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH0, ADC_CH2, ADC_CH6, ADC_CH5, 0 };	// 可以任意指定通道顺序
 	ADC_SEQ_Init(ADC0, ADC_SEQ0, &ADC_SEQ_initStruct);
 	
 	ADC_Open(ADC0);
@@ -35,9 +35,9 @@ int main(void)
 	while(1==1)
 	{
 		ADC_Start(ADC_SEQ0, 0);
-		while(ADC_DataAvailable(ADC0, ADC_CH3) == 0) {}
-#if 0
-		printf("%4d\t%4d\t%4d\t%4d\r\n", ADC_Read(ADC0, ADC_CH0), ADC_Read(ADC0, ADC_CH1), ADC_Read(ADC0, ADC_CH2), ADC_Read(ADC0, ADC_CH3));
+		while(ADC_DataAvailable(ADC0, ADC_CH5) == 0) __NOP();
+#if 1
+		printf("%4d\t%4d\t%4d\t%4d\r\n", ADC_Read(ADC0, ADC_CH0), ADC_Read(ADC0, ADC_CH2), ADC_Read(ADC0, ADC_CH5), ADC_Read(ADC0, ADC_CH6));
 #else
 		printf("%4d,", ADC_Read(ADC0, ADC_CH0));
 		ADC_Read(ADC0, ADC_CH3);	// clear available flag
