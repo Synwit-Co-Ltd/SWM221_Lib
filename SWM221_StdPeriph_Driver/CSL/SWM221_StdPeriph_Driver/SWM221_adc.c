@@ -75,8 +75,6 @@ static uint32_t ADC_chn2idx(uint32_t chn)
 	case ADC_CH7:  idx = 7;  break;
 	case ADC_CH8:  idx = 8;  break;
 	case ADC_CH9:  idx = 9;  break;
-	case ADC_CH10: idx = 10; break;
-	case ADC_CH11: idx = 11; break;
 	}
 	
 	return idx;

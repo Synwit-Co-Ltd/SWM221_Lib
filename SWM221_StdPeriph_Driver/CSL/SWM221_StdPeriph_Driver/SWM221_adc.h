@@ -38,8 +38,6 @@ typedef struct {
 #define ADC_CH7		0x080
 #define ADC_CH8		0x100
 #define ADC_CH9		0x200
-#define ADC_CH10	0x400
-#define ADC_CH11	0x800
 
 
 #define ADC_AVG_SAMPLE1			0
