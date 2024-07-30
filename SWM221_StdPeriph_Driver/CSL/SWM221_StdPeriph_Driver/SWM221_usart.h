@@ -51,7 +51,6 @@ typedef struct {
 #define USART_IT_RX_TO			USART_IER_RXTO_Msk		//接收超时
 #define USART_IT_TX_EMPTY		USART_IER_TXEMPTY_Msk	//THR 和 发送移位寄存器皆空
 #define USART_IT_ERR_OVR		USART_IER_OVRERR_Msk	//移除错误
-#define USART_IT_ERR_UDR		USART_IER_UDRERR_Msk	//下溢错误
 #define USART_IT_ERR_FRAME		USART_IER_FRAMERR_Msk	//帧格式错误
 #define USART_IT_ERR_PARITY		USART_IER_PARITYERR_Msk	//校验错误
 #define USART_IT_LIN_BRK		USART_LINIER_BRK_Msk	//LIN Break Sent or Received
@@ -109,7 +108,6 @@ static inline void USART_INTClr(USART_TypeDef * USARTx, uint32_t it)
 	}
 	
 	if(it & (USART_IT_ERR_OVR |
-			 USART_IT_ERR_UDR |
 			 USART_IT_ERR_FRAME |
 			 USART_IT_ERR_PARITY |
 			 USART_IT_LIN_BRK |

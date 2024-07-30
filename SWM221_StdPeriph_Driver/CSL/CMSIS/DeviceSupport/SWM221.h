@@ -900,16 +900,12 @@ typedef struct {
 #define USART_MR_NBDATA_Msk			(0x03 << USART_MR_NBDATA_Pos)
 #define USART_MR_SYNC_Pos			8		//USART operates in: 0 Asynchronous Mode   1 Synchronous Mode
 #define USART_MR_SYNC_Msk			(0x01 << USART_MR_SYNC_Pos)
-#define USART_MR_CPHA_Pos			8
-#define USART_MR_CPHA_Msk			(0x01 << USART_MR_CPHA_Pos)
 #define USART_MR_PARITY_Pos			9		//0 Even parity   1 Odd parity   2 force 0   3 force 1   4 No parity   6 Multidrop mode
 #define USART_MR_PARITY_Msk			(0x07 << USART_MR_PARITY_Pos)
 #define USART_MR_NBSTOP_Pos			12		//Number of Stop bits, 0 1bit   1 1.5bit   2 2bit
 #define USART_MR_NBSTOP_Msk			(0x03 << USART_MR_NBSTOP_Pos)
 #define USART_MR_MSBF_Pos			16		//MSB first
 #define USART_MR_MSBF_Msk			(0x01 << USART_MR_MSBF_Pos)
-#define USART_MR_CPOL_Pos			16
-#define USART_MR_CPOL_Msk			(0x01 << USART_MR_CPOL_Pos)
 #define USART_MR_DATA9b_Pos			17		//1 9-bit data length
 #define USART_MR_DATA9b_Msk			(0x01 << USART_MR_DATA9b_Pos)
 #define USART_MR_CLKO_Pos			18		//1 USART drive the SCK pin
@@ -951,8 +947,6 @@ typedef struct {
 #define USART_IER_TXEMPTY_Msk		(0x01 << USART_IER_TXEMPTY_Pos)
 #define USART_IER_MAXITER_Pos		10
 #define USART_IER_MAXITER_Msk		(0x01 << USART_IER_MAXITER_Pos)
-#define USART_IER_UDRERR_Pos		10
-#define USART_IER_UDRERR_Msk		(0x01 << USART_IER_UDRERR_Pos)
 #define USART_IER_TXBEMPTY_Pos		11
 #define USART_IER_TXBEMPTY_Msk		(0x01 << USART_IER_TXBEMPTY_Pos)
 #define USART_IER_RXBFULL_Pos		12
@@ -1011,8 +1005,6 @@ typedef struct {
 #define USART_IDR_TXEMPTY_Msk		(0x01 << USART_IDR_TXEMPTY_Pos)
 #define USART_IDR_MAXITER_Pos		10
 #define USART_IDR_MAXITER_Msk		(0x01 << USART_IDR_MAXITER_Pos)
-#define USART_IDR_UDRERR_Pos		10
-#define USART_IDR_UDRERR_Msk		(0x01 << USART_IDR_UDRERR_Pos)
 #define USART_IDR_TXBEMPTY_Pos		11
 #define USART_IDR_TXBEMPTY_Msk		(0x01 << USART_IDR_TXBEMPTY_Pos)
 #define USART_IDR_RXBFULL_Pos		12
@@ -1071,8 +1063,6 @@ typedef struct {
 #define USART_IMR_TXEMPTY_Msk		(0x01 << USART_IMR_TXEMPTY_Pos)
 #define USART_IMR_MAXITER_Pos		10
 #define USART_IMR_MAXITER_Msk		(0x01 << USART_IMR_MAXITER_Pos)
-#define USART_IMR_UDRERR_Pos		10
-#define USART_IMR_UDRERR_Msk		(0x01 << USART_IMR_UDRERR_Pos)
 #define USART_IMR_TXBEMPTY_Pos		11
 #define USART_IMR_TXBEMPTY_Msk		(0x01 << USART_IMR_TXBEMPTY_Pos)
 #define USART_IMR_RXBFULL_Pos		12
@@ -1131,8 +1121,6 @@ typedef struct {
 #define USART_ISR_TXEMPTY_Msk		(0x01 << USART_ISR_TXEMPTY_Pos)
 #define USART_ISR_MAXITER_Pos		10		//Maximum number of repetitions has been reached, CR.RSTSTA Ð´ 1 ÇåÁã
 #define USART_ISR_MAXITER_Msk		(0x01 << USART_ISR_MAXITER_Pos)
-#define USART_ISR_UDRERR_Pos		10		//ÏÂÒç´íÎó£¬CR.RSTSTA Ð´ 1 ÇåÁã
-#define USART_ISR_UDRERR_Msk		(0x01 << USART_ISR_UDRERR_Pos)
 #define USART_ISR_TXBEMPTY_Pos		11
 #define USART_ISR_TXBEMPTY_Msk		(0x01 << USART_ISR_TXBEMPTY_Pos)
 #define USART_ISR_RXBFULL_Pos		12
@@ -1204,9 +1192,9 @@ typedef struct {
 #define USART_MANCH_RXPL_Pos		16
 #define USART_MANCH_RXPL_Msk		(0x0F << USART_MANCH_RXPL_Pos)
 #define USART_MANCH_RXPP_Pos		24
-#define USART_MANCH_RXPP_Msk		(0x0F << USART_MANCH_RXPP_Pos)
+#define USART_MANCH_RXPP_Msk		(0x03 << USART_MANCH_RXPP_Pos)
 #define USART_MANCH_RXPOL_Pos		28
-#define USART_MANCH_RXPOL_Msk		(0x0F << USART_MANCH_RXPOL_Pos)
+#define USART_MANCH_RXPOL_Msk		(0x01 << USART_MANCH_RXPOL_Pos)
 #define USART_MANCH_ONE_Pos			29		//must always be set to 1 when programming this register
 #define USART_MANCH_ONE_Msk			(0x01 << USART_MANCH_ONE_Pos)
 
