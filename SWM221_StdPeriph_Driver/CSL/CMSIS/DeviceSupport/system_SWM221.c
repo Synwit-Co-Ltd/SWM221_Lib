@@ -176,7 +176,6 @@ void SystemInit(void)
 	
 	FMC->CACHE = (1 << FMC_CACHE_CEN_Pos) | FMC_CACHE_CCLR_Msk;	// Çå³ý Cache
 	__NOP(); __NOP(); __NOP(); __NOP(); __NOP(); __NOP(); __NOP();
-	FMC->CACHE = (1 << FMC_CACHE_CEN_Pos) | (1 << FMC_CACHE_CPEN_Pos);
 	
 	PORTB->PULLD &= ~((1 << PIN10) | (1 << PIN11));
 	PORTB->PULLU &= ~((1 << PIN12) | (1 << PIN15));
