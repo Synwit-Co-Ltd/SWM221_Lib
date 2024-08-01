@@ -242,7 +242,7 @@ uint32_t ADC_Read(ADC_TypeDef * ADCx, uint32_t chn)
 * 输    入: ADC_TypeDef * ADCx		指定要设置的ADC，有效值包括ADC0、ADC1
 *			uint32_t chn			要读取的通道，有效值为ADC_CH0、ADC_CH1、... ...、ADC_CH10、ADC_CH11
 * 输    出: uint32_t				1 有数据可读取    0 无数据
-* 注意事项: 无
+* 注意事项: 若在 ADC 转换过程中调用此函数，有一定概率在转换完成时 ADCx->DATA.FLAG 位无法置起
 ******************************************************************************************************************************************/
 uint32_t ADC_DataAvailable(ADC_TypeDef * ADCx, uint32_t chn)
 {

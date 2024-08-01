@@ -35,7 +35,7 @@ int main(void)
 	while(1==1)
 	{
 		ADC_Start(ADC_SEQ0, 0);
-		while(ADC_DataAvailable(ADC0, ADC_CH5) == 0) __NOP();
+		while(ADC_Busy(ADC0)) __NOP();
 #if 1
 		printf("%4d\t%4d\t%4d\t%4d\r\n", ADC_Read(ADC0, ADC_CH0), ADC_Read(ADC0, ADC_CH2), ADC_Read(ADC0, ADC_CH5), ADC_Read(ADC0, ADC_CH6));
 #else
