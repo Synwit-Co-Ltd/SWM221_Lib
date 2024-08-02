@@ -32,7 +32,7 @@ int main(void)
 	CAN_initStruct.ErrPassiveIEn = 1;
 	CAN_Init(CAN0, &CAN_initStruct);
 	
-	CAN_INTEn(CAN0, CAN_IT_ERR_WARN);
+	CAN_INTEn(CAN0, CAN_IT_ERR_WARN | CAN_IT_RX_OVERFLOW);
 	
 	CAN_SetFilter32b(CAN0, CAN_FILTER_1, 0x00122122, 0x1FFFFFFE);		//接收ID为0x00122122、0x00122123的扩展包
 	CAN_SetFilter16b(CAN0, CAN_FILTER_2, 0x122, 0x7FE, 0x101, 0x7FF);	//接收ID为0x122、123、0x101的标准包
@@ -73,6 +73,15 @@ void CAN0_Handler(void)
 		{
 			printf("\r\nReceive %s Remote Request\r\n", msg.format == CAN_FRAME_STD ? "STD" : "EXT");
 		}
+	}
+	
+	if(can_if & CAN_IF_RXOV_Msk)
+	{
+		printf("\r\nCAN RX Overflow\r\n");
+		
+		CAN_Close(CAN0);
+		for(int i = 0; i < CyclesPerUs; i++) __NOP();
+		CAN_Open(CAN0);
 	}
 	
 	if(can_if & CAN_IF_ERRWARN_Msk)
