@@ -13,7 +13,7 @@ typedef struct {
 	uint8_t  samp_tim;		//ADC序列采样时间，可取值4--259
 	uint8_t  conv_cnt;		//ADC序列转换次数，可取值1--256
 	uint8_t  EOCIntEn;		//转换完成中断使能，可取值0、1
-	uint8_t *channels;		//序列转换通道选择，元素为 ADC_CH0、ADC_CH1、...、ADC_CH11 的数组，最多 8 个通道，以 0 结束，通道可重复
+	uint8_t *channels;		//序列转换通道选择，元素为 ADC_CH0、ADC_CH1、...、ADC_CH11 的数组，最多 8 个通道，以 0xF 结束，通道可重复
 } ADC_SEQ_InitStructure;
 
 
@@ -28,16 +28,16 @@ typedef struct {
 #define ADC_SEQ0	0x1
 #define ADC_SEQ1	0x2
 
-#define ADC_CH0		0x001
-#define ADC_CH1		0x002
-#define ADC_CH2		0x004
-#define ADC_CH3		0x008
-#define ADC_CH4		0x010
-#define ADC_CH5		0x020
-#define ADC_CH6		0x040
-#define ADC_CH7		0x080
-#define ADC_CH8		0x100
-#define ADC_CH9		0x200
+#define ADC_CH0		0
+#define ADC_CH1		1
+#define ADC_CH2		2
+#define ADC_CH3		3
+#define ADC_CH4		4
+#define ADC_CH5		5
+#define ADC_CH6		6
+#define ADC_CH7		7
+#define ADC_CH8		8
+#define ADC_CH9		9
 
 
 #define ADC_AVG_SAMPLE1			0

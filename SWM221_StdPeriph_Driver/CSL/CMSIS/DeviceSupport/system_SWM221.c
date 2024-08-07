@@ -46,9 +46,9 @@
 /********************************** PLL 设定 **********************************************
  * PLL输出频率 = PLL输入时钟 / INDIV * FBDIV
  *****************************************************************************************/ 
-#define SYS_PLL_SRC   	SYS_CLK_8MHz	//可取值SYS_CLK_8MHz、SYS_CLK_XTAL
+#define SYS_PLL_SRC   	SYS_CLK_XTAL	//可取值SYS_CLK_8MHz、SYS_CLK_XTAL
 
-#define PLL_IN_DIV		2
+#define PLL_IN_DIV		3
 
 #define PLL_FB_DIV		15
 

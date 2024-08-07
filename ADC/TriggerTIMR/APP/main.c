@@ -27,7 +27,7 @@ int main(void)
 	ADC_SEQ_initStruct.samp_tim = 6;
 	ADC_SEQ_initStruct.conv_cnt = 1;
 	ADC_SEQ_initStruct.EOCIntEn = 0;
-	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH0, 0 };
+	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH0, 0xF };
 	ADC_SEQ_Init(ADC0, ADC_SEQ0, &ADC_SEQ_initStruct);
 	
 	ADC_Open(ADC0);

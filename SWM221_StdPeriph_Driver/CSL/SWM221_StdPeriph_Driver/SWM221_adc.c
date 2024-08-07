@@ -59,27 +59,6 @@ static uint32_t ADC_seq2pos(uint32_t seq)
 	return pos;
 }
 
-static uint32_t ADC_chn2idx(uint32_t chn)
-{
-	uint32_t idx = 0;
-	
-	switch(chn)
-	{
-	case ADC_CH0:  idx = 0;  break;
-	case ADC_CH1:  idx = 1;  break;
-	case ADC_CH2:  idx = 2;  break;
-	case ADC_CH3:  idx = 3;  break;
-	case ADC_CH4:  idx = 4;  break;
-	case ADC_CH5:  idx = 5;  break;
-	case ADC_CH6:  idx = 6;  break;
-	case ADC_CH7:  idx = 7;  break;
-	case ADC_CH8:  idx = 8;  break;
-	case ADC_CH9:  idx = 9;  break;
-	}
-	
-	return idx;
-}
-
 /****************************************************************************************************************************************** 
 * 函数名称: ADC_SEQ_Init()
 * 功能说明:	ADC序列初始化
@@ -111,14 +90,10 @@ void ADC_SEQ_Init(ADC_TypeDef * ADCx, uint32_t seq, ADC_SEQ_InitStructure * init
 	*SEQxCHN = 0;
 	for(int i = 0; i < 8; i++)
 	{
-		if(initStruct->channels[i] == 0)
-		{
-			*SEQxCHN |= 0xF << (i * 4);
-			
-			break;
-		}
+		*SEQxCHN |= initStruct->channels[i] << (i * 4);
 		
-		*SEQxCHN |= ADC_chn2idx(initStruct->channels[i]) << (i * 4);
+		if(initStruct->channels[i] == 0xF)
+			break;
 	}
 }
 
@@ -231,9 +206,7 @@ bool ADC_Busy(ADC_TypeDef * ADCx)
 ******************************************************************************************************************************************/
 uint32_t ADC_Read(ADC_TypeDef * ADCx, uint32_t chn)
 {
-	uint32_t idx = ADC_chn2idx(chn);
-	
-	return ADCx->DATA[idx] & ADC_DATA_DATA_Msk;
+	return ADCx->DATA[chn] & ADC_DATA_DATA_Msk;
 }
 
 /****************************************************************************************************************************************** 
@@ -246,9 +219,7 @@ uint32_t ADC_Read(ADC_TypeDef * ADCx, uint32_t chn)
 ******************************************************************************************************************************************/
 uint32_t ADC_DataAvailable(ADC_TypeDef * ADCx, uint32_t chn)
 {
-	uint32_t idx = ADC_chn2idx(chn);
-	
-	return (ADCx->DATA[idx] & ADC_DATA_FLAG_Msk) != 0;
+	return (ADCx->DATA[chn] & ADC_DATA_FLAG_Msk) != 0;
 }
 
 
