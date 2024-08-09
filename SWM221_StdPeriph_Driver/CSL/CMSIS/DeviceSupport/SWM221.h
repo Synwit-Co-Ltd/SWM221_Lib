@@ -820,29 +820,13 @@ typedef struct {
 	
 	__IO uint32_t TXTG;						//Transmitter Timeguard, 1-255 bit period
 	
-		 uint32_t RESERVED[5];
-		 
-	__IO uint32_t ISODIV;					//In ISO7816 mode, the baud rate is the clock provided on SCK divided by ISODIV
-	
-	__I  uint32_t ISONER;					//Number of errors occurred during an ISO7816 transfer. automatically clears when read.
-	
-		 uint32_t RESERVED2;
-		 
-	__IO uint32_t IDAFR;					//IrDA Filter Register
-	
-	__IO uint32_t MANCH;					//Manchester Encoder Decoder Register
+		 uint32_t RESERVED[10];
 	
 	__IO uint32_t LINMR;					//LIN Mode Register
 	
 	__IO uint32_t LINID;
 	
 	__I  uint32_t LINBR;					//LIN Baud Rate Register
-	
-		 uint32_t RESERVED3[33];
-		 
-	__IO uint32_t WPCR;
-	
-	__I  uint32_t WPSR;
 } USART_TypeDef;
 
 
@@ -874,21 +858,12 @@ typedef struct {
 #define USART_CR_RSTNAK_Msk			(0x01 << USART_CR_RSTNAK_Pos)
 #define USART_CR_RETTO_Pos			15		//Rearm Time-out
 #define USART_CR_RETTO_Msk			(0x01 << USART_CR_RETTO_Pos)
-#define USART_CR_DTREN_Pos			16		//DTR Enable
-#define USART_CR_DTREN_Msk			(0x01 << USART_CR_DTREN_Pos)
-#define USART_CR_DTRDIS_Pos			17		//DTR Disable
-#define USART_CR_DTRDIS_Msk			(0x01 << USART_CR_DTRDIS_Pos)
-#define USART_CR_RTSEN_Pos			18		//RTS Enable, drives the pin RTS to 0.
-#define USART_CR_RTSEN_Msk			(0x01 << USART_CR_RTSEN_Pos)
-#define USART_CR_RTSDIS_Pos			19		//RTS Disable, drives the pin RTS to 1.
-#define USART_CR_RTSDIS_Msk			(0x01 << USART_CR_RTSDIS_Pos)
 #define USART_CR_LINABT_Pos			20		//Abort the current LIN transmission.
 #define USART_CR_LINABT_Msk			(0x01 << USART_CR_LINABT_Pos)
 #define USART_CR_LINWKUP_Pos		21		//Sends a wakeup signal on the LIN bus.
 #define USART_CR_LINWKUP_Msk		(0x01 << USART_CR_LINWKUP_Pos)
 
-#define USART_MR_MODE_Pos			0		//0 UART   1 RS485   2 Hardware Handshaking   3 MODEM   4 IS07816_T_0   6  IS07816_T_1
-											//8 IrDA   9 LON   10 LIN Master   11 LIN Slave   14 SPI Master   15 SPI Slave
+#define USART_MR_MODE_Pos			0		//0 UART   10 LIN Master   11 LIN Slave
 #define USART_MR_MODE_Msk			(0x0F << USART_MR_MODE_Pos)
 #define USART_MR_CLKS_Pos			4		//
 #define USART_MR_CLKS_Msk			(0x03 << USART_MR_CLKS_Pos)
@@ -904,8 +879,6 @@ typedef struct {
 #define USART_MR_MSBF_Msk			(0x01 << USART_MR_MSBF_Pos)
 #define USART_MR_DATA9b_Pos			17		//1 9-bit data length
 #define USART_MR_DATA9b_Msk			(0x01 << USART_MR_DATA9b_Pos)
-#define USART_MR_CLKO_Pos			18		//1 USART drive the SCK pin
-#define USART_MR_CLKO_Msk			(0x01 << USART_MR_CLKO_Pos)
 #define USART_MR_OVER8_Pos			19		//0 16x Oversampling   1 8x Oversampling
 #define USART_MR_OVER8_Msk			(0x01 << USART_MR_OVER8_Pos)
 #define USART_MR_DISNAK_Pos			20		//1 Not generate NAK
@@ -916,10 +889,6 @@ typedef struct {
 #define USART_MR_INVDATA_Msk		(0x01 << USART_MR_INVDATA_Pos)
 #define USART_MR_MAXITER_Pos		24		//Maximum Number of Automatic Iteration
 #define USART_MR_MAXITER_Msk		(0x07 << USART_MR_MAXITER_Pos)
-#define USART_MR_IDAFLEN_Pos		28		//Infrared Receive Line Filter
-#define USART_MR_IDAFLEN_Msk		(0x01 << USART_MR_IDAFLEN_Pos)
-#define USART_MR_MANCHEN_Pos		29		//Manchester Encoder/Decoder Enable
-#define USART_MR_MANCHEN_Msk		(0x01 << USART_MR_MANCHEN_Pos)
 
 #define USART_IER_RXRDY_Pos			0
 #define USART_IER_RXRDY_Msk			(0x01 << USART_IER_RXRDY_Pos)
@@ -949,16 +918,6 @@ typedef struct {
 #define USART_IER_RXBFULL_Msk		(0x01 << USART_IER_RXBFULL_Pos)
 #define USART_IER_NAK_Pos			13
 #define USART_IER_NAK_Msk			(0x01 << USART_IER_NAK_Pos)
-#define USART_IER_RICHG_Pos			16
-#define USART_IER_RICHG_Msk			(0x01 << USART_IER_RICHG_Pos)
-#define USART_IER_DSRCHG_Pos		17
-#define USART_IER_DSRCHG_Msk		(0x01 << USART_IER_DSRCHG_Pos)
-#define USART_IER_DCDCHG_Pos		18
-#define USART_IER_DCDCHG_Msk		(0x01 << USART_IER_DCDCHG_Pos)
-#define USART_IER_CTSCHG_Pos		19
-#define USART_IER_CTSCHG_Msk		(0x01 << USART_IER_CTSCHG_Pos)
-#define USART_IER_MANERR_Pos		24
-#define USART_IER_MANERR_Msk		(0x01 << USART_IER_MANERR_Pos)
 
 #define USART_LINIER_BRK_Pos		13
 #define USART_LINIER_BRK_Msk		(0x01 << USART_LINIER_BRK_Pos)
@@ -1007,16 +966,6 @@ typedef struct {
 #define USART_IDR_RXBFULL_Msk		(0x01 << USART_IDR_RXBFULL_Pos)
 #define USART_IDR_NAK_Pos			13
 #define USART_IDR_NAK_Msk			(0x01 << USART_IDR_NAK_Pos)
-#define USART_IDR_RICHG_Pos			16
-#define USART_IDR_RICHG_Msk			(0x01 << USART_IDR_RICHG_Pos)
-#define USART_IDR_DSRCHG_Pos		17
-#define USART_IDR_DSRCHG_Msk		(0x01 << USART_IDR_DSRCHG_Pos)
-#define USART_IDR_DCDCHG_Pos		18
-#define USART_IDR_DCDCHG_Msk		(0x01 << USART_IDR_DCDCHG_Pos)
-#define USART_IDR_CTSCHG_Pos		19
-#define USART_IDR_CTSCHG_Msk		(0x01 << USART_IDR_CTSCHG_Pos)
-#define USART_IDR_MANERR_Pos		24
-#define USART_IDR_MANERR_Msk		(0x01 << USART_IDR_MANERR_Pos)
 
 #define USART_LINIDR_BRK_Pos		13
 #define USART_LINIDR_BRK_Msk		(0x01 << USART_LINIDR_BRK_Pos)
@@ -1065,16 +1014,6 @@ typedef struct {
 #define USART_IMR_RXBFULL_Msk		(0x01 << USART_IMR_RXBFULL_Pos)
 #define USART_IMR_NAK_Pos			13
 #define USART_IMR_NAK_Msk			(0x01 << USART_IMR_NAK_Pos)
-#define USART_IMR_RICHG_Pos			16
-#define USART_IMR_RICHG_Msk			(0x01 << USART_IMR_RICHG_Pos)
-#define USART_IMR_DSRCHG_Pos		17
-#define USART_IMR_DSRCHG_Msk		(0x01 << USART_IMR_DSRCHG_Pos)
-#define USART_IMR_DCDCHG_Pos		18
-#define USART_IMR_DCDCHG_Msk		(0x01 << USART_IMR_DCDCHG_Pos)
-#define USART_IMR_CTSCHG_Pos		19
-#define USART_IMR_CTSCHG_Msk		(0x01 << USART_IMR_CTSCHG_Pos)
-#define USART_IMR_MANERR_Pos		24
-#define USART_IMR_MANERR_Msk		(0x01 << USART_IMR_MANERR_Pos)
 
 #define USART_LINIMR_BRK_Pos		13
 #define USART_LINIMR_BRK_Msk		(0x01 << USART_LINIMR_BRK_Pos)
@@ -1131,16 +1070,6 @@ typedef struct {
 #define USART_ISR_DCDCHG_Msk		(0x01 << USART_ISR_DCDCHG_Pos)
 #define USART_ISR_CTSCHG_Pos		19		//CTS 引脚电平变化，读 ISR 清零
 #define USART_ISR_CTSCHG_Msk		(0x01 << USART_ISR_CTSCHG_Pos)
-#define USART_ISR_RI_Pos			20
-#define USART_ISR_RI_Msk			(0x01 << USART_ISR_RI_Pos)
-#define USART_ISR_DSR_Pos			21
-#define USART_ISR_DSR_Msk			(0x01 << USART_ISR_DSR_Pos)
-#define USART_ISR_DCD_Pos			22
-#define USART_ISR_DCD_Msk			(0x01 << USART_ISR_DCD_Pos)
-#define USART_ISR_CTS_Pos			23
-#define USART_ISR_CTS_Msk			(0x01 << USART_ISR_CTS_Pos)
-#define USART_ISR_MANERR_Pos		24		//At least one Manchester error has been detected, CR.RSTSTA 写 1 清零
-#define USART_ISR_MANERR_Msk		(0x01 << USART_ISR_MANERR_Pos)
 
 #define USART_LINISR_BRK_Pos		13		//LIN Break Sent or LIN Break Received, CR.RSTSTA 写 1 清零
 #define USART_LINISR_BRK_Msk		(0x01 << USART_LINISR_BRK_Pos)
@@ -1179,21 +1108,6 @@ typedef struct {
 #define USART_BAUD_FDIV_Pos			16
 #define USART_BAUD_FDIV_Msk			(0x07 << USART_BAUD_FDIV_Pos)
 
-#define USART_MANCH_TXPL_Pos		0		//Transmitter Preamble Length
-#define USART_MANCH_TXPL_Msk		(0x0F << USART_MANCH_TXPL_Pos)
-#define USART_MANCH_TXPP_Pos		8		//Transmitter Preamble Pattern, 0 all one   1 all zero   2 zero_one   3 one_zero
-#define USART_MANCH_TXPP_Msk		(0x03 << USART_MANCH_TXPP_Pos)
-#define USART_MANCH_TXPOL_Pos		12		//Transmitter Polarity, 0 Logic Zero is coded as a zero-to-one transition
-#define USART_MANCH_TXPOL_Msk		(0x01 << USART_MANCH_TXPOL_Pos)
-#define USART_MANCH_RXPL_Pos		16
-#define USART_MANCH_RXPL_Msk		(0x0F << USART_MANCH_RXPL_Pos)
-#define USART_MANCH_RXPP_Pos		24
-#define USART_MANCH_RXPP_Msk		(0x03 << USART_MANCH_RXPP_Pos)
-#define USART_MANCH_RXPOL_Pos		28
-#define USART_MANCH_RXPOL_Msk		(0x01 << USART_MANCH_RXPOL_Pos)
-#define USART_MANCH_ONE_Pos			29		//must always be set to 1 when programming this register
-#define USART_MANCH_ONE_Msk			(0x01 << USART_MANCH_ONE_Pos)
-
 #define USART_LINMR_NACT_Pos		0		//Node Action, 0 transmit the response   1 receive the response   2 ignore
 #define USART_LINMR_NACT_Msk		(0x03 << USART_LINMR_NACT_Pos)
 #define USART_LINMR_PARDIS_Pos		2		//Parity Disable
@@ -1217,16 +1131,6 @@ typedef struct {
 #define USART_LINBR_IDIV_Msk		(0xFFFF << USART_LINBR_IDIV_Pos)
 #define USART_LINBR_FDIV_Pos		16
 #define USART_LINBR_FDIV_Msk		(0x07 << USART_LINBR_FDIV_Pos)
-
-#define USART_WPCR_WPEN_Pos			0
-#define USART_WPCR_WPEN_Msk			(0x01 << USART_WPCR_WPEN_Pos)
-#define USART_WPCR_KEY_Pos			8		//must be 0x555341 when write this register
-#define USART_WPCR_KEY_Msk			(0xFFFFFF  << USART_WPCR_KEY_Pos)
-
-#define USART_WPSR_WPVS_Pos			0		//1 Write Protect Violation has occurred since the last read of the WPSR.
-#define USART_WPSR_WPVS_Msk			(0x01 << USART_WPSR_WPVS_Pos)
-#define USART_WPSR_SRC_Pos			8		//Write Protect Violation Source, indicate the write-protected register in which a write access has been attempted.
-#define USART_WPSR_SRC_Msk			(0xFFFF << USART_WPSR_SRC_Pos)
 
 
 
