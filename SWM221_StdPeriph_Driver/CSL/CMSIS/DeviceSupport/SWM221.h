@@ -786,29 +786,13 @@ typedef struct {
 	
 	__IO uint32_t MR;
 	
-	union {
-		__O  uint32_t IER;					//Interrupt Enable Register
-		
-		__O  uint32_t LINIER;
-	};
+	__O  uint32_t IER;						//Interrupt Enable Register
 	
-	union {
-		__O  uint32_t IDR;					//Interrupt Disable Register
-		
-		__O  uint32_t LINIDR;
-	};
+	__O  uint32_t IDR;						//Interrupt Disable Register
 	
-	union {
-		__I  uint32_t IMR;
-		
-		__I  uint32_t LINIMR;
-	};
+	__I  uint32_t IMR;						//Interrupt Enable value register
 	
-	union {
-		__I  uint32_t ISR;
-		
-		__I  uint32_t LINISR;
-	};
+	__I  uint32_t ISR;
 	
 	__I  uint32_t RHR;						//Receiver Holding Register
 	
@@ -818,9 +802,7 @@ typedef struct {
 	
 	__IO uint32_t RXTO;						//Receiver Time-out, 1-65535 bit period
 	
-	__IO uint32_t TXTG;						//Transmitter Timeguard, 1-255 bit period
-	
-		 uint32_t RESERVED[10];
+		 uint32_t RESERVED[11];
 	
 	__IO uint32_t LINMR;					//LIN Mode Register
 	
@@ -850,12 +832,6 @@ typedef struct {
 #define USART_CR_STPBRK_Msk			(0x01 << USART_CR_STPBRK_Pos)
 #define USART_CR_STTTO_Pos			11		//Start Time-out
 #define USART_CR_STTTO_Msk			(0x01 << USART_CR_STTTO_Pos)
-#define USART_CR_SENDAD_Pos			12		//Send Address
-#define USART_CR_SENDAD_Msk			(0x01 << USART_CR_SENDAD_Pos)
-#define USART_CR_RSTIT_Pos			13		//Resets ITERATION in US_CSR
-#define USART_CR_RSTIT_Msk			(0x01 << USART_CR_RSTIT_Pos)
-#define USART_CR_RSTNAK_Pos			14		//Resets NACK in US_CSR
-#define USART_CR_RSTNAK_Msk			(0x01 << USART_CR_RSTNAK_Pos)
 #define USART_CR_RETTO_Pos			15		//Rearm Time-out
 #define USART_CR_RETTO_Msk			(0x01 << USART_CR_RETTO_Pos)
 #define USART_CR_LINABT_Pos			20		//Abort the current LIN transmission.
@@ -865,12 +841,10 @@ typedef struct {
 
 #define USART_MR_MODE_Pos			0		//0 UART   10 LIN Master   11 LIN Slave
 #define USART_MR_MODE_Msk			(0x0F << USART_MR_MODE_Pos)
-#define USART_MR_CLKS_Pos			4		//
+#define USART_MR_CLKS_Pos			4		//Clock source
 #define USART_MR_CLKS_Msk			(0x03 << USART_MR_CLKS_Pos)
 #define USART_MR_NBDATA_Pos			6		//Number of Data bits, 0 5bit   1 6bit   2 7bit   3 8bit
 #define USART_MR_NBDATA_Msk			(0x03 << USART_MR_NBDATA_Pos)
-#define USART_MR_SYNC_Pos			8		//USART operates in: 0 Asynchronous Mode   1 Synchronous Mode
-#define USART_MR_SYNC_Msk			(0x01 << USART_MR_SYNC_Pos)
 #define USART_MR_PARITY_Pos			9		//0 Even parity   1 Odd parity   2 force 0   3 force 1   4 No parity   6 Multidrop mode
 #define USART_MR_PARITY_Msk			(0x07 << USART_MR_PARITY_Pos)
 #define USART_MR_NBSTOP_Pos			12		//Number of Stop bits, 0 1bit   1 1.5bit   2 2bit
@@ -881,14 +855,6 @@ typedef struct {
 #define USART_MR_DATA9b_Msk			(0x01 << USART_MR_DATA9b_Pos)
 #define USART_MR_OVER8_Pos			19		//0 16x Oversampling   1 8x Oversampling
 #define USART_MR_OVER8_Msk			(0x01 << USART_MR_OVER8_Pos)
-#define USART_MR_DISNAK_Pos			20		//1 Not generate NAK
-#define USART_MR_DISNAK_Msk			(0x01 << USART_MR_DISNAK_Pos)
-#define USART_MR_DSNAK_Pos			21		//Disalbe successive NAK
-#define USART_MR_DSNAK_Msk			(0x01 << USART_MR_DSNAK_Pos)
-#define USART_MR_INVDATA_Pos		23		//Invert Data
-#define USART_MR_INVDATA_Msk		(0x01 << USART_MR_INVDATA_Pos)
-#define USART_MR_MAXITER_Pos		24		//Maximum Number of Automatic Iteration
-#define USART_MR_MAXITER_Msk		(0x07 << USART_MR_MAXITER_Pos)
 
 #define USART_IER_RXRDY_Pos			0
 #define USART_IER_RXRDY_Msk			(0x01 << USART_IER_RXRDY_Pos)
@@ -896,10 +862,6 @@ typedef struct {
 #define USART_IER_TXRDY_Msk			(0x01 << USART_IER_TXRDY_Pos)
 #define USART_IER_RXBRK_Pos			2
 #define USART_IER_RXBRK_Msk			(0x01 << USART_IER_RXBRK_Pos)
-#define USART_IER_RXDMAEND_Pos		3
-#define USART_IER_RXDMAEND_Msk		(0x01 << USART_IER_RXDMAEND_Pos)
-#define USART_IER_TXDMAEND_Pos		4
-#define USART_IER_TXDMAEND_Msk		(0x01 << USART_IER_TXDMAEND_Pos)
 #define USART_IER_OVRERR_Pos		5
 #define USART_IER_OVRERR_Msk		(0x01 << USART_IER_OVRERR_Pos)
 #define USART_IER_FRAMERR_Pos		6
@@ -910,33 +872,28 @@ typedef struct {
 #define USART_IER_RXTO_Msk			(0x01 << USART_IER_RXTO_Pos)
 #define USART_IER_TXEMPTY_Pos		9
 #define USART_IER_TXEMPTY_Msk		(0x01 << USART_IER_TXEMPTY_Pos)
-#define USART_IER_MAXITER_Pos		10
-#define USART_IER_MAXITER_Msk		(0x01 << USART_IER_MAXITER_Pos)
 #define USART_IER_TXBEMPTY_Pos		11
 #define USART_IER_TXBEMPTY_Msk		(0x01 << USART_IER_TXBEMPTY_Pos)
 #define USART_IER_RXBFULL_Pos		12
 #define USART_IER_RXBFULL_Msk		(0x01 << USART_IER_RXBFULL_Pos)
-#define USART_IER_NAK_Pos			13
-#define USART_IER_NAK_Msk			(0x01 << USART_IER_NAK_Pos)
-
-#define USART_LINIER_BRK_Pos		13
-#define USART_LINIER_BRK_Msk		(0x01 << USART_LINIER_BRK_Pos)
-#define USART_LINIER_ID_Pos			14
-#define USART_LINIER_ID_Msk			(0x01 << USART_LINIER_ID_Pos)
-#define USART_LINIER_DONE_Pos		15
-#define USART_LINIER_DONE_Msk		(0x01 << USART_LINIER_DONE_Pos)
-#define USART_LINIER_BITERR_Pos		25
-#define USART_LINIER_BITERR_Msk		(0x01 << USART_LINIER_BITERR_Pos)
-#define USART_LINIER_SYNCERR_Pos	26
-#define USART_LINIER_SYNCERR_Msk	(0x01 << USART_LINIER_SYNCERR_Pos)
-#define USART_LINIER_IDERR_Pos		27
-#define USART_LINIER_IDERR_Msk		(0x01 << USART_LINIER_IDERR_Pos)
-#define USART_LINIER_CHKERR_Pos		28
-#define USART_LINIER_CHKERR_Msk		(0x01 << USART_LINIER_CHKERR_Pos)
-#define USART_LINIER_NAKERR_Pos		29
-#define USART_LINIER_NAKERR_Msk		(0x01 << USART_LINIER_NAKERR_Pos)
-#define USART_LINIER_HDRTO_Pos		31
-#define USART_LINIER_HDRTO_Msk		(0x01 << USART_LINIER_HDRTO_Pos)
+#define USART_IER_BRK_Pos			13
+#define USART_IER_BRK_Msk			(0x01 << USART_IER_BRK_Pos)
+#define USART_IER_ID_Pos			14
+#define USART_IER_ID_Msk			(0x01 << USART_IER_ID_Pos)
+#define USART_IER_DONE_Pos			15
+#define USART_IER_DONE_Msk			(0x01 << USART_IER_DONE_Pos)
+#define USART_IER_BITERR_Pos		25
+#define USART_IER_BITERR_Msk		(0x01 << USART_IER_BITERR_Pos)
+#define USART_IER_SYNCERR_Pos		26
+#define USART_IER_SYNCERR_Msk		(0x01 << USART_IER_SYNCERR_Pos)
+#define USART_IER_IDERR_Pos			27
+#define USART_IER_IDERR_Msk			(0x01 << USART_IER_IDERR_Pos)
+#define USART_IER_CHKERR_Pos		28
+#define USART_IER_CHKERR_Msk		(0x01 << USART_IER_CHKERR_Pos)
+#define USART_IER_NAKERR_Pos		29
+#define USART_IER_NAKERR_Msk		(0x01 << USART_IER_NAKERR_Pos)
+#define USART_IER_HDRTO_Pos			31
+#define USART_IER_HDRTO_Msk			(0x01 << USART_IER_HDRTO_Pos)
 
 #define USART_IDR_RXRDY_Pos			0
 #define USART_IDR_RXRDY_Msk			(0x01 << USART_IDR_RXRDY_Pos)
@@ -944,10 +901,6 @@ typedef struct {
 #define USART_IDR_TXRDY_Msk			(0x01 << USART_IDR_TXRDY_Pos)
 #define USART_IDR_RXBRK_Pos			2
 #define USART_IDR_RXBRK_Msk			(0x01 << USART_IDR_RXBRK_Pos)
-#define USART_IDR_RXDMAEND_Pos		3
-#define USART_IDR_RXDMAEND_Msk		(0x01 << USART_IDR_RXDMAEND_Pos)
-#define USART_IDR_TXDMAEND_Pos		4
-#define USART_IDR_TXDMAEND_Msk		(0x01 << USART_IDR_TXDMAEND_Pos)
 #define USART_IDR_OVRERR_Pos		5
 #define USART_IDR_OVRERR_Msk		(0x01 << USART_IDR_OVRERR_Pos)
 #define USART_IDR_FRAMERR_Pos		6
@@ -958,33 +911,28 @@ typedef struct {
 #define USART_IDR_RXTO_Msk			(0x01 << USART_IDR_RXTO_Pos)
 #define USART_IDR_TXEMPTY_Pos		9
 #define USART_IDR_TXEMPTY_Msk		(0x01 << USART_IDR_TXEMPTY_Pos)
-#define USART_IDR_MAXITER_Pos		10
-#define USART_IDR_MAXITER_Msk		(0x01 << USART_IDR_MAXITER_Pos)
 #define USART_IDR_TXBEMPTY_Pos		11
 #define USART_IDR_TXBEMPTY_Msk		(0x01 << USART_IDR_TXBEMPTY_Pos)
 #define USART_IDR_RXBFULL_Pos		12
 #define USART_IDR_RXBFULL_Msk		(0x01 << USART_IDR_RXBFULL_Pos)
-#define USART_IDR_NAK_Pos			13
-#define USART_IDR_NAK_Msk			(0x01 << USART_IDR_NAK_Pos)
-
-#define USART_LINIDR_BRK_Pos		13
-#define USART_LINIDR_BRK_Msk		(0x01 << USART_LINIDR_BRK_Pos)
-#define USART_LINIDR_ID_Pos			14
-#define USART_LINIDR_ID_Msk			(0x01 << USART_LINIDR_ID_Pos)
-#define USART_LINIDR_DONE_Pos		15
-#define USART_LINIDR_DONE_Msk		(0x01 << USART_LINIDR_DONE_Pos)
-#define USART_LINIDR_BITERR_Pos		25
-#define USART_LINIDR_BITERR_Msk		(0x01 << USART_LINIDR_BITERR_Pos)
-#define USART_LINIDR_SYNCERR_Pos	26
-#define USART_LINIDR_SYNCERR_Msk	(0x01 << USART_LINIDR_SYNCERR_Pos)
-#define USART_LINIDR_IDERR_Pos		27
-#define USART_LINIDR_IDERR_Msk		(0x01 << USART_LINIDR_IDERR_Pos)
-#define USART_LINIDR_CHKERR_Pos		28
-#define USART_LINIDR_CHKERR_Msk		(0x01 << USART_LINIDR_CHKERR_Pos)
-#define USART_LINIDR_NAKERR_Pos		29
-#define USART_LINIDR_NAKERR_Msk		(0x01 << USART_LINIDR_NAKERR_Pos)
-#define USART_LINIDR_HDRTO_Pos		31
-#define USART_LINIDR_HDRTO_Msk		(0x01 << USART_LINIDR_HDRTO_Pos)
+#define USART_IDR_BRK_Pos			13
+#define USART_IDR_BRK_Msk			(0x01 << USART_IDR_BRK_Pos)
+#define USART_IDR_ID_Pos			14
+#define USART_IDR_ID_Msk			(0x01 << USART_IDR_ID_Pos)
+#define USART_IDR_DONE_Pos			15
+#define USART_IDR_DONE_Msk			(0x01 << USART_IDR_DONE_Pos)
+#define USART_IDR_BITERR_Pos		25
+#define USART_IDR_BITERR_Msk		(0x01 << USART_IDR_BITERR_Pos)
+#define USART_IDR_SYNCERR_Pos		26
+#define USART_IDR_SYNCERR_Msk		(0x01 << USART_IDR_SYNCERR_Pos)
+#define USART_IDR_IDERR_Pos			27
+#define USART_IDR_IDERR_Msk			(0x01 << USART_IDR_IDERR_Pos)
+#define USART_IDR_CHKERR_Pos		28
+#define USART_IDR_CHKERR_Msk		(0x01 << USART_IDR_CHKERR_Pos)
+#define USART_IDR_NAKERR_Pos		29
+#define USART_IDR_NAKERR_Msk		(0x01 << USART_IDR_NAKERR_Pos)
+#define USART_IDR_HDRTO_Pos			31
+#define USART_IDR_HDRTO_Msk			(0x01 << USART_IDR_HDRTO_Pos)
 
 #define USART_IMR_RXRDY_Pos			0
 #define USART_IMR_RXRDY_Msk			(0x01 << USART_IMR_RXRDY_Pos)
@@ -992,10 +940,6 @@ typedef struct {
 #define USART_IMR_TXRDY_Msk			(0x01 << USART_IMR_TXRDY_Pos)
 #define USART_IMR_RXBRK_Pos			2
 #define USART_IMR_RXBRK_Msk			(0x01 << USART_IMR_RXBRK_Pos)
-#define USART_IMR_RXDMAEND_Pos		3
-#define USART_IMR_RXDMAEND_Msk		(0x01 << USART_IMR_RXDMAEND_Pos)
-#define USART_IMR_TXDMAEND_Pos		4
-#define USART_IMR_TXDMAEND_Msk		(0x01 << USART_IMR_TXDMAEND_Pos)
 #define USART_IMR_OVRERR_Pos		5
 #define USART_IMR_OVRERR_Msk		(0x01 << USART_IMR_OVRERR_Pos)
 #define USART_IMR_FRAMERR_Pos		6
@@ -1006,33 +950,28 @@ typedef struct {
 #define USART_IMR_RXTO_Msk			(0x01 << USART_IMR_RXTO_Pos)
 #define USART_IMR_TXEMPTY_Pos		9
 #define USART_IMR_TXEMPTY_Msk		(0x01 << USART_IMR_TXEMPTY_Pos)
-#define USART_IMR_MAXITER_Pos		10
-#define USART_IMR_MAXITER_Msk		(0x01 << USART_IMR_MAXITER_Pos)
 #define USART_IMR_TXBEMPTY_Pos		11
 #define USART_IMR_TXBEMPTY_Msk		(0x01 << USART_IMR_TXBEMPTY_Pos)
 #define USART_IMR_RXBFULL_Pos		12
 #define USART_IMR_RXBFULL_Msk		(0x01 << USART_IMR_RXBFULL_Pos)
-#define USART_IMR_NAK_Pos			13
-#define USART_IMR_NAK_Msk			(0x01 << USART_IMR_NAK_Pos)
-
-#define USART_LINIMR_BRK_Pos		13
-#define USART_LINIMR_BRK_Msk		(0x01 << USART_LINIMR_BRK_Pos)
-#define USART_LINIMR_ID_Pos			14
-#define USART_LINIMR_ID_Msk			(0x01 << USART_LINIMR_ID_Pos)
-#define USART_LINIMR_DONE_Pos		15
-#define USART_LINIMR_DONE_Msk		(0x01 << USART_LINIMR_DONE_Pos)
-#define USART_LINIMR_BITERR_Pos		25
-#define USART_LINIMR_BITERR_Msk		(0x01 << USART_LINIMR_BITERR_Pos)
-#define USART_LINIMR_SYNCERR_Pos	26
-#define USART_LINIMR_SYNCERR_Msk	(0x01 << USART_LINIMR_SYNCERR_Pos)
-#define USART_LINIMR_IDERR_Pos		27
-#define USART_LINIMR_IDERR_Msk		(0x01 << USART_LINIMR_IDERR_Pos)
-#define USART_LINIMR_CHKERR_Pos		28
-#define USART_LINIMR_CHKERR_Msk		(0x01 << USART_LINIMR_CHKERR_Pos)
-#define USART_LINIMR_NAKERR_Pos		29
-#define USART_LINIMR_NAKERR_Msk		(0x01 << USART_LINIMR_NAKERR_Pos)
-#define USART_LINIMR_HDRTO_Pos		31
-#define USART_LINIMR_HDRTO_Msk		(0x01 << USART_LINIMR_HDRTO_Pos)
+#define USART_IMR_BRK_Pos			13
+#define USART_IMR_BRK_Msk			(0x01 << USART_IMR_BRK_Pos)
+#define USART_IMR_ID_Pos			14
+#define USART_IMR_ID_Msk			(0x01 << USART_IMR_ID_Pos)
+#define USART_IMR_DONE_Pos			15
+#define USART_IMR_DONE_Msk			(0x01 << USART_IMR_DONE_Pos)
+#define USART_IMR_BITERR_Pos		25
+#define USART_IMR_BITERR_Msk		(0x01 << USART_IMR_BITERR_Pos)
+#define USART_IMR_SYNCERR_Pos		26
+#define USART_IMR_SYNCERR_Msk		(0x01 << USART_IMR_SYNCERR_Pos)
+#define USART_IMR_IDERR_Pos			27
+#define USART_IMR_IDERR_Msk			(0x01 << USART_IMR_IDERR_Pos)
+#define USART_IMR_CHKERR_Pos		28
+#define USART_IMR_CHKERR_Msk		(0x01 << USART_IMR_CHKERR_Pos)
+#define USART_IMR_NAKERR_Pos		29
+#define USART_IMR_NAKERR_Msk		(0x01 << USART_IMR_NAKERR_Pos)
+#define USART_IMR_HDRTO_Pos			31
+#define USART_IMR_HDRTO_Msk			(0x01 << USART_IMR_HDRTO_Pos)
 
 #define USART_ISR_RXRDY_Pos			0		//RHR 中有数据，读 RHR 清零
 #define USART_ISR_RXRDY_Msk			(0x01 << USART_ISR_RXRDY_Pos)
@@ -1040,10 +979,6 @@ typedef struct {
 #define USART_ISR_TXRDY_Msk			(0x01 << USART_ISR_TXRDY_Pos)
 #define USART_ISR_RXBRK_Pos			2		//Break Received or End of Break detected, CR.RSTSTA 写 1 清零
 #define USART_ISR_RXBRK_Msk			(0x01 << USART_ISR_RXBRK_Pos)
-#define USART_ISR_RXDMAEND_Pos		3
-#define USART_ISR_RXDMAEND_Msk		(0x01 << USART_ISR_RXDMAEND_Pos)
-#define USART_ISR_TXDMAEND_Pos		4
-#define USART_ISR_TXDMAEND_Msk		(0x01 << USART_ISR_TXDMAEND_Pos)
 #define USART_ISR_OVRERR_Pos		5		//溢出错误，CR.RSTSTA 写 1 清零
 #define USART_ISR_OVRERR_Msk		(0x01 << USART_ISR_OVRERR_Pos)
 #define USART_ISR_FRAMERR_Pos		6		//帧格式错误，CR.RSTSTA 写 1 清零
@@ -1054,54 +989,36 @@ typedef struct {
 #define USART_ISR_RXTO_Msk			(0x01 << USART_ISR_RXTO_Pos)
 #define USART_ISR_TXEMPTY_Pos		9		//THR 和发送移位寄存器中皆无数据，写 THR 清零
 #define USART_ISR_TXEMPTY_Msk		(0x01 << USART_ISR_TXEMPTY_Pos)
-#define USART_ISR_MAXITER_Pos		10		//Maximum number of repetitions has been reached, CR.RSTSTA 写 1 清零
-#define USART_ISR_MAXITER_Msk		(0x01 << USART_ISR_MAXITER_Pos)
 #define USART_ISR_TXBEMPTY_Pos		11
 #define USART_ISR_TXBEMPTY_Msk		(0x01 << USART_ISR_TXBEMPTY_Pos)
 #define USART_ISR_RXBFULL_Pos		12
 #define USART_ISR_RXBFULL_Msk		(0x01 << USART_ISR_RXBFULL_Pos)
-#define USART_ISR_NAK_Pos			13		//At least one NAK has been detected, CR.RSTNAK 写 1 清零
-#define USART_ISR_NAK_Msk			(0x01 << USART_ISR_NAK_Pos)
-#define USART_ISR_RICHG_Pos			16		//RI 引脚电平变化，读 ISR 清零
-#define USART_ISR_RICHG_Msk			(0x01 << USART_ISR_RICHG_Pos)
-#define USART_ISR_DSRCHG_Pos		17		//DSR 引脚电平变化，读 ISR 清零
-#define USART_ISR_DSRCHG_Msk		(0x01 << USART_ISR_DSRCHG_Pos)
-#define USART_ISR_DCDCHG_Pos		18		//DCD 引脚电平变化，读 ISR 清零
-#define USART_ISR_DCDCHG_Msk		(0x01 << USART_ISR_DCDCHG_Pos)
-#define USART_ISR_CTSCHG_Pos		19		//CTS 引脚电平变化，读 ISR 清零
-#define USART_ISR_CTSCHG_Msk		(0x01 << USART_ISR_CTSCHG_Pos)
-
-#define USART_LINISR_BRK_Pos		13		//LIN Break Sent or LIN Break Received, CR.RSTSTA 写 1 清零
-#define USART_LINISR_BRK_Msk		(0x01 << USART_LINISR_BRK_Pos)
-#define USART_LINISR_ID_Pos			14		//LIN Identifier Sent or LIN Identifier Received, CR.RSTSTA 写 1 清零
-#define USART_LINISR_ID_Msk			(0x01 << USART_LINISR_ID_Pos)
-#define USART_LINISR_DONE_Pos		15		//LIN Transfer Completed, CR.RSTSTA 写 1 清零
-#define USART_LINISR_DONE_Msk		(0x01 << USART_LINISR_DONE_Pos)
-#define USART_LINISR_BUSSTA_Pos		23		//LIN Bus Line Status
-#define USART_LINISR_BUSSTA_Msk		(0x01 << USART_LINISR_BUSSTA_Pos)
-#define USART_LINISR_BITERR_Pos		25		//A Bit Error has been detected, CR.RSTSTA 写 1 清零
-#define USART_LINISR_BITERR_Msk		(0x01 << USART_LINISR_BITERR_Pos)
-#define USART_LINISR_SYNCERR_Pos	26		//LIN Slave 模式下，a LIN Inconsistent Synch Field Error has been detected, CR.RSTSTA 写 1 清零
-#define USART_LINISR_SYNCERR_Msk	(0x01 << USART_LINISR_SYNCERR_Pos)
-#define USART_LINISR_IDERR_Pos		27		//A LIN Identifier Parity Error has been detected, CR.RSTSTA 写 1 清零
-#define USART_LINISR_IDERR_Msk		(0x01 << USART_LINISR_IDERR_Pos)
-#define USART_LINISR_CHKERR_Pos		28		//A LIN Checksum Error has been detected, CR.RSTSTA 写 1 清零
-#define USART_LINISR_CHKERR_Msk		(0x01 << USART_LINISR_CHKERR_Pos)
-#define USART_LINISR_NAKERR_Pos		29		//A LIN Slave Not Responding Error has been detected, CR.RSTSTA 写 1 清零
-#define USART_LINISR_NAKERR_Msk		(0x01 << USART_LINISR_NAKERR_Pos)
-#define USART_LINISR_HDRTO_Pos		31		//A LIN Header Timeout Error has been detected, CR.RSTSTA 写 1 清零
-#define USART_LINISR_HDRTO_Msk		(0x01u<< USART_LINISR_HDRTO_Pos)
+#define USART_ISR_BRK_Pos			13		//LIN Break Sent or LIN Break Received, CR.RSTSTA 写 1 清零
+#define USART_ISR_BRK_Msk			(0x01 << USART_ISR_BRK_Pos)
+#define USART_ISR_ID_Pos			14		//LIN Identifier Sent or LIN Identifier Received, CR.RSTSTA 写 1 清零
+#define USART_ISR_ID_Msk			(0x01 << USART_ISR_ID_Pos)
+#define USART_ISR_DONE_Pos			15		//LIN Transfer Completed, CR.RSTSTA 写 1 清零
+#define USART_ISR_DONE_Msk			(0x01 << USART_ISR_DONE_Pos)
+#define USART_ISR_BUSSTA_Pos		23		//LIN Bus Line Status
+#define USART_ISR_BUSSTA_Msk		(0x01 << USART_ISR_BUSSTA_Pos)
+#define USART_ISR_BITERR_Pos		25		//A Bit Error has been detected, CR.RSTSTA 写 1 清零
+#define USART_ISR_BITERR_Msk		(0x01 << USART_ISR_BITERR_Pos)
+#define USART_ISR_SYNCERR_Pos		26		//LIN Slave 模式下，a LIN Inconsistent Synch Field Error has been detected, CR.RSTSTA 写 1 清零
+#define USART_ISR_SYNCERR_Msk		(0x01 << USART_ISR_SYNCERR_Pos)
+#define USART_ISR_IDERR_Pos			27		//A LIN Identifier Parity Error has been detected, CR.RSTSTA 写 1 清零
+#define USART_ISR_IDERR_Msk			(0x01 << USART_ISR_IDERR_Pos)
+#define USART_ISR_CHKERR_Pos		28		//A LIN Checksum Error has been detected, CR.RSTSTA 写 1 清零
+#define USART_ISR_CHKERR_Msk		(0x01 << USART_ISR_CHKERR_Pos)
+#define USART_ISR_NAKERR_Pos		29		//A LIN Slave Not Responding Error has been detected, CR.RSTSTA 写 1 清零
+#define USART_ISR_NAKERR_Msk		(0x01 << USART_ISR_NAKERR_Pos)
+#define USART_ISR_HDRTO_Pos			31		//A LIN Header Timeout Error has been detected, CR.RSTSTA 写 1 清零
+#define USART_ISR_HDRTO_Msk			(0x01u<< USART_ISR_HDRTO_Pos)
 
 #define USART_RHR_DATA_Pos			0
 #define USART_RHR_DATA_Msk			(0x1FF<< USART_RHR_DATA_Pos)
-#define USART_RHR_SYNC_Pos			15
-#define USART_RHR_SYNC_Msk			(0x01 << USART_RHR_SYNC_Pos)
 
 #define USART_THR_DATA_Pos			0
 #define USART_THR_DATA_Msk			(0x1FF<< USART_THR_DATA_Pos)
-#define USART_THR_SYNC_Pos			15		//0 Start Frame Delimiter is DATA SYNC
-											//1 Start Frame Delimiter is COMMAND SYNC
-#define USART_THR_SYNC_Msk			(0x01 << USART_THR_SYNC_Pos)
 
 #define USART_BAUD_IDIV_Pos			0
 #define USART_BAUD_IDIV_Msk			(0xFFFF << USART_BAUD_IDIV_Pos)
