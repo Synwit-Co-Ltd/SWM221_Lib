@@ -477,15 +477,15 @@ typedef struct {
 
 	__IO uint32_t INTEN;					//1 中断使能	0 中断禁止
 
-	__IO uint32_t INTRAWSTAT;			    //中断检测单元是否检测到了触发中断的条件 1 检测到了中断触发条件	0 没有检测到中断触发条件
+	__I  uint32_t INTRAWSTAT;			    //中断检测单元是否检测到了触发中断的条件 1 检测到了中断触发条件	0 没有检测到中断触发条件
 
-	__IO uint32_t INTSTAT;				    //INTSTAT.PIN0 = INTRAWSTAT.PIN0 & INTEN.PIN0
+	__I  uint32_t INTSTAT;				    //INTSTAT.PIN0 = INTRAWSTAT.PIN0 & INTEN.PIN0
 
-	__IO uint32_t INTCLR;				    //写1清除中断标志，只对边沿触发中断有用
+	__O  uint32_t INTCLR;				    //写1清除中断标志，只对边沿触发中断有用
 	
 		 uint32_t RESERVED[3];
 	
-	__IO uint32_t IDR;
+	__I  uint32_t IDR;
 	
 		 uint32_t RESERVED2[3];
 	
