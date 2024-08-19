@@ -39,7 +39,7 @@
 
 #define __HSI		( 8000000UL)		//高速内部时钟
 #define __LSI		(   32000UL)		//低速内部时钟
-#define __HSE		(12000000UL)		//高速外部时钟
+#define __HSE		( 8000000UL)		//高速外部时钟
 #define __LSE		(   32768UL)		//低速外部时钟
 
 
@@ -48,7 +48,7 @@
  *****************************************************************************************/ 
 #define SYS_PLL_SRC   	SYS_CLK_XTAL	//可取值SYS_CLK_8MHz、SYS_CLK_XTAL
 
-#define PLL_IN_DIV		3
+#define PLL_IN_DIV		2
 
 #define PLL_FB_DIV		15
 

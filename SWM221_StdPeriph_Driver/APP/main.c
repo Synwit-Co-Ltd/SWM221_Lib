@@ -18,7 +18,7 @@ int main(void)
  	while(1==1)
  	{
  		GPIO_InvBit(GPIOA, PIN5);
-  		for(i=0; i<SystemCoreClock/5; i++) __NOP();
+  		for(i=0; i<SystemCoreClock/4; i++) __NOP();
 		
      	printf("Hi, World!\r\n");
  	}
