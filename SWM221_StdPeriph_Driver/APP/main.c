@@ -5,8 +5,6 @@ void SerialInit(void);
 
 int main(void)
 {
- 	uint32_t i;
-	
 	SystemInit();
 	
 	SerialInit();
@@ -18,9 +16,10 @@ int main(void)
  	while(1==1)
  	{
  		GPIO_InvBit(GPIOA, PIN5);
-  		for(i=0; i<SystemCoreClock/4; i++) __NOP();
-		
+  		
      	printf("Hi, World!\r\n");
+		
+		for(int i=0; i<SystemCoreClock/4; i++) __NOP();
  	}
 }
 
