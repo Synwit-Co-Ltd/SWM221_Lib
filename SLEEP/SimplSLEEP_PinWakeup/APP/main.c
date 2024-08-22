@@ -4,17 +4,15 @@
 /* 注意：
  *	芯片的 ISP、SWD 引脚默认开启了上拉电阻，会增加休眠功耗，若想获得最低休眠功耗，休眠前请关闭所有引脚的上拉和下拉电阻
  */
- 
- 
+
+
 int main(void)
 {
-	uint32_t i;
-	
 	SystemInit();
 	
 	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);						//接 LED，指示程序执行状态
 	GPIO_SetBit(GPIOA, PIN5);								//点亮LED
-	for(i = 0; i < SystemCoreClock/2; i++) __NOP();			//延时，防止上电后SWD立即切掉无法下载程序
+	for(int i = 0; i < SystemCoreClock/2; i++) __NOP();		//延时，防止上电后SWD立即切掉无法下载程序
 	
 	GPIO_Init(GPIOA, PIN4, 0, 1, 0, 0);						//接按键，上拉使能
 	SYS->PAWKEN |= (1 << PIN4);								//开启PA4引脚低电平唤醒
@@ -24,17 +22,13 @@ int main(void)
 	while(1==1)
 	{
 		GPIO_SetBit(GPIOA, PIN5);							//点亮LED
-		for(i = 0; i < SystemCoreClock/8; i++) __NOP();
+		for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
 		GPIO_ClrBit(GPIOA, PIN5);							//熄灭LED
-		
-		switchTo8MHz();	//休眠前切换到内部RC时钟
 		
 		EnterSleepMode();
 		
 		while((SYS->PAWKSR & (1 << PIN4)) == 0) __NOP();	//等待唤醒条件
 		SYS->PAWKSR |= (1 << PIN4);							//清除唤醒状态
-		
-		switchToPLL(0);		//唤醒后切换到PLL时钟
 	}
 }
 
