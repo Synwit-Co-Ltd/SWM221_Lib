@@ -276,6 +276,11 @@ typedef struct {
 #define SYS_PRSTR0_QEI_Pos			20
 #define SYS_PRSTR0_QEI_Msk			(0x01 << SYS_PRSTR0_QEI_Pos)
 
+#define SYS_VRFCR_EN_Pos			0
+#define SYS_VRFCR_EN_Msk			(0x01 << SYS_VRFCR_EN_Pos)
+#define SYS_VRFCR_LVL_Pos			1		//0 2.4V   1 3.6V   2 4.5V
+#define SYS_VRFCR_LVL_Msk			(0x03 << SYS_VRFCR_LVL_Pos)
+
 #define SYS_RCCR_HON_Pos			0		//High speed RC ON
 #define SYS_RCCR_HON_Msk			(0x01 << SYS_RCCR_HON_Pos)
 #define SYS_RCCR_LON_Pos			1		//Low speed RC ON

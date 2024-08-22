@@ -4,6 +4,7 @@
 
 typedef struct {
 	uint8_t  clkdiv;		//1-32
+	uint8_t  refsrc;		//ADC_REF_VDD、ADC_REF_REFP、ADC_REF_2V4、ADC_REF_3V6、ADC_REF_4V5
 	uint8_t  samplAvg;		//ADC_AVG_SAMPLE1、ADC_AVG_SAMPLE2、ADC_AVG_SAMPLE4、ADC_AVG_SAMPLE8
 } ADC_InitStructure;
 
@@ -39,6 +40,11 @@ typedef struct {
 #define ADC_CH8		8
 #define ADC_CH9		9
 
+#define ADC_REF_VDD		(0)
+#define ADC_REF_REFP	(1 | (0 << 1))
+#define ADC_REF_2V4		(1 | (1 << 1) | (0 << 2))
+#define ADC_REF_3V6		(1 | (1 << 1) | (1 << 2))
+#define ADC_REF_4V5		(1 | (1 << 1) | (2 << 2))
 
 #define ADC_AVG_SAMPLE1			0
 #define ADC_AVG_SAMPLE2			1	//一次启动连续采样、转换2次，并计算两次结果的平均值作为转换结果

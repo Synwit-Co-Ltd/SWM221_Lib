@@ -44,6 +44,27 @@ void ADC_Init(ADC_TypeDef * ADCx, ADC_InitStructure * initStruct)
 	ADCx->CR |= ((initStruct->clkdiv - 1) << ADC_CR_CLKDIV_Pos) |
 				(initStruct->samplAvg	  << ADC_CR_AVG_Pos)    |
 				(0					 	  << ADC_CR_BITS_Pos);
+	
+	if(initStruct->refsrc & (1 << 0))
+	{
+		if(initStruct->refsrc & (1 << 1))
+		{
+			SYS->VRFCR &=~SYS_VRFCR_LVL_Msk;
+			SYS->VRFCR |= (initStruct->refsrc >> 2) << SYS_VRFCR_LVL_Pos;
+			
+			SYS->VRFCR |= SYS_VRFCR_EN_Msk;
+		}
+		else
+		{
+			SYS->VRFCR &=~SYS_VRFCR_EN_Msk;
+		}
+		
+		SYS->ADCREF |= SYS_ADCREF_REFSEL_Msk;
+	}
+	else
+	{
+		SYS->ADCREF &=~SYS_ADCREF_REFSEL_Msk;
+	}
 }
 
 static uint32_t ADC_seq2pos(uint32_t seq)

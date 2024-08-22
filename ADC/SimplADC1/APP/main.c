@@ -25,6 +25,7 @@ int main(void)
 	PORT_Init(PORTB, PIN14, PORTB_PIN14_ADC1_CH9, 0);		//PB.14 => ADC1.CH9
 	
 	ADC_initStruct.clkdiv = 4;
+	ADC_initStruct.refsrc = ADC_REF_VDD;
 	ADC_initStruct.samplAvg = ADC_AVG_SAMPLE1;
 	ADC_Init(ADC1, &ADC_initStruct);
 	
