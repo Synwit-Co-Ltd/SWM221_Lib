@@ -47,6 +47,8 @@ void ADC_Init(ADC_TypeDef * ADCx, ADC_InitStructure * initStruct)
 	
 	if(initStruct->refsrc & (1 << 0))
 	{
+		PORT_Init(PORTA, PIN11, PORTA_PIN11_ADC_REFP, 0);
+		
 		if(initStruct->refsrc & (1 << 1))
 		{
 			SYS->VRFCR &=~SYS_VRFCR_LVL_Msk;
