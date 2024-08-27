@@ -11,16 +11,16 @@ int main(void)
 	/* 测试说明：
 		将 PA5 与 PB4 连接，示波器观察 PA5 与 PB5 波形，可观察到 PA5 上较宽的脉冲被复制到了 PB5 上，但较窄的波形没有
 	*/
-	GPIO_Init(GPIOA, PIN5, 1, 0, 0, 0);
+	GPIO_INIT(GPIOA, PIN5, GPIO_OUTPUT);
 	
-	GPIO_Init(GPIOB, PIN4, 0, 1, 0, 0);
+	GPIO_INIT(GPIOB, PIN4, GPIO_INPUT_PullUp);
 	EXTI_Init(GPIOB, PIN4, EXTI_BOTH_EDGE);	//双边沿触发中断
 	NVIC_EnableIRQ(GPIOB_IRQn);
 	EXTI_Open(GPIOB, PIN4);
 	
-	GPIO_Init(GPIOB, PIN5, 1, 0, 0, 0);
+	GPIO_INIT(GPIOB, PIN5, GPIO_OUTPUT);
 	
-	IOFILT_Init(0, IOFILT0_PB4, IOFILT_WIDTH_256);
+	IOFILT_Init(0, IOFILT0_PB4, IOFILT_WIDTH_64);
    	
 	while(1==1)
 	{
