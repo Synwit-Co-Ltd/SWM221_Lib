@@ -20,7 +20,7 @@ int main(void)
 	
 	GPIO_INIT(GPIOB, PIN5, GPIO_OUTPUT);
 	
-	IOFILT_Init(0, IOFILT0_PB4, IOFILT_WIDTH_64);
+	IOFILT_Init(0, IOFILT0_PB4, IOFILT_WIDTH_8us);	// 宽度小于 8us 的脉冲被滤除掉
    	
 	while(1==1)
 	{
