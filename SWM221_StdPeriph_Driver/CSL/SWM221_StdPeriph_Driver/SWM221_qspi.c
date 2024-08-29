@@ -190,10 +190,11 @@ void QSPI_Erase(QSPI_TypeDef * QSPIx, uint8_t cmd, uint32_t addr, uint8_t wait)
 *			uint8_t buff[]			要写入 SPI Flash 的数据
 *			uint32_t count			要写入 SPI Flash 的数据个数，最大 256，且写入数据不能跨页
 *			uint8_t data_width		写入使用的数据线个数，有效值包括 1、4
+*			uint8_t data_phase		是否在此函数内执行数据阶段；若否，可在后续通过 QSPIx->DRW（须保证对齐访问）或 DMA 实现更高效的写入
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
-void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t count, uint8_t data_width)
+void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t count, uint8_t data_width, uint8_t data_phase)
 {
 	QSPI_CmdStructure cmdStruct;
 	QSPI_CmdStructClear(&cmdStruct);
@@ -226,6 +227,9 @@ void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t c
 	
 	QSPI_Command(QSPIx, QSPI_Mode_IndirectWrite, &cmdStruct);
 	
+	if(data_phase == 0)
+		return;
+	
 	for(int i = 0; i < count; i++)
 	{
 		while(QSPI_FIFOSpace(QSPIx) < 1) __NOP();
@@ -248,10 +252,11 @@ void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t c
 *			uint32_t count			要读取数据的个数
 *			uint8_t addr_width		读取使用的地址线个数，有效值包括 1、2、4
 *			uint8_t data_width		读取使用的数据线个数，有效值包括 1、2、4
+*			uint8_t data_phase		是否在此函数内执行数据阶段；若否，可在后续通过 QSPIx->DRW（须保证对齐访问）或 DMA 实现更高效的读取
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
-void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t count, uint8_t addr_width, uint8_t data_width)
+void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t count, uint8_t addr_width, uint8_t data_width, uint8_t data_phase)
 {
 	QSPI_CmdStructure cmdStruct;
 	QSPI_CmdStructClear(&cmdStruct);
@@ -321,6 +326,9 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 	cmdStruct.DataCount 		 = count;
 	
 	QSPI_Command(QSPIx, QSPI_Mode_IndirectRead, &cmdStruct);
+	
+	if(data_phase == 0)
+		return;
 	
 	for(int i = 0; i < count; i++)
 	{

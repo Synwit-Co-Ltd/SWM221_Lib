@@ -12,6 +12,7 @@ uint8_t RdBuff[RWLEN] = {0};
 
 
 void SerialInit(void);
+void QSPI_Read_DMA(uint32_t addr, uint8_t buff[], uint32_t count, uint8_t addr_width, uint8_t data_width);
 
 int main(void)
 {
@@ -92,11 +93,54 @@ int main(void)
 	
 	printf("\n\nQuad IO Read: \n");
 	for(i = 0; i < RWLEN; i++) printf("0x%02X, ", RdBuff[i]);
-   	
+	
+	
+	QSPI_Read_DMA(EEPROM_ADDR, RdBuff, RWLEN, 4, 4);
+	
+	printf("\n\nDMA Read: \n");
+	for(i = 0; i < RWLEN; i++) printf("0x%02X, ", RdBuff[i]);
+	
 	while(1==1)
 	{
 	}
 }
+
+
+void QSPI_Read_DMA(uint32_t addr, uint8_t buff[], uint32_t count, uint8_t addr_width, uint8_t data_width)
+{
+	static bool dma_inited = false;
+	
+	if(!dma_inited)
+	{
+		DMA_InitStructure DMA_initStruct;
+		
+		DMA_initStruct.Mode = DMA_MODE_SINGLE;
+		DMA_initStruct.Unit = DMA_UNIT_BYTE;
+		DMA_initStruct.Count = count;
+		DMA_initStruct.MemoryAddr = (uint32_t)buff;
+		DMA_initStruct.MemoryAddrInc = 1;
+		DMA_initStruct.PeripheralAddr = (uint32_t)&QSPI0->DRB;
+		DMA_initStruct.PeripheralAddrInc = 0;
+		DMA_initStruct.Handshake = DMA_CH1_QSPI0RX;
+		DMA_initStruct.Priority = DMA_PRI_LOW;
+		DMA_initStruct.INTEn = 0;
+		DMA_CH_Init(DMA_CH1, &DMA_initStruct);
+		
+		dma_inited = true;
+	}
+	
+	QSPI0->CR |= QSPI_CR_DMAEN_Msk;
+	
+	QSPI_Read_(QSPI0, addr, buff, count, addr_width, data_width, 0);
+	
+	DMA_CH_Open(DMA_CH1);
+	
+	while(DMA_CH_INTStat(DMA_CH1, DMA_IT_DONE) == 0) __NOP();
+    DMA_CH_INTClr(DMA_CH1, DMA_IT_DONE);
+	
+	QSPI0->CR &=~QSPI_CR_DMAEN_Msk;
+}
+
 
 void SerialInit(void)
 {
