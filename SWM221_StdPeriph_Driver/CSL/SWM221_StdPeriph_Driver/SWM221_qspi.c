@@ -174,7 +174,7 @@ void QSPI_Erase(QSPI_TypeDef * QSPIx, uint8_t cmd, uint32_t addr, uint8_t wait)
 	QSPI_WriteEnable(QSPIx);
 	
 	QSPI_Command(QSPIx, QSPI_Mode_IndirectWrite, &cmdStruct);
-		
+	
 	while(QSPI_Busy(QSPIx)) __NOP();
 	
 	if(wait)
@@ -225,32 +225,12 @@ void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t c
 	QSPI_WriteEnable(QSPIx);
 	
 	QSPI_Command(QSPIx, QSPI_Mode_IndirectWrite, &cmdStruct);
-		
-	uint32_t n_word = count / 4;
 	
-	for(int i = 0; i < n_word; i++)
-	{
-		uint32_t * p_word = (uint32_t *)buff;
-		
-		while(QSPI_FIFOSpace(QSPIx) < 4) __NOP();
-		
-		QSPIx->DRW = p_word[i];
-	}
-	
-	if((count % 4) / 2)
-	{
-		uint16_t * p_half = (uint16_t *)&buff[n_word * 4];
-		
-		while(QSPI_FIFOSpace(QSPIx) < 2) __NOP();
-		
-		QSPIx->DRH = p_half[0];
-	}
-	
-	if(count % 2)
+	for(int i = 0; i < count; i++)
 	{
 		while(QSPI_FIFOSpace(QSPIx) < 1) __NOP();
 		
-		QSPIx->DRB = buff[count - 1];
+		QSPIx->DRB = buff[i];
 	}
 	
 	while(QSPI_Busy(QSPIx)) __NOP();
@@ -341,32 +321,12 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 	cmdStruct.DataCount 		 = count;
 	
 	QSPI_Command(QSPIx, QSPI_Mode_IndirectRead, &cmdStruct);
-		
-	uint32_t n_word = count / 4;
 	
-	for(int i = 0; i < n_word; i++)
-	{
-		uint32_t * p_word = (uint32_t *)buff;
-		
-		while(QSPI_FIFOCount(QSPIx) < 4) __NOP();
-		
-		p_word[i] = QSPIx->DRW;
-	}
-	
-	if((count % 4) / 2)
-	{
-		uint16_t * p_half = (uint16_t *)&buff[n_word * 4];
-		
-		while(QSPI_FIFOCount(QSPIx) < 2) __NOP();
-		
-		p_half[0] = QSPIx->DRH;
-	}
-	
-	if(count % 2)
+	for(int i = 0; i < count; i++)
 	{
 		while(QSPI_FIFOCount(QSPIx) < 1) __NOP();
 		
-		buff[count - 1] = QSPIx->DRB;
+		buff[i] = QSPIx->DRB;
 	}
 }
 
