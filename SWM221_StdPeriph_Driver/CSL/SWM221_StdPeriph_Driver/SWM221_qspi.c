@@ -190,7 +190,7 @@ void QSPI_Erase(QSPI_TypeDef * QSPIx, uint8_t cmd, uint32_t addr, uint8_t wait)
 *			uint8_t buff[]			要写入 SPI Flash 的数据
 *			uint32_t count			要写入 SPI Flash 的数据个数，最大 256，且写入数据不能跨页
 *			uint8_t data_width		写入使用的数据线个数，有效值包括 1、4
-*			uint8_t data_phase		是否在此函数内执行数据阶段；若否，可在后续通过 QSPIx->DRW（须保证对齐访问）或 DMA 实现更高效的写入
+*			uint8_t data_phase		是否在此函数内执行数据阶段；若否，可在后续通过 DMA 实现更高效的写入
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
@@ -230,11 +230,43 @@ void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t c
 	if(data_phase == 0)
 		return;
 	
-	for(int i = 0; i < count; i++)
+	if((uint32_t)buff % 4 == 0)	// word aligned
 	{
-		while(QSPI_FIFOSpace(QSPIx) < 1) __NOP();
+		uint32_t n_word = count / 4;
 		
-		QSPIx->DRB = buff[i];
+		for(int i = 0; i < n_word; i++)
+		{
+			uint32_t * p_word = (uint32_t *)buff;
+			
+			while(QSPI_FIFOSpace(QSPIx) < 4) __NOP();
+			
+			QSPIx->DRW = p_word[i];
+		}
+		
+		if((count % 4) / 2)
+		{
+			uint16_t * p_half = (uint16_t *)&buff[n_word * 4];
+			
+			while(QSPI_FIFOSpace(QSPIx) < 2) __NOP();
+			
+			QSPIx->DRH = p_half[0];
+		}
+		
+		if(count % 2)
+		{
+			while(QSPI_FIFOSpace(QSPIx) < 1) __NOP();
+			
+			QSPIx->DRB = buff[count - 1];
+		}
+	}
+	else
+	{
+		for(int i = 0; i < count; i++)
+		{
+			while(QSPI_FIFOSpace(QSPIx) < 1) __NOP();
+			
+			QSPIx->DRB = buff[i];
+		}
 	}
 	
 	while(QSPI_Busy(QSPIx)) __NOP();
@@ -252,7 +284,7 @@ void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t c
 *			uint32_t count			要读取数据的个数
 *			uint8_t addr_width		读取使用的地址线个数，有效值包括 1、2、4
 *			uint8_t data_width		读取使用的数据线个数，有效值包括 1、2、4
-*			uint8_t data_phase		是否在此函数内执行数据阶段；若否，可在后续通过 QSPIx->DRW（须保证对齐访问）或 DMA 实现更高效的读取
+*			uint8_t data_phase		是否在此函数内执行数据阶段；若否，可在后续通过 DMA 实现更高效的读取
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
@@ -330,11 +362,43 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 	if(data_phase == 0)
 		return;
 	
-	for(int i = 0; i < count; i++)
+	if((uint32_t)buff % 4 == 0)	// word aligned
 	{
-		while(QSPI_FIFOCount(QSPIx) < 1) __NOP();
+		uint32_t n_word = count / 4;
 		
-		buff[i] = QSPIx->DRB;
+		for(int i = 0; i < n_word; i++)
+		{
+			uint32_t * p_word = (uint32_t *)buff;
+			
+			while(QSPI_FIFOCount(QSPIx) < 4) __NOP();
+			
+			p_word[i] = QSPIx->DRW;
+		}
+		
+		if((count % 4) / 2)
+		{
+			uint16_t * p_half = (uint16_t *)&buff[n_word * 4];
+			
+			while(QSPI_FIFOCount(QSPIx) < 2) __NOP();
+			
+			p_half[0] = QSPIx->DRH;
+		}
+		
+		if(count % 2)
+		{
+			while(QSPI_FIFOCount(QSPIx) < 1) __NOP();
+			
+			buff[count - 1] = QSPIx->DRB;
+		}
+	}
+	else
+	{
+		for(int i = 0; i < count; i++)
+		{
+			while(QSPI_FIFOCount(QSPIx) < 1) __NOP();
+			
+			buff[i] = QSPIx->DRB;
+		}
 	}
 }
 
