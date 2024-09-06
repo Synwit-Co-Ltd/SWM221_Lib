@@ -129,8 +129,8 @@ void QSPI_Read_DMA(uint32_t addr, uint8_t buff[], uint32_t count, uint8_t addr_w
 		dma_inited = true;
 	}
 	
-	QSPI0->CCR &= ~QSPI_CCR_MODE_Msk;
-	QSPI0->CCR |= (QSPI_Mode_IndirectRead << QSPI_CCR_MODE_Pos);	// 必须先设置正确的读写模式，然后再置位 QSPI->CR.DMAEN
+	/* 必须先设置正确的读写模式，然后再置位 QSPI->CR.DMAEN；且在设置 CCR.MODE 时不能写 CCR.CODE 域 */
+	*((uint8_t *)((uint32_t)&QSPI0->CCR + 3)) = (QSPI_Mode_IndirectRead << (QSPI_CCR_MODE_Pos - 24));
 	
 	QSPI0->CR |= QSPI_CR_DMAEN_Msk;
 	
