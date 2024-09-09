@@ -12,6 +12,7 @@ uint8_t RdBuff[RWLEN] = {0};
 
 
 void SerialInit(void);
+void QSPI_Write_DMA(uint32_t addr, uint8_t buff[], uint32_t count, uint8_t data_width);
 void QSPI_Read_DMA(uint32_t addr, uint8_t buff[], uint32_t count, uint8_t addr_width, uint8_t data_width);
 
 int main(void)
@@ -95,6 +96,9 @@ int main(void)
 	for(i = 0; i < RWLEN; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
+	QSPI_Erase(QSPI0, (QSPI_initStruct.Size > QSPI_Size_16MB) ? QSPI_C4B_ERASE_SECTOR : QSPI_CMD_ERASE_SECTOR, EEPROM_ADDR, 1);
+	QSPI_Write_DMA(EEPROM_ADDR, WrBuff, RWLEN, 4);
+	
 	QSPI_Read_DMA(EEPROM_ADDR, RdBuff, RWLEN, 4, 4);
 	
 	printf("\n\nDMA Read: \n");
@@ -103,6 +107,44 @@ int main(void)
 	while(1==1)
 	{
 	}
+}
+
+
+void QSPI_Write_DMA(uint32_t addr, uint8_t buff[], uint32_t count, uint8_t data_width)
+{
+	static bool dma_inited = false;
+	
+	if(!dma_inited)
+	{
+		DMA_InitStructure DMA_initStruct;
+		
+		DMA_initStruct.Mode = DMA_MODE_SINGLE;
+		DMA_initStruct.Unit = DMA_UNIT_BYTE;
+		DMA_initStruct.Count = count;
+		DMA_initStruct.MemoryAddr = (uint32_t)buff;
+		DMA_initStruct.MemoryAddrInc = 1;
+		DMA_initStruct.PeripheralAddr = (uint32_t)&QSPI0->DRB;
+		DMA_initStruct.PeripheralAddrInc = 0;
+		DMA_initStruct.Handshake = DMA_CH0_QSPI0TX;
+		DMA_initStruct.Priority = DMA_PRI_LOW;
+		DMA_initStruct.INTEn = 0;
+		DMA_CH_Init(DMA_CH0, &DMA_initStruct);
+		
+		dma_inited = true;
+	}
+	
+	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectWrite);
+	
+	QSPI_Write_(QSPI0, addr, buff, count, data_width, 0);
+	
+	DMA_CH_Open(DMA_CH0);
+	
+	/* 在 QSPI busy 时，写 QSPI->CR 寄存器无效 */
+	while(QSPI_Busy(QSPI0)) __NOP();
+	
+	QSPI_DMADisable(QSPI0);
+	
+	while(QSPI_FlashBusy(QSPI0)) __NOP();
 }
 
 
@@ -129,10 +171,7 @@ void QSPI_Read_DMA(uint32_t addr, uint8_t buff[], uint32_t count, uint8_t addr_w
 		dma_inited = true;
 	}
 	
-	/* 必须先设置正确的读写模式，然后再置位 QSPI->CR.DMAEN；且在设置 CCR.MODE 时不能写 CCR.CODE 域 */
-	*((uint8_t *)((uint32_t)&QSPI0->CCR + 3)) = (QSPI_Mode_IndirectRead << (QSPI_CCR_MODE_Pos - 24));
-	
-	QSPI0->CR |= QSPI_CR_DMAEN_Msk;
+	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectRead);
 	
 	QSPI_Read_(QSPI0, addr, buff, count, addr_width, data_width, 0);
 	
@@ -141,7 +180,7 @@ void QSPI_Read_DMA(uint32_t addr, uint8_t buff[], uint32_t count, uint8_t addr_w
 	while(DMA_CH_INTStat(DMA_CH1, DMA_IT_DONE) == 0) __NOP();
     DMA_CH_INTClr(DMA_CH1, DMA_IT_DONE);
 	
-	QSPI0->CR &=~QSPI_CR_DMAEN_Msk;
+	QSPI_DMADisable(QSPI0);
 }
 
 

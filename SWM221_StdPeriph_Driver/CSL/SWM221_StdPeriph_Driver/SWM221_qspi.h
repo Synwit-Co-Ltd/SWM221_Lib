@@ -178,6 +178,19 @@ static inline bool QSPI_FIFOEmpty(QSPI_TypeDef * QSPIx)
 	return QSPI_FIFOCount(QSPIx) == 0;
 }
 
+static inline void QSPI_DMAEnable(QSPI_TypeDef * QSPIx, uint32_t mode)
+{
+	/* 必须先设置正确的读写模式，然后再置位 QSPI->CR.DMAEN；且在设置 CCR.MODE 时不能写 CCR.CODE 域 */
+	*((uint8_t *)((uint32_t)&QSPIx->CCR + 3)) = (mode << (QSPI_CCR_MODE_Pos - 24));
+	
+	QSPIx->CR |=  QSPI_CR_DMAEN_Msk;
+}
+
+static inline void QSPI_DMADisable(QSPI_TypeDef * QSPIx)
+{
+	QSPIx->CR &= ~QSPI_CR_DMAEN_Msk;
+}
+
 void QSPI_INTEn(QSPI_TypeDef * QSPIx, uint32_t it);
 void QSPI_INTDis(QSPI_TypeDef * QSPIx, uint32_t it);
 void QSPI_INTClr(QSPI_TypeDef * QSPIx, uint32_t it);
