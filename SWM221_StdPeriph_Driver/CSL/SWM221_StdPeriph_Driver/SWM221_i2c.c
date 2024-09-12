@@ -49,7 +49,7 @@ void I2C_Init(I2C_TypeDef * I2Cx, I2C_InitStructure * initStruct)
 		
 		I2Cx->CR |= (1 << I2C_CR_MASTER_Pos);
 		
-		total_clkdiv = (SystemCoreClock / 2) / initStruct->MstClk;
+		total_clkdiv = SystemCoreClock / initStruct->MstClk;
 		if(total_clkdiv < 17)
 			total_clkdiv = 17;	//无法产生指定的频率，产生最接近的频率
 		
