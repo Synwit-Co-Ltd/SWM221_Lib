@@ -6,7 +6,7 @@ typedef struct {
 	uint16_t Size;			// Flash 大小
 	uint16_t ClkDiv;		// 可取值 2--256
 	uint8_t  ClkMode;		// 可取值 QSPI_ClkMode_0、QSPI_ClkMode_3
-	uint8_t  SampleShift;	// 可取值 QSPI_SampleShift_None、QSPI_SampleShift_Half_SPICLK、QSPI_SampleShift_1_SYSCLK、...
+	uint8_t  SampleShift;	// 可取值 QSPI_SampleShift_None、QSPI_SampleShift_1_SYSCLK、...
 	uint8_t  IntEn;			// 可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_FFTHR、QSPI_IT_PSMAT、QSPI_IT_TO 及其“或”
 } QSPI_InitStructure;
 
@@ -24,22 +24,14 @@ typedef struct {
 #define QSPI_ClkMode_0		0
 #define QSPI_ClkMode_3		1
 
-#define QSPI_SampleShift_NONE						0x00000
-#define QSPI_SampleShift_1_SYSCLK					0x00001
-#define QSPI_SampleShift_2_SYSCLK					0x00010
-#define QSPI_SampleShift_3_SYSCLK					0x00011
-#define QSPI_SampleShift_4_SYSCLK					0x00100
-#define QSPI_SampleShift_5_SYSCLK					0x00101
-#define QSPI_SampleShift_6_SYSCLK					0x00110
-#define QSPI_SampleShift_7_SYSCLK					0x00111
-#define QSPI_SampleShift_Half_SPICLK				0x10000
-#define QSPI_SampleShift_Half_SPICLK_PLUS_1_SYSCLK	0x10001
-#define QSPI_SampleShift_Half_SPICLK_PLUS_2_SYSCLK	0x10010
-#define QSPI_SampleShift_Half_SPICLK_PLUS_3_SYSCLK	0x10011
-#define QSPI_SampleShift_Half_SPICLK_PLUS_4_SYSCLK	0x10100
-#define QSPI_SampleShift_Half_SPICLK_PLUS_5_SYSCLK	0x10101
-#define QSPI_SampleShift_Half_SPICLK_PLUS_6_SYSCLK	0x10110
-#define QSPI_SampleShift_Half_SPICLK_PLUS_7_SYSCLK	0x10111
+#define QSPI_SampleShift_NONE		0
+#define QSPI_SampleShift_1_SYSCLK	1
+#define QSPI_SampleShift_2_SYSCLK	2
+#define QSPI_SampleShift_3_SYSCLK	3
+#define QSPI_SampleShift_4_SYSCLK	4
+#define QSPI_SampleShift_5_SYSCLK	5
+#define QSPI_SampleShift_6_SYSCLK	6
+#define QSPI_SampleShift_7_SYSCLK	7
 
 
 typedef struct {

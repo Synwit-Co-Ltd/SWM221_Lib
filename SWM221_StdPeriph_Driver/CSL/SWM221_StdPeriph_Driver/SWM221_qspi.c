@@ -44,10 +44,10 @@ void QSPI_Init(QSPI_TypeDef * QSPIx, QSPI_InitStructure * initStruct)
 	
 	QSPI_Close(QSPIx);
 	
-	QSPIx->CR = ((initStruct->SampleShift >> 4)	<< QSPI_CR_SSHIFT_Pos) |
-				(7 								<< QSPI_CR_FFTHR_Pos)  |
-				(initStruct->IntEn 				<< QSPI_CR_ERRIE_Pos)  |
-				((initStruct->ClkDiv - 1) 		<< QSPI_CR_CLKDIV_Pos);
+	QSPIx->CR = (0						<< QSPI_CR_SSHIFT_Pos) |
+				(7						<< QSPI_CR_FFTHR_Pos)  |
+				(initStruct->IntEn		<< QSPI_CR_ERRIE_Pos)  |
+				((initStruct->ClkDiv-1)	<< QSPI_CR_CLKDIV_Pos);
 	
 	QSPIx->DCR = (initStruct->ClkMode 	<< QSPI_DCR_CLKMOD_Pos) |
 				 (3						<< QSPI_DCR_CSHIGH_Pos) |
