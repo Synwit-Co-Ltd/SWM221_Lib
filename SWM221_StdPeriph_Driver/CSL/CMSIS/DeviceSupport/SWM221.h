@@ -1732,6 +1732,8 @@ typedef struct {
 	};
 	
 	__IO uint32_t EVSR;
+	
+	__IO uint32_t SWEV;
 } PWMG_TypeDef;
 
 
@@ -1811,6 +1813,13 @@ typedef struct {
 #define PWMG_EVSR_EV5_Msk			(0x01 << PWMG_EVSR_EV5_Pos)
 #define PWMG_EVSR_EV6_Pos			6
 #define PWMG_EVSR_EV6_Msk			(0x01 << PWMG_EVSR_EV6_Pos)
+
+#define PWMG_SWEV_EV2_Pos			0
+#define PWMG_SWEV_EV2_Msk			(0x01 << PWMG_SWEV_EV2_Pos)
+#define PWMG_SWEV_EV3_Pos			1
+#define PWMG_SWEV_EV3_Msk			(0x01 << PWMG_SWEV_EV3_Pos)
+#define PWMG_SWEV_EV4_Pos			2
+#define PWMG_SWEV_EV4_Msk			(0x01 << PWMG_SWEV_EV4_Pos)
 
 
 
