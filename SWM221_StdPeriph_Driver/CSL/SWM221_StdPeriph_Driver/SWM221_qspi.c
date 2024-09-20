@@ -58,8 +58,6 @@ void QSPI_Init(QSPI_TypeDef * QSPIx, QSPI_InitStructure * initStruct)
 	QSPIx->SSHIFT = ((initStruct->SampleShift & 0x0F) << QSPI_SSHIFT_CYCLE_Pos) |
 					(4								  << QSPI_SSHIFT_SPACE_Pos);
 	
-	QSPIx->CS0TO = 100;
-	
 	QSPIx->FCR = 0x1B;
 	if(initStruct->IntEn)
 	{

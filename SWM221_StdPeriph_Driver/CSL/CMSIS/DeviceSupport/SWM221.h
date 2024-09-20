@@ -2041,9 +2041,7 @@ typedef struct {
 	
 	__IO uint32_t PSITV;					//Polling Status Interval
 	
-	__IO uint32_t CS0TO;					//CS stay low timeout time after FIFO full
-	
-		 uint32_t RESERVED[3];
+		 uint32_t RESERVED[4];
 	
 	__IO uint32_t SSHIFT;					//Sample Shift in System clock cycles, 实际的采样延迟时间是此寄存器与 CR.SSHIFT 设定延迟的累加
 } QSPI_TypeDef;
