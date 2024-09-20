@@ -1,6 +1,9 @@
 #include "SWM221.h"
 
 
+/* 使用非对称中心对齐模式，保持输出波形占空比不变，实现移相功能 */
+
+
 int main(void)
 {
 	PWM_InitStructure  PWM_initStruct;
@@ -43,47 +46,72 @@ int main(void)
 	PWM_Init(PWM0, &PWM_initStruct);
 	PWM_Init(PWM1, &PWM_initStruct);
 	
+	PWM_IntEn(PWM1, PWM_IT_OVF_UP);
+	NVIC_EnableIRQ(PWM1_IRQn);
+	
 	PWM_Start(PWM0_MSK | PWM1_MSK);
 	
 	while(1==1)
 	{
-		PWMG->RELOADEN = 0x00;		// 关闭工作寄存器加载更新，保证所有寄存器都更新完后再更新输出波形
-		
-		/* 使用非对称中心对齐模式，保持输出波形占空比不变，实现移相功能 */
-#if 0
-		if(PWM1->CMPA2 == 0)
-		{
-			PWM1->CMPA = 2500;
-			PWM1->CMPA2 = 2500;
-			PWM1->CMPB = 7500;
-			PWM1->CMPB2 = 7500;
-		}
-		else
-		{
-			PWM1->CMPA += 250;		// 前半周期的高电平时长增加
-			PWM1->CMPA2 -= 250;		// 后半周期的高电平时长减小，高电平向右移相
-			PWM1->CMPB += 750;		// 注意：这里说的前半周期、后半周期是针对 PWM 计数器的计数方向说的，向上计数称作前半周期，向下计数称作后半周期
-			PWM1->CMPB2 -= 750;		// 从PWM输出的波形上看，前半周期反而对应 PWM 高电平的右侧部分，后半周期反而对应 PWM 高电平的左侧部分
-		}
-#else
-		if(PWM1->CMPA == 0)
-		{
-			PWM1->CMPA = 2500;
-			PWM1->CMPA2 = 2500;
-			PWM1->CMPB = 7500;
-			PWM1->CMPB2 = 7500;
-		}
-		else
-		{
-			PWM1->CMPA -= 250;		// 前半周期的高电平时长增加
-			PWM1->CMPA2 += 250;		// 后半周期的高电平时长减小，高电平向左移相
-			PWM1->CMPB -= 750;
-			PWM1->CMPB2 += 750;
-		}
-#endif
-		PWMG->RELOADEN = 0x3F;
-		
-		for(int i = 0; i < SystemCoreClock / 32; i++) __NOP();
 	}
 }
 
+
+void PWM1_Handler(void)
+{
+	static int dir = 0;
+	static int n = 0;
+	
+	if(PWM_IntStat(PWM1, PWM_IT_OVF_UP))
+	{
+		PWM_IntClr(PWM1, PWM_IT_OVF_UP);
+		
+		if(++n == 2)
+			n = 0;
+		else
+			return;
+		
+		PWMG->RELOADEN = 0x00;		// 关闭工作寄存器加载更新，保证所有寄存器都更新完后再更新输出波形
+		
+		if(dir == 0)
+		{
+			if(PWM1->CMPA2 == 0)
+			{
+				PWM1->CMPA = 2500;
+				PWM1->CMPA2 = 2500;
+				PWM1->CMPB = 7500;
+				PWM1->CMPB2 = 7500;
+				
+				dir = 1;
+			}
+			else
+			{
+				PWM1->CMPA += 250;		// 前半周期的高电平时长增加
+				PWM1->CMPA2 -= 250;		// 后半周期的高电平时长减小，高电平向右移相
+				PWM1->CMPB += 750;		// 注意：这里说的前半周期、后半周期是针对 PWM 计数器的计数方向说的，向上计数称作前半周期，向下计数称作后半周期
+				PWM1->CMPB2 -= 750;		// 从PWM输出的波形上看，前半周期反而对应 PWM 高电平的右侧部分，后半周期反而对应 PWM 高电平的左侧部分
+			}
+		}
+		else
+		{
+			if(PWM1->CMPA == 0)
+			{
+				PWM1->CMPA = 2500;
+				PWM1->CMPA2 = 2500;
+				PWM1->CMPB = 7500;
+				PWM1->CMPB2 = 7500;
+				
+				dir = 0;
+			}
+			else
+			{
+				PWM1->CMPA -= 250;		// 前半周期的高电平时长减小
+				PWM1->CMPA2 += 250;		// 后半周期的高电平时长增加，高电平向左移相
+				PWM1->CMPB -= 750;
+				PWM1->CMPB2 += 750;
+			}
+		}
+		
+		PWMG->RELOADEN = 0x3F;
+	}
+}
