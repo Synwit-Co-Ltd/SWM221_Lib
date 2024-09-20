@@ -103,10 +103,11 @@ void W25N01G_Erase(uint32_t addr, uint8_t wait)
 * 输    入: uint32_t addr			要写入到的 SPI Flash 地址，必须是 0x1000（即 4096）的整数倍
 *			uint8_t buff[2048]		要写入 SPI Flash 的数据，数组大小必须是 2048 字节，ECC 区域内容由硬件计算生成
 *			uint8_t data_width		写入使用的数据线个数，有效值包括 1、4
+*			uint8_t data_phase		是否在此函数内执行数据阶段；若否，可在后续通过 DMA 实现更高效的写入
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
-void W25N01G_Write_(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
+void W25N01G_Write_(uint32_t addr, uint8_t buff[2048], uint8_t data_width, uint8_t data_phase)
 {
 	QSPI_CmdStructure cmdStruct;
 	QSPI_CmdStructClear(&cmdStruct);
@@ -139,20 +140,44 @@ void W25N01G_Write_(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
 	
 	QSPI_Command(QSPI0, QSPI_Mode_IndirectWrite, &cmdStruct);
 	
-	for(int i = 0; i < 2048 / 4; i++)
+	if(data_phase == 0)
+		return;
+	
+	if((uint32_t)buff % 4 == 0)	// word aligned
 	{
-		uint32_t * p_word = (uint32_t *)buff;
-		
-		while(QSPI_FIFOSpace(QSPI0) < 4) __NOP();
-		
-		QSPI0->DRW = p_word[i];
+		for(int i = 0; i < 2048 / 4; i++)
+		{
+			uint32_t * p_word = (uint32_t *)buff;
+			
+			while(QSPI_FIFOSpace(QSPI0) < 4) __NOP();
+			
+			QSPI0->DRW = p_word[i];
+		}
+	}
+	else
+	{
+		for(int i = 0; i < 2048; i++)
+		{
+			while(QSPI_FIFOSpace(QSPI0) < 1) __NOP();
+			
+			QSPI0->DRB = buff[i];
+		}
 	}
 	
 	while(QSPI_Busy(QSPI0)) __NOP();
 	
+	W25N01G_Program_Execute(addr);
 	
-	/* Program the Data Buffer content into the physical memory page */
+	while(W25N01G_FlashBusy()) __NOP();
+}
+
+
+/* Program the Data Buffer content into the physical memory page */
+void W25N01G_Program_Execute(uint32_t addr)
+{
+	QSPI_CmdStructure cmdStruct;
 	QSPI_CmdStructClear(&cmdStruct);
+	
 	cmdStruct.InstructionMode 	 = QSPI_PhaseMode_1bit;
 	cmdStruct.Instruction 		 = W25N_CMD_PROGRAM_EXECUTE;
 	cmdStruct.AddressMode 		 = QSPI_PhaseMode_1bit;
@@ -165,8 +190,6 @@ void W25N01G_Write_(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
 	QSPI_Command(QSPI0, QSPI_Mode_IndirectWrite, &cmdStruct);
 	
 	while(QSPI_Busy(QSPI0)) __NOP();
-	
-	while(W25N01G_FlashBusy()) __NOP();
 }
 
 
@@ -177,10 +200,11 @@ void W25N01G_Write_(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
 *			uint8_t buff[2048]		读取到的数据写入此数组中，数组大小必须是 2048 字节，ECC 数据不读取
 *			uint8_t addr_width		读取使用的地址线个数，有效值包括 1、2、4
 *			uint8_t data_width		读取使用的数据线个数，有效值包括 1、2、4
+*			uint8_t data_phase		是否在此函数内执行数据阶段；若否，可在后续通过 DMA 实现更高效的读取
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
-void W25N01G_Read_(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width)
+void W25N01G_Read_(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width, uint8_t data_phase)
 {
 	QSPI_CmdStructure cmdStruct;
 	QSPI_CmdStructClear(&cmdStruct);
@@ -253,14 +277,29 @@ void W25N01G_Read_(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_
 	cmdStruct.DataCount 		 = 2048;
 	
 	QSPI_Command(QSPI0, QSPI_Mode_IndirectRead, &cmdStruct);
-		
-	for(int i = 0; i < 2048 / 4; i++)
+	
+	if(data_phase == 0)
+		return;
+	
+	if((uint32_t)buff % 4 == 0)	// word aligned
 	{
-		uint32_t * p_word = (uint32_t *)buff;
-		
-		while(QSPI_FIFOCount(QSPI0) < 4) __NOP();
-		
-		p_word[i] = QSPI0->DRW;
+		for(int i = 0; i < 2048 / 4; i++)
+		{
+			uint32_t * p_word = (uint32_t *)buff;
+			
+			while(QSPI_FIFOCount(QSPI0) < 4) __NOP();
+			
+			p_word[i] = QSPI0->DRW;
+		}
+	}
+	else
+	{
+		for(int i = 0; i < 2048; i++)
+		{
+			while(QSPI_FIFOCount(QSPI0) < 1) __NOP();
+			
+			buff[i] = QSPI0->DRB;
+		}
 	}
 }
 

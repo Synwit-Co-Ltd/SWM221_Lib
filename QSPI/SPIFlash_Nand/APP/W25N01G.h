@@ -57,15 +57,17 @@ void W25N01G_Init(void);
 uint32_t W25N01G_ReadJEDEC(void);
 
 void W25N01G_Erase(uint32_t addr, uint8_t wait);
-void W25N01G_Write_(uint32_t addr, uint8_t buff[2048], uint8_t data_width);
-#define W25N01G_Write(addr, buff)			W25N01G_Write_((addr), (buff), 1)
-#define W25N01G_Write_4bit(addr, buff)		W25N01G_Write_((addr), (buff), 4)
-void W25N01G_Read_(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width);
-#define W25N01G_Read(addr, buff)			W25N01G_Read_((addr), (buff), 1, 1);
-#define W25N01G_Read_2bit(addr, buff)		W25N01G_Read_((addr), (buff), 1, 2);
-#define W25N01G_Read_4bit(addr, buff)		W25N01G_Read_((addr), (buff), 1, 4);
-#define W25N01G_Read_IO2bit(addr, buff)		W25N01G_Read_((addr), (buff), 2, 2);
-#define W25N01G_Read_IO4bit(addr, buff)		W25N01G_Read_((addr), (buff), 4, 4);
+void W25N01G_Write_(uint32_t addr, uint8_t buff[2048], uint8_t data_width, uint8_t data_phase);
+#define W25N01G_Write(addr, buff)			W25N01G_Write_((addr), (buff), 1, 1)
+#define W25N01G_Write_4bit(addr, buff)		W25N01G_Write_((addr), (buff), 4, 1)
+void W25N01G_Read_(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width, uint8_t data_phase);
+#define W25N01G_Read(addr, buff)			W25N01G_Read_((addr), (buff), 1, 1, 1);
+#define W25N01G_Read_2bit(addr, buff)		W25N01G_Read_((addr), (buff), 1, 2, 1);
+#define W25N01G_Read_4bit(addr, buff)		W25N01G_Read_((addr), (buff), 1, 4, 1);
+#define W25N01G_Read_IO2bit(addr, buff)		W25N01G_Read_((addr), (buff), 2, 2, 1);
+#define W25N01G_Read_IO4bit(addr, buff)		W25N01G_Read_((addr), (buff), 4, 4, 1);
+
+void W25N01G_Program_Execute(uint32_t addr);
 
 bool W25N01G_FlashBusy(void);
 void W25N01G_FlashProtect(uint8_t protect);

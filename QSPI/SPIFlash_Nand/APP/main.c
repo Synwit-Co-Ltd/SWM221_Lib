@@ -15,6 +15,8 @@ uint8_t WrBuff[W25N_PAGE_SIZE] = {
 };
 
 
+void W25N01G_Write_DMA(uint32_t addr, uint8_t buff[2048], uint8_t data_width);
+void W25N01G_Read_DMA(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width);
 void SerialInit(void);
 
 int main(void)
@@ -74,11 +76,100 @@ int main(void)
 	
 	printf("\n\nQuad IO Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
+	
+	
+	W25N01G_Erase(EEPROM_ADDR, 1);
+	W25N01G_Write_DMA(EEPROM_ADDR, WrBuff, 4);
+	
+	W25N01G_Read_DMA(EEPROM_ADDR, RdBuff, 4, 4);
+	
+	printf("\n\nDMA Read: \n");
+	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
    	
 	while(1==1)
 	{
 	}
 }
+
+
+void W25N01G_Write_DMA(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
+{
+	static bool dma_inited = false;
+	
+	if(!dma_inited)
+	{
+		DMA_InitStructure DMA_initStruct;
+		
+		DMA_initStruct.Mode = DMA_MODE_SINGLE;
+		DMA_initStruct.Unit = DMA_UNIT_BYTE;
+		DMA_initStruct.Count = 2048;
+		DMA_initStruct.MemoryAddr = (uint32_t)buff;
+		DMA_initStruct.MemoryAddrInc = 1;
+		DMA_initStruct.PeripheralAddr = (uint32_t)&QSPI0->DRB;
+		DMA_initStruct.PeripheralAddrInc = 0;
+		DMA_initStruct.Handshake = DMA_CH0_QSPI0TX;
+		DMA_initStruct.Priority = DMA_PRI_LOW;
+		DMA_initStruct.INTEn = 0;
+		DMA_CH_Init(DMA_CH0, &DMA_initStruct);
+		
+		dma_inited = true;
+	}
+	
+	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectWrite);
+	
+	W25N01G_Write_(addr, buff, data_width, 0);
+	
+	DMA_CH_Open(DMA_CH0);
+	
+	while(DMA_CH_INTStat(DMA_CH0, DMA_IT_DONE) == 0) __NOP();
+    DMA_CH_INTClr(DMA_CH0, DMA_IT_DONE);
+	
+	/* 在 QSPI busy 时，写 QSPI->CR 寄存器无效 */
+	while(QSPI_Busy(QSPI0)) __NOP();
+	
+	QSPI_DMADisable(QSPI0);
+	
+	W25N01G_Program_Execute(addr);
+	
+	while(W25N01G_FlashBusy()) __NOP();
+}
+
+
+void W25N01G_Read_DMA(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width)
+{
+	static bool dma_inited = false;
+	
+	if(!dma_inited)
+	{
+		DMA_InitStructure DMA_initStruct;
+		
+		DMA_initStruct.Mode = DMA_MODE_SINGLE;
+		DMA_initStruct.Unit = DMA_UNIT_BYTE;
+		DMA_initStruct.Count = 2048;
+		DMA_initStruct.MemoryAddr = (uint32_t)buff;
+		DMA_initStruct.MemoryAddrInc = 1;
+		DMA_initStruct.PeripheralAddr = (uint32_t)&QSPI0->DRB;
+		DMA_initStruct.PeripheralAddrInc = 0;
+		DMA_initStruct.Handshake = DMA_CH1_QSPI0RX;
+		DMA_initStruct.Priority = DMA_PRI_LOW;
+		DMA_initStruct.INTEn = 0;
+		DMA_CH_Init(DMA_CH1, &DMA_initStruct);
+		
+		dma_inited = true;
+	}
+	
+	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectRead);
+	
+	W25N01G_Read_(addr, buff, addr_width, data_width, 0);
+	
+	DMA_CH_Open(DMA_CH1);
+	
+	while(DMA_CH_INTStat(DMA_CH1, DMA_IT_DONE) == 0) __NOP();
+    DMA_CH_INTClr(DMA_CH1, DMA_IT_DONE);
+	
+	QSPI_DMADisable(QSPI0);
+}
+
 
 void SerialInit(void)
 {
