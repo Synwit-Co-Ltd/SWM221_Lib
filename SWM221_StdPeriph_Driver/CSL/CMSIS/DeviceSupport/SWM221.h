@@ -2045,7 +2045,7 @@ typedef struct {
 	
 		 uint32_t RESERVED[3];
 	
-	__IO uint32_t SSTRIM;					//Sample Shift Trim
+	__IO uint32_t SSHIFT;					//Sample Shift in System clock cycles, 实际的采样延迟时间是此寄存器与 CR.SSHIFT 设定延迟的累加
 } QSPI_TypeDef;
 
 
@@ -2055,7 +2055,7 @@ typedef struct {
 #define QSPI_CR_ABORT_Msk			(0x01 << QSPI_CR_ABORT_Pos)
 #define QSPI_CR_DMAEN_Pos			2
 #define QSPI_CR_DMAEN_Msk			(0x01 << QSPI_CR_DMAEN_Pos)
-#define QSPI_CR_SSHIFT_Pos			4		//Sample shift, 0 No shift   1 1/2 cycle shift
+#define QSPI_CR_SSHIFT_Pos			4		//Sample Shift in QSPI clock cycle, 0 No shift   1 1/2 cycle shift
 #define QSPI_CR_SSHIFT_Msk			(0x01 << QSPI_CR_SSHIFT_Pos)
 #define QSPI_CR_BIDI_Pos			5		//单线双向工模式：0 IO0输出，IO1输入    1 IO0负责输入输出
 #define QSPI_CR_BIDI_Msk			(0x01 << QSPI_CR_BIDI_Pos)
@@ -2126,6 +2126,11 @@ typedef struct {
 #define QSPI_CCR_MODE_Msk			(0x03 << QSPI_CCR_MODE_Pos)
 #define QSPI_CCR_SIOO_Pos			28		//Send Instruction Only Once
 #define QSPI_CCR_SIOO_Msk			(0x01 << QSPI_CCR_SIOO_Pos)
+
+#define QSPI_SSHIFT_CYCLE_Pos		0		//Sample Shift Cycle Count in System clock
+#define QSPI_SSHIFT_CYCLE_Msk		(0x0F << QSPI_SSHIFT_CYCLE_Pos)
+#define QSPI_SSHIFT_SPACE_Pos		4		//当 RX FIFO 中剩余 SPACE 个空位时，提前暂停接收，防止因无法及时暂停导致的 FIFO 溢出
+#define QSPI_SSHIFT_SPACE_Msk		(0x0F << QSPI_SSHIFT_SPACE_Pos)
 
 
 

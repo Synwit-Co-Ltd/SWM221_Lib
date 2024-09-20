@@ -34,7 +34,7 @@ int main(void)
 	QSPI_initStruct.Size = QSPI_Size_16MB;
 	QSPI_initStruct.ClkDiv = 4;
 	QSPI_initStruct.ClkMode = QSPI_ClkMode_3;
-	QSPI_initStruct.SampleShift = QSPI_SampleShift_NONE;
+	QSPI_initStruct.SampleShift = QSPI_SampleShift_NONE;	// ClkDiv = 2 时需使用 QSPI_SampleShift_1_SYSCLK
 	QSPI_initStruct.IntEn = 0;
 	QSPI_Init(QSPI0, &QSPI_initStruct);
 	QSPI_Open(QSPI0);
@@ -138,6 +138,9 @@ void QSPI_Write_DMA(uint32_t addr, uint8_t buff[], uint32_t count, uint8_t data_
 	QSPI_Write_(QSPI0, addr, buff, count, data_width, 0);
 	
 	DMA_CH_Open(DMA_CH0);
+	
+	while(DMA_CH_INTStat(DMA_CH0, DMA_IT_DONE) == 0) __NOP();
+    DMA_CH_INTClr(DMA_CH0, DMA_IT_DONE);
 	
 	/* 在 QSPI busy 时，写 QSPI->CR 寄存器无效 */
 	while(QSPI_Busy(QSPI0)) __NOP();

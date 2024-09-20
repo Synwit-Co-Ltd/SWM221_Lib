@@ -55,7 +55,8 @@ void QSPI_Init(QSPI_TypeDef * QSPIx, QSPI_InitStructure * initStruct)
 	
 	AddressSize = initStruct->Size / 8;
 	
-	QSPIx->SSTRIM = initStruct->SampleShift & 0x0F;
+	QSPIx->SSHIFT = ((initStruct->SampleShift & 0x0F) << QSPI_SSHIFT_CYCLE_Pos) |
+					(4								  << QSPI_SSHIFT_SPACE_Pos);
 	
 	QSPIx->CS0TO = 100;
 	
