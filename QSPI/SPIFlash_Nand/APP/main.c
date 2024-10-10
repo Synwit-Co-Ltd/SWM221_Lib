@@ -168,6 +168,8 @@ void W25N01G_Read_DMA(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uin
     DMA_CH_INTClr(DMA_CH1, DMA_IT_DONE);
 	
 	QSPI_DMADisable(QSPI0);
+	
+	QSPI_Abort(QSPI0);
 }
 
 

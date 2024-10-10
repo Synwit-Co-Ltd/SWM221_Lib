@@ -155,6 +155,9 @@ void QSPI_Read_DMA(uint32_t addr, uint8_t buff[], uint32_t count, uint8_t addr_w
 {
 	static bool dma_inited = false;
 	
+	if(count < 16)	// DMA 读取数据个数不能小于 16
+		return;
+	
 	if(!dma_inited)
 	{
 		DMA_InitStructure DMA_initStruct;
@@ -184,6 +187,8 @@ void QSPI_Read_DMA(uint32_t addr, uint8_t buff[], uint32_t count, uint8_t addr_w
     DMA_CH_INTClr(DMA_CH1, DMA_IT_DONE);
 	
 	QSPI_DMADisable(QSPI0);
+	
+	QSPI_Abort(QSPI0);
 }
 
 

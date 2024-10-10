@@ -155,6 +155,11 @@ static inline bool QSPI_Busy(QSPI_TypeDef * QSPIx)
 	return QSPIx->SR & QSPI_SR_BUSY_Msk;
 }
 
+static inline void QSPI_Abort(QSPI_TypeDef * QSPIx)
+{
+	QSPIx->CR |= QSPI_CR_ABORT_Msk;
+}
+
 static inline uint32_t QSPI_FIFOCount(QSPI_TypeDef * QSPIx)
 {
 	return (QSPIx->SR & QSPI_SR_FFLVL_Msk) >> QSPI_SR_FFLVL_Pos;

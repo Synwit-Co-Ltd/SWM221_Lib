@@ -301,6 +301,8 @@ void W25N01G_Read_(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_
 			buff[i] = QSPI0->DRB;
 		}
 	}
+	
+	QSPI_Abort(QSPI0);
 }
 
 

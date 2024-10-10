@@ -56,7 +56,7 @@ void QSPI_Init(QSPI_TypeDef * QSPIx, QSPI_InitStructure * initStruct)
 	AddressSize = initStruct->Size / 8;
 	
 	QSPIx->SSHIFT = ((initStruct->SampleShift & 0x0F) << QSPI_SSHIFT_CYCLE_Pos) |
-					(4								  << QSPI_SSHIFT_SPACE_Pos);
+					(2								  << QSPI_SSHIFT_SPACE_Pos);
 	
 	QSPIx->FCR = 0x1B;
 	if(initStruct->IntEn)
@@ -399,6 +399,8 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 			buff[i] = QSPIx->DRB;
 		}
 	}
+	
+	QSPI_Abort(QSPIx);
 }
 
 
