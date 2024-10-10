@@ -108,12 +108,14 @@ void W25N01G_Write_DMA(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
 		DMA_initStruct.PeripheralAddr = (uint32_t)&QSPI0->DRB;
 		DMA_initStruct.PeripheralAddrInc = 0;
 		DMA_initStruct.Handshake = DMA_CH0_QSPI0TX;
-		DMA_initStruct.Priority = DMA_PRI_LOW;
+		DMA_initStruct.Priority = DMA_PRI_VERY_HIGH;
 		DMA_initStruct.INTEn = 0;
 		DMA_CH_Init(DMA_CH0, &DMA_initStruct);
 		
 		dma_inited = true;
 	}
+	
+	DMA_CH_SetAddrAndCount(DMA_CH0, (uint32_t)buff, 2048);
 	
 	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectWrite);
 	
@@ -151,12 +153,14 @@ void W25N01G_Read_DMA(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uin
 		DMA_initStruct.PeripheralAddr = (uint32_t)&QSPI0->DRB;
 		DMA_initStruct.PeripheralAddrInc = 0;
 		DMA_initStruct.Handshake = DMA_CH1_QSPI0RX;
-		DMA_initStruct.Priority = DMA_PRI_LOW;
+		DMA_initStruct.Priority = DMA_PRI_VERY_HIGH;
 		DMA_initStruct.INTEn = 0;
 		DMA_CH_Init(DMA_CH1, &DMA_initStruct);
 		
 		dma_inited = true;
 	}
+	
+	DMA_CH_SetAddrAndCount(DMA_CH1, (uint32_t)buff, 2048);
 	
 	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectRead);
 	

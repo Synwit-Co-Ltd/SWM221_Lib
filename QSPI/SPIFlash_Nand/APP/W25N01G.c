@@ -23,7 +23,7 @@ void W25N01G_Init(void)
 	QSPI_initStruct.Size = QSPI_Size_128MB;
 	QSPI_initStruct.ClkDiv = 4;
 	QSPI_initStruct.ClkMode = QSPI_ClkMode_3;
-	QSPI_initStruct.SampleShift = QSPI_SampleShift_NONE;
+	QSPI_initStruct.SampleShift = (QSPI_initStruct.ClkDiv == 2) ? QSPI_SampleShift_1_SYSCLK : QSPI_SampleShift_NONE;
 	QSPI_initStruct.IntEn = 0;
 	QSPI_Init(QSPI0, &QSPI_initStruct);
 	QSPI_Open(QSPI0);
