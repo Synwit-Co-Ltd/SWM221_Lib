@@ -5,6 +5,7 @@
 uint32_t FLASH_Erase(uint32_t addr);
 uint32_t FLASH_Write(uint32_t addr, uint32_t buff[], uint32_t cnt);
 void Flash_Param_at_xMHz(uint32_t x);
+void Cache_Clear(void);
 
 
 #define FLASH_SECTOR_SIZE	512
