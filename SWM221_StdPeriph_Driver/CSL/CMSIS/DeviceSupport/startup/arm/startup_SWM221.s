@@ -90,7 +90,7 @@ __Vectors       DCD     __initial_sp               ; Top of Stack
 				DCD    GPIOA0_GPIOC0_Handler
 				DCD    GPIOA1_GPIOC1_Handler
 				DCD    GPIOA2_GPIOC2_MPU_Handler
-				DCD    GPIOA3_GPIOC3_BOD_Handler
+				DCD    GPIOA3_GPIOC3_PVD_Handler
 				DCD    GPIOB0_GPIOA8_TIMR2_Handler
 				DCD    GPIOB1_GPIOA9_DMA_Handler
 				DCD    GPIOB2_GPIOA10_DIV_Handler
@@ -269,8 +269,8 @@ GPIOA2_GPIOC2_MPU_Handler  PROC
 				B       .
 				ENDP
 
-GPIOA3_GPIOC3_BOD_Handler  PROC
-				EXPORT  GPIOA3_GPIOC3_BOD_Handler    [WEAK]
+GPIOA3_GPIOC3_PVD_Handler  PROC
+				EXPORT  GPIOA3_GPIOC3_PVD_Handler    [WEAK]
 				B       .
 				ENDP
 

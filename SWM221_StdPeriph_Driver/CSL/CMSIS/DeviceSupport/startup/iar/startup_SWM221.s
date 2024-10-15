@@ -57,7 +57,7 @@ __vector_table
         DCD    TIMR1_Handler
         DCD    HALL_Handler
         DCD    PWM0_Handler
-        DCD    BOD_Handler
+        DCD    PVD_Handler
         DCD    PWMBRK_Handler
         DCD    0
         DCD    WDT_Handler
@@ -157,10 +157,10 @@ HALL_Handler
 PWM0_Handler
         B PWM0_Handler
 
-        PUBWEAK BOD_Handler
+        PUBWEAK PVD_Handler
         SECTION .text:CODE:REORDER:NOROOT(1)
-BOD_Handler
-        B BOD_Handler
+PVD_Handler
+        B PVD_Handler
 
         PUBWEAK PWMBRK_Handler
         SECTION .text:CODE:REORDER:NOROOT(1)

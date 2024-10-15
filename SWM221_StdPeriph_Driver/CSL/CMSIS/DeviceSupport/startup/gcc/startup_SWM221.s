@@ -53,7 +53,7 @@ __isr_vector:
     .long    TIMR1_Handler
     .long    HALL_Handler
     .long    PWM0_Handler
-    .long    BOD_Handler
+    .long    PVD_Handler
     .long    PWMBRK_Handler
     .long    0
     .long    WDT_Handler
@@ -145,7 +145,7 @@ Reset_Handler:
     def_default_handler    TIMR1_Handler
     def_default_handler    HALL_Handler
     def_default_handler    PWM0_Handler
-    def_default_handler    BOD_Handler
+    def_default_handler    PVD_Handler
     def_default_handler    PWMBRK_Handler
     def_default_handler    WDT_Handler
     def_default_handler    I2C0_Handler

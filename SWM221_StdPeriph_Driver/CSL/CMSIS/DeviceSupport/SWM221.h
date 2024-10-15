@@ -42,7 +42,7 @@ typedef enum IRQn
   GPIOA0_GPIOC0_IRQn        = 23,
   GPIOA1_GPIOC1_IRQn		= 24,
   GPIOA2_GPIOC2_MPU_IRQn    = 25,
-  GPIOA3_GPIOC3_BOD_IRQn    = 26,
+  GPIOA3_GPIOC3_PVD_IRQn    = 26,
   GPIOB0_GPIOA8_TIMR2_IRQn  = 27,
   GPIOB1_GPIOA9_DMA_IRQn    = 28,
   GPIOB2_GPIOA10_DIV_IRQn   = 29,
@@ -134,8 +134,8 @@ typedef struct {
 	__IO uint32_t PLLCR;
     __IO uint32_t PLLSR;
 	
-	__IO uint32_t BODCR;
-	__IO uint32_t BODSR;
+	__IO uint32_t PVDCR;
+	__IO uint32_t PVDSR;
 	
 	__IO uint32_t LVRCR;
 	
@@ -314,17 +314,17 @@ typedef struct {
 #define SYS_PLLSR_ENA_Pos			1
 #define SYS_PLLSR_ENA_Msk			(0x01 << SYS_PLLSR_ENA_Pos)
 
-#define SYS_BODCR_EN_Pos		    0		//BOD Enable
-#define SYS_BODCR_EN_Msk		    (0x01 << SYS_BODCR_EN_Pos)
-#define SYS_BODCR_LVL_Pos			1		//BOD触发电平，0 2.0v   1 2.3v   2 2.7v   3 3.0v   4 3.7v   5 4.0v   6 4.3v
-#define SYS_BODCR_LVL_Msk			(0x07 << SYS_BODCR_LVL_Pos)
-#define SYS_BODCR_IE_Pos			4		//BOD Interrupt Enable
-#define SYS_BODCR_IE_Msk			(0x01 << SYS_BODCR_IE_Pos)
+#define SYS_PVDCR_EN_Pos		    0		//PVD Enable
+#define SYS_PVDCR_EN_Msk		    (0x01 << SYS_PVDCR_EN_Pos)
+#define SYS_PVDCR_LVL_Pos			1		//PVD触发电平，0 2.0v   1 2.3v   2 2.7v   3 3.0v   4 3.7v   5 4.0v   6 4.3v
+#define SYS_PVDCR_LVL_Msk			(0x07 << SYS_PVDCR_LVL_Pos)
+#define SYS_PVDCR_IE_Pos			4		//PVD Interrupt Enable
+#define SYS_PVDCR_IE_Msk			(0x01 << SYS_PVDCR_IE_Pos)
 
-#define SYS_BODSR_ST_Pos			0		//BOD Status
-#define SYS_BODSR_ST_Msk			(0x01 << SYS_BODSR_ST_Pos)
-#define SYS_BODSR_IF_Pos			1		//中断标志，写1清零
-#define SYS_BODSR_IF_Msk			(0x01 << SYS_BODSR_IF_Pos)
+#define SYS_PVDSR_ST_Pos			0		//PVD Status
+#define SYS_PVDSR_ST_Msk			(0x01 << SYS_PVDSR_ST_Pos)
+#define SYS_PVDSR_IF_Pos			1		//中断标志，写1清零
+#define SYS_PVDSR_IF_Msk			(0x01 << SYS_PVDSR_IF_Pos)
 
 #define SYS_LVRCR_EN_Pos			0		//LVR Enable
 #define SYS_LVRCR_EN_Msk			(0x01 << SYS_LVRCR_EN_Pos)
