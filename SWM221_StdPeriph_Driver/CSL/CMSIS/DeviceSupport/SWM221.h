@@ -383,7 +383,7 @@ typedef struct {
 #define SYS_PGA0CR_MODE_Msk			(0x01 << SYS_PGA0CR_MODE_Pos)
 #define SYS_PGA0CR_ROUT_Pos			2 	//输出电阻选择：0 open   1 100   2 1k   3 10k
 #define SYS_PGA0CR_ROUT_Msk			(0x03 << SYS_PGA0CR_ROUT_Pos)
-#define SYS_PGA0CR_GAIN_Pos			4 	//PGA 增益选择：0 x1   1 x5   2 x10   3 x10
+#define SYS_PGA0CR_GAIN_Pos			4 	//PGA 增益选择：0 x1   1 x5   2 x10   3 x20
 #define SYS_PGA0CR_GAIN_Msk			(0x03 << SYS_PGA0CR_GAIN_Pos)
 #define SYS_PGA0CR_BUFEN_Pos		6 	//输出 BUF 使能
 #define SYS_PGA0CR_BUFEN_Msk		(0x01 << SYS_PGA0CR_BUFEN_Pos)
@@ -416,7 +416,7 @@ typedef struct {
 #define SYS_PGA2CR_BYPASS_Pos		7
 #define SYS_PGA2CR_BYPASS_Msk		(0x01 << SYS_PGA2CR_BYPASS_Pos)
 
-#define SYS_PGAREF_REFSEL_Pos		0 		//PGA 参考电压选择：0 1.2v   1 1.5v   2 2.25v   3 ADCVREF/2
+#define SYS_PGAREF_REFSEL_Pos		0 		//PGA 参考电压选择：0 1.2v   1 1.8v   2 2.25v   3 ADCVREF/2
 #define SYS_PGAREF_REFSEL_Msk		(0x03 << SYS_PGAREF_REFSEL_Pos)
 
 #define SYS_TEMPCR_EN_Pos			0
