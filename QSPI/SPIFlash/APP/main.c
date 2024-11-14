@@ -53,7 +53,7 @@ int main(void)
 	printf("SPI Flash Quad %s\n", quad ? "enabled" : "disabled");
 	
 	
-	QSPI_Erase(QSPI0, (QSPI_initStruct.Size > QSPI_Size_16MB) ? QSPI_C4B_ERASE_SECTOR : QSPI_CMD_ERASE_SECTOR, EEPROM_ADDR, 1);
+	QSPI_Erase(QSPI0, EEPROM_ADDR, 1);
 	
 	QSPI_Read(QSPI0, EEPROM_ADDR, RdBuff, RWLEN);
 	
@@ -81,7 +81,7 @@ int main(void)
 	for(i = 0; i < RWLEN; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	QSPI_Erase(QSPI0, (QSPI_initStruct.Size > QSPI_Size_16MB) ? QSPI_C4B_ERASE_SECTOR : QSPI_CMD_ERASE_SECTOR, EEPROM_ADDR, 1);
+	QSPI_Erase(QSPI0, EEPROM_ADDR, 1);
 	QSPI_Write_4bit(QSPI0, EEPROM_ADDR, WrBuff, RWLEN);
 	
 	QSPI_Read_4bit(QSPI0, EEPROM_ADDR, RdBuff, RWLEN);
@@ -96,7 +96,7 @@ int main(void)
 	for(i = 0; i < RWLEN; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	QSPI_Erase(QSPI0, (QSPI_initStruct.Size > QSPI_Size_16MB) ? QSPI_C4B_ERASE_SECTOR : QSPI_CMD_ERASE_SECTOR, EEPROM_ADDR, 1);
+	QSPI_Erase(QSPI0, EEPROM_ADDR, 1);
 	QSPI_Write_DMA(EEPROM_ADDR, WrBuff, RWLEN, 4);
 	
 	QSPI_Read_DMA(EEPROM_ADDR, RdBuff, RWLEN, 4, 4);

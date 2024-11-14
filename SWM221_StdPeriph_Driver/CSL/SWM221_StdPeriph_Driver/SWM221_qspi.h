@@ -124,10 +124,14 @@ void QSPI_Close(QSPI_TypeDef * QSPIx);
 void QSPI_CmdStructClear(QSPI_CmdStructure * cmdStruct);
 void QSPI_Command(QSPI_TypeDef * QSPIx, uint8_t cmdMode, QSPI_CmdStructure * cmdStruct);
 
-void QSPI_Erase(QSPI_TypeDef * QSPIx, uint8_t cmd, uint32_t addr, uint8_t wait);
+void QSPI_Erase_(QSPI_TypeDef * QSPIx, uint32_t addr, uint16_t block_size, uint8_t wait);
+#define QSPI_Erase(QSPIx, addr, wait)				QSPI_Erase_(QSPIx, (addr),  4, (wait));
+#define QSPI_Erase_Block64KB(QSPIx, addr, wait)		QSPI_Erase_(QSPIx, (addr), 64, (wait));
+
 void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t count, uint8_t data_width, uint8_t data_phase);
 #define QSPI_Write(QSPIx, addr, buff, count)	   QSPI_Write_(QSPIx, (addr), (buff), (count), 1, 1)
 #define QSPI_Write_4bit(QSPIx, addr, buff, count)  QSPI_Write_(QSPIx, (addr), (buff), (count), 4, 1)
+
 void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t count, uint8_t addr_width, uint8_t data_width, uint8_t data_phase);
 #define QSPI_Read(QSPIx, addr, buff, count)			QSPI_Read_(QSPIx, (addr), (buff), (count), 1, 1, 1)
 #define QSPI_Read_2bit(QSPIx, addr, buff, count)	QSPI_Read_(QSPIx, (addr), (buff), (count), 1, 2, 1)
