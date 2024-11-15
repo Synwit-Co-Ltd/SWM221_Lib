@@ -474,32 +474,6 @@ void QSPI_QuadSwitch(QSPI_TypeDef * QSPIx, uint8_t on)
 
 
 /****************************************************************************************************************************************** 
-* 函数名称:	QSPI_SendCmd()
-* 功能说明:	QSPI 命令发送，适用于只有命令阶段的情况
-* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
-*			uint8_t cmd				要发送的命令
-* 输    出: 无
-* 注意事项: 无
-******************************************************************************************************************************************/
-void QSPI_SendCmd(QSPI_TypeDef * QSPIx, uint8_t cmd)
-{
-	QSPI_CmdStructure cmdStruct;
-	QSPI_CmdStructClear(&cmdStruct);
-	
-	cmdStruct.InstructionMode 	 = QSPI_PhaseMode_1bit;
-	cmdStruct.Instruction 		 = cmd;
-	cmdStruct.AddressMode 		 = QSPI_PhaseMode_None;
-	cmdStruct.AlternateBytesMode = QSPI_PhaseMode_None;
-	cmdStruct.DummyCycles 		 = 0;
-	cmdStruct.DataMode 			 = QSPI_PhaseMode_None;
-	
-	QSPI_Command(QSPIx, QSPI_Mode_IndirectWrite, &cmdStruct);
-	
-	while(QSPI_Busy(QSPIx)) __NOP();
-}
-
-
-/****************************************************************************************************************************************** 
 * 函数名称:	QSPI_ReadReg()
 * 功能说明:	QSPI Flash 寄存器读取，适用于只有命令、数据阶段，且数据不多于4字节的情况
 * 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
@@ -539,7 +513,7 @@ uint32_t QSPI_ReadReg(QSPI_TypeDef * QSPIx, uint8_t cmd, uint8_t n_bytes)
 * 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 *			uint8_t cmd				寄存器写入命令
 *			uint32_t data			要写入寄存器的数据，MSB
-*			uint8_t n_bytes			要写入寄存器的字节数，可取值 1、2、3、4
+*			uint8_t n_bytes			要写入寄存器的字节数，可取值 1、2、3、4、0（用于无数据阶段命令）
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
@@ -553,7 +527,7 @@ void QSPI_WriteReg(QSPI_TypeDef * QSPIx, uint8_t cmd, uint32_t data, uint8_t n_b
 	cmdStruct.AddressMode 		 = QSPI_PhaseMode_None;
 	cmdStruct.AlternateBytesMode = QSPI_PhaseMode_None;
 	cmdStruct.DummyCycles 		 = 0;
-	cmdStruct.DataMode 			 = QSPI_PhaseMode_1bit;
+	cmdStruct.DataMode 			 = n_bytes ? QSPI_PhaseMode_1bit : QSPI_PhaseMode_None;
 	cmdStruct.DataCount 		 = n_bytes;
 	
 	QSPI_Command(QSPIx, QSPI_Mode_IndirectWrite, &cmdStruct);

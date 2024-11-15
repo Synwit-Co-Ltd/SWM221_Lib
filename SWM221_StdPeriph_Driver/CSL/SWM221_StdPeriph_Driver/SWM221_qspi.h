@@ -143,15 +143,15 @@ void QSPI_Read_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t co
 bool QSPI_FlashBusy(QSPI_TypeDef * QSPIx);
 uint8_t QSPI_QuadState(QSPI_TypeDef * QSPIx);
 void QSPI_QuadSwitch(QSPI_TypeDef * QSPIx, uint8_t on);
-void QSPI_SendCmd(QSPI_TypeDef * QSPIx, uint8_t cmd);
+
 uint32_t QSPI_ReadReg(QSPI_TypeDef * QSPIx, uint8_t cmd, uint8_t n_bytes);
 void QSPI_WriteReg(QSPI_TypeDef * QSPIx, uint8_t cmd, uint32_t data, uint8_t n_bytes);
 
 #define QSPI_ReadJEDEC(QSPIx)			QSPI_ReadReg(QSPIx, QSPI_CMD_READ_JEDEC, 3)
-#define QSPI_WriteEnable(QSPIx)			QSPI_SendCmd(QSPIx, QSPI_CMD_WRITE_ENABLE)
-#define QSPI_WriteDisable(QSPIx)		QSPI_SendCmd(QSPIx, QSPI_CMD_WRITE_DISABLE)
-#define QSPI_4ByteAddrEnable(QSPIx)		QSPI_SendCmd(QSPIx, QSPI_CMD_4BYTE_ADDR_ENTER)
-#define QSPI_4ByteAddrDisable(QSPIx)	QSPI_SendCmd(QSPIx, QSPI_CMD_4BYTE_ADDR_EXIT)
+#define QSPI_WriteEnable(QSPIx)			QSPI_WriteReg(QSPIx, QSPI_CMD_WRITE_ENABLE, 0, 0)
+#define QSPI_WriteDisable(QSPIx)		QSPI_WriteReg(QSPIx, QSPI_CMD_WRITE_DISABLE, 0, 0)
+#define QSPI_4ByteAddrEnable(QSPIx)		QSPI_WriteReg(QSPIx, QSPI_CMD_4BYTE_ADDR_ENTER, 0, 0)
+#define QSPI_4ByteAddrDisable(QSPIx)	QSPI_WriteReg(QSPIx, QSPI_CMD_4BYTE_ADDR_EXIT, 0, 0)
 
 
 static inline bool QSPI_Busy(QSPI_TypeDef * QSPIx)
