@@ -2648,7 +2648,6 @@ typedef struct {
 #include "SWM221_qspi.h"
 #include "SWM221_usart.h"
 #include "SWM221_flash.h"
-#include "SWM221_sleep.h"
 #include "SWM221_iofilt.h"
 
 

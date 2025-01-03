@@ -4,7 +4,7 @@
  *	芯片的 ISP、SWD 引脚默认开启了上拉电阻，会增加休眠功耗，若想获得最低休眠功耗，休眠前请关闭所有引脚的上拉和下拉电阻
  */
  
-extern void EnterSleep_SRAM(void) ;
+extern void EnterSleepMode(void) ;
 void gpio_outhigh(void); //GPIO无外设连接情况下,GPIO输出高降低功耗,应用中根据实际情况配置IO状态
 
 
