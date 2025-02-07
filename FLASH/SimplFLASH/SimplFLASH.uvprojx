@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>SWM221xB</Device>
           <Vendor>Synwit</Vendor>
-          <PackID>Synwit.SWM32_DFP.2.1.4</PackID>
+          <PackID>Synwit.SWM32_DFP.2.1.5</PackID>
           <PackURL>http://www.synwit.com/pack</PackURL>
           <Cpu>CLOCK(12000000) CPUTYPE("Cortex-M0") ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -467,11 +467,6 @@
               <FileName>SWM221_qei.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\SWM221_StdPeriph_Driver\CSL\SWM221_StdPeriph_Driver\SWM221_qei.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWM221_sleep.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\SWM221_StdPeriph_Driver\CSL\SWM221_StdPeriph_Driver\SWM221_sleep.c</FilePath>
             </File>
             <File>
               <FileName>SWM221_spi.c</FileName>

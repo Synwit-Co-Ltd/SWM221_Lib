@@ -3,7 +3,7 @@
 
 /* 注意：EnterSleepMode() 必须在RAM中执行，Keil下实现方法有：
    方法一、Scatter file
-   方法二、code_in_ra.c上右键 =》Options for File "SWM221_sleep.c" =》Properties =》Memory Assignment =》Code/Conts 选择 IRAM1
+   方法二、code_in_ram.c 上右键 =》Options for File "code_in_ram.c" =》Properties =》Memory Assignment =》Code/Conts 选择 IRAM1
 */
 
 void EnterSleepMode(void) 
