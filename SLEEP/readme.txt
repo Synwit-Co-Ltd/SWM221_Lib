@@ -1,1 +1,0 @@
-SimplSLEEP_PinWakeup：低功耗唤醒；需要注意FLASH会进入深度睡眠模式，唤醒需要等待20uS时间，进入睡眠后，不能访问FLASH,所以进入唤醒和等待需要在RAM中执行。
