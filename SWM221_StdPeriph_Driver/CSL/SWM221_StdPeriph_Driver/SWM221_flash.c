@@ -91,7 +91,7 @@ void Flash_Param_at_xMHz(uint32_t x)
 }
 
 
-#if   defined ( __CC_ARM )
+#if   defined ( __CC_ARM ) || defined (__ARMCC_VERSION)
 
 /* Code_Cache_Clear 中数据是此函数编译生成的指令
 __asm void Cache_Clear(void)
@@ -124,7 +124,8 @@ uint16_t Code_Cache_Clear[] = {
 	0xBF00, 0xBF00, 0xBF00, 0x4770, 
 };
 
-__asm void Cache_Clear(void)
+#if   defined ( __CC_ARM )
+__asm void Cache_Clear(void)	// AC5
 {
 	IMPORT Code_Cache_Clear
 	PUSH {LR}
@@ -136,6 +137,20 @@ __asm void Cache_Clear(void)
 	POP {R0}
 	BX R0
 }
+#else
+void Cache_Clear(void)			// AC6
+{
+__asm(
+	"PUSH {LR}\n"
+	"NOP\n"
+	"LDR R0,=Code_Cache_Clear\n"
+	"ADDS R0, R0, #1\n"
+	"NOP\n"
+	"BLX R0\n"
+	"POP {R0}\n"
+	"BX R0\n");
+}
+#endif
 
 #elif defined ( __ICCARM__ )
 
