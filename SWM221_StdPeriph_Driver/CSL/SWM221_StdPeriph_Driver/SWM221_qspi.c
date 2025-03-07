@@ -590,3 +590,145 @@ uint32_t QSPI_INTStat(QSPI_TypeDef * QSPIx, uint32_t it)
 {
 	return QSPIx->SR & it;
 }
+
+
+/****************************************************************************************************************************************** 
+* 函数名称:	QSPI_SPI_Write_()
+* 功能说明:	QSPI 用作普通 SPI 写
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
+*			uint8_t buff[]			要写的数据
+*			uint32_t count			要写的数据个数
+*			uint8_t data_width		写入使用的数据线个数，有效值包括 1、2、4
+*			uint8_t data_phase		是否在此函数内执行数据阶段；若否，可在后续通过 DMA 实现更高效的写入
+* 输    出: 无
+* 注意事项: 无
+******************************************************************************************************************************************/
+void QSPI_SPI_Write_(QSPI_TypeDef * QSPIx, uint8_t buff[], uint32_t count, uint8_t data_width, uint8_t data_phase)
+{
+	QSPI_CmdStructure cmdStruct;
+	QSPI_CmdStructClear(&cmdStruct);
+	
+	cmdStruct.InstructionMode 	 = QSPI_PhaseMode_None;
+	cmdStruct.AddressMode 		 = QSPI_PhaseMode_None;
+	cmdStruct.AlternateBytesMode = QSPI_PhaseMode_None;
+	cmdStruct.DummyCycles 		 = 0;
+	cmdStruct.DataMode 			 = (data_width == 1) ? QSPI_PhaseMode_1bit : ((data_width == 2) ? QSPI_PhaseMode_2bit : QSPI_PhaseMode_4bit);
+	cmdStruct.DataCount 		 = count;
+	
+	QSPI_Command(QSPIx, QSPI_Mode_IndirectWrite, &cmdStruct);
+	
+	if(data_phase == 0)
+		return;
+	
+	if((uint32_t)buff % 4 == 0)	// word aligned
+	{
+		uint32_t n_word = count / 4;
+		
+		for(int i = 0; i < n_word; i++)
+		{
+			uint32_t * p_word = (uint32_t *)buff;
+			
+			while(QSPI_FIFOSpace(QSPIx) < 4) __NOP();
+			
+			QSPIx->DRW = p_word[i];
+		}
+		
+		if((count % 4) / 2)
+		{
+			uint16_t * p_half = (uint16_t *)&buff[n_word * 4];
+			
+			while(QSPI_FIFOSpace(QSPIx) < 2) __NOP();
+			
+			QSPIx->DRH = p_half[0];
+		}
+		
+		if(count % 2)
+		{
+			while(QSPI_FIFOSpace(QSPIx) < 1) __NOP();
+			
+			QSPIx->DRB = buff[count - 1];
+		}
+	}
+	else
+	{
+		for(int i = 0; i < count; i++)
+		{
+			while(QSPI_FIFOSpace(QSPIx) < 1) __NOP();
+			
+			QSPIx->DRB = buff[i];
+		}
+	}
+	
+	while(QSPI_Busy(QSPIx)) __NOP();
+}
+
+
+/****************************************************************************************************************************************** 
+* 函数名称:	QSPI_SPI_Read_()
+* 功能说明:	QSPI 用作普通 SPI 读
+* 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
+*			uint8_t buff[]			读取到的数据写入此数组中
+*			uint32_t count			要读取数据的个数
+*			uint8_t data_width		读取使用的数据线个数，有效值包括 1、2、4
+*			uint8_t data_phase		是否在此函数内执行数据阶段；若否，可在后续通过 DMA 实现更高效的读取
+* 输    出: 无
+* 注意事项: 无
+******************************************************************************************************************************************/
+void QSPI_SPI_Read_(QSPI_TypeDef * QSPIx, uint8_t buff[], uint32_t count, uint8_t data_width, uint8_t data_phase)
+{
+	QSPI_CmdStructure cmdStruct;
+	QSPI_CmdStructClear(&cmdStruct);
+	
+	cmdStruct.InstructionMode 	 = QSPI_PhaseMode_None;
+	cmdStruct.AddressMode 		 = QSPI_PhaseMode_None;
+	cmdStruct.AlternateBytesMode = QSPI_PhaseMode_None;
+	cmdStruct.DummyCycles 		 = 0;
+	cmdStruct.DataMode 			 = (data_width == 1) ? QSPI_PhaseMode_1bit : ((data_width == 2) ? QSPI_PhaseMode_2bit : QSPI_PhaseMode_4bit);
+	cmdStruct.DataCount 		 = count;
+	
+	QSPI_Command(QSPIx, QSPI_Mode_IndirectRead, &cmdStruct);
+	
+	if(data_phase == 0)
+		return;
+	
+	if((uint32_t)buff % 4 == 0)	// word aligned
+	{
+		uint32_t n_word = count / 4;
+		
+		for(int i = 0; i < n_word; i++)
+		{
+			uint32_t * p_word = (uint32_t *)buff;
+			
+			while(QSPI_FIFOCount(QSPIx) < 4) __NOP();
+			
+			p_word[i] = QSPIx->DRW;
+		}
+		
+		if((count % 4) / 2)
+		{
+			uint16_t * p_half = (uint16_t *)&buff[n_word * 4];
+			
+			while(QSPI_FIFOCount(QSPIx) < 2) __NOP();
+			
+			p_half[0] = QSPIx->DRH;
+		}
+		
+		if(count % 2)
+		{
+			while(QSPI_FIFOCount(QSPIx) < 1) __NOP();
+			
+			buff[count - 1] = QSPIx->DRB;
+		}
+	}
+	else
+	{
+		for(int i = 0; i < count; i++)
+		{
+			while(QSPI_FIFOCount(QSPIx) < 1) __NOP();
+			
+			buff[i] = QSPIx->DRB;
+		}
+	}
+	
+	QSPI_Abort(QSPIx);
+}

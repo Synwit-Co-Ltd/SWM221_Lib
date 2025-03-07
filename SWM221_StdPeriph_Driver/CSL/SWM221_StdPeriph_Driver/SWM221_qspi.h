@@ -198,4 +198,18 @@ void QSPI_INTClr(QSPI_TypeDef * QSPIx, uint32_t it);
 uint32_t QSPI_INTStat(QSPI_TypeDef * QSPIx, uint32_t it);
 
 
+
+/******** QSPI use as normal SPI (half-duplex) ********/
+
+void QSPI_SPI_Write_(QSPI_TypeDef * QSPIx, uint8_t buff[], uint32_t count, uint8_t data_width, uint8_t data_phase);
+#define QSPI_SPI_Write(QSPIx, buff, count)			QSPI_SPI_Write_(QSPIx, (buff), (count), 1, 1)
+#define QSPI_SPI_Write_2bit(QSPIx, buff, count)		QSPI_SPI_Write_(QSPIx, (buff), (count), 2, 1)
+#define QSPI_SPI_Write_4bit(QSPIx, buff, count)		QSPI_SPI_Write_(QSPIx, (buff), (count), 4, 1)
+
+void QSPI_SPI_Read_(QSPI_TypeDef * QSPIx, uint8_t buff[], uint32_t count, uint8_t data_width, uint8_t data_phase);
+#define QSPI_SPI_Read(QSPIx, buff, count)			QSPI_SPI_Read_(QSPIx, (buff), (count), 1, 1)
+#define QSPI_SPI_Read_2bit(QSPIx, buff, count)		QSPI_SPI_Read_(QSPIx, (buff), (count), 2, 1)
+#define QSPI_SPI_Read_4bit(QSPIx, buff, count)		QSPI_SPI_Read_(QSPIx, (buff), (count), 4, 1)
+
+
 #endif //__SWM221_QSPI_H__
