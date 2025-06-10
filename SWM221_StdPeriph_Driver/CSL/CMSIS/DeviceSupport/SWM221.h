@@ -1104,7 +1104,7 @@ typedef struct {
 #define SPI_CTRL_TFCLR_Msk			(0x01 << SPI_CTRL_TFCLR_Pos)
 #define SPI_CTRL_LSBF_Pos			28		//LSB Fisrt
 #define SPI_CTRL_LSBF_Msk			(0x01 << SPI_CTRL_LSBF_Pos)
-#define SPI_CTRL_NSYNC_Pos			29		//1 对SPI输入信号进行采样同步    0 对SPI输入信号不进行采样同步
+#define SPI_CTRL_NSYNC_Pos			29		//0 对SPI输入信号进行采样同步    1 对SPI输入信号不进行采样同步
 #define SPI_CTRL_NSYNC_Msk			(0x01 << SPI_CTRL_NSYNC_Pos)
 
 #define SPI_STAT_WTC_Pos			0		//Word Transmit Complete，每传输完成一个数据字由硬件置1，软件写1清零
