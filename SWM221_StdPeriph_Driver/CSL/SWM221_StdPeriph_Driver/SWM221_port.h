@@ -205,7 +205,7 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define PORTB_PIN11_PWM0BN      3
 #define PORTB_PIN11_TIMR1_IN    4
 #define PORTB_PIN11_TIMR1_OUT   5
-#define PORTB_PIN11_XTAL_IN     7
+#define PORTB_PIN11_XTAL_OUT	7
 
 #define PORTB_PIN12_GPIO        0
 #define PORTB_PIN12_UART0_RX    1
@@ -213,7 +213,7 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define PORTB_PIN12_PWM0B       3
 #define PORTB_PIN12_TIMR2_IN    4
 #define PORTB_PIN12_TIMR2_OUT   5
-#define PORTB_PIN12_XTAL_OUT    7
+#define PORTB_PIN12_XTAL_IN		7
 
 #define PORTB_PIN13_GPIO        0
 #define PORTB_PIN13_SPI0_MOSI	1
