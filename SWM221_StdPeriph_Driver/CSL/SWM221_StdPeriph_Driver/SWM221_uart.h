@@ -60,7 +60,7 @@ void UART_Init(UART_TypeDef * UARTx, UART_InitStructure * initStruct);	//UART´®¿
 void UART_Open(UART_TypeDef * UARTx);
 void UART_Close(UART_TypeDef * UARTx);
 
-void UART_WriteByte(UART_TypeDef * UARTx, uint8_t data);				//·¢ËÍÒ»¸ö×Ö½ÚÊý¾Ý
+void UART_WriteByte(UART_TypeDef * UARTx, uint16_t data);				//·¢ËÍÒ»¸ö×Ö½ÚÊý¾Ý
 uint32_t UART_ReadByte(UART_TypeDef * UARTx, uint32_t * data);			//¶ÁÈ¡Ò»¸ö×Ö½ÚÊý¾Ý£¬²¢Ö¸³öÊý¾ÝÊÇ·ñValid
 
 uint32_t UART_IsTXBusy(UART_TypeDef * UARTx);
