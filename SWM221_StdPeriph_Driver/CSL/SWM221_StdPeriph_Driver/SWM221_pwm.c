@@ -152,7 +152,7 @@ void PWM_ReloadDis(uint32_t pwm)
 /****************************************************************************************************************************************** 
 * 函数名称:	PWM_BrkInPolarity()
 * 功能说明:	设置刹车输入有效极性
-* 输    入: uint32_t brk			PWM_BRK0、PWM_BRK1、PWM_BRK2 及其“或”
+* 输    入: uint32_t brk			PWM_BRK0、PWM_BRK1 及其“或”
 *			uint32_t level			0 低电平刹车   1 高电平刹车
 * 输    出: 无
 * 注意事项: 无
@@ -170,7 +170,7 @@ void PWM_BrkInPolarity(uint32_t brk, uint32_t level)
 * 功能说明:	刹车配置
 * 输    入: PWM_TypeDef * PWMx 		指定要被设置的PWM，有效值包括PWM0、PWM1
 *			uint32_t chn			指定要被设置的PWM通道，有效值包括PWM_CH_A、PWM_CH_B
-*			uint32_t brk			刹车输入，PWM_BRK0、PWM_BRK1、PWM_BRK2 及其“或”
+*			uint32_t brk			刹车输入，PWM_BRK0、PWM_BRK1 及其“或”
 *			uint32_t out			刹车过程中PWMxA/PWMxB输出电平
 *			uint32_t outN			刹车过程中PWMxAN/PWMxBN输出电平
 *			uint32_t outHold		刹车信号撤销后，0 输出立即恢复   1 输出保持到计数器溢出再恢复

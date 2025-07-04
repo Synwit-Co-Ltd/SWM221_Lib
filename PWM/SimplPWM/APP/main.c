@@ -76,11 +76,10 @@ int main(void)
 				  (0   << SYS_ACMPCR_DACVR_Pos) |
 				  (100 << SYS_ACMPCR_DACDR_Pos);	// Vout = 100 / 255 * VDD
 #endif
-	PWM_BrkInPolarity(PWM_BRK0 | PWM_BRK1 | PWM_BRK2, 0);			//PWM_BRK0、PWM_BRK1、PWM_BRK2 低电平刹车
+	PWM_BrkInPolarity(PWM_BRK0 | PWM_BRK1, 0);		// PWM_BRK0、PWM_BRK1 低电平刹车
 	
 	PWM_BrkConfig(PWM0, PWM_CH_A, PWM_BRK0 | PWM_BRK1, 0, 1, 1, 0);	//PWM0通道A 受刹车输入 PWM_BRK0和PWM_BRK1 控制
 	PWM_BrkConfig(PWM0, PWM_CH_B, PWM_BRK0 | PWM_BRK1, 0, 1, 1, 0);	//PWM0通道B 受刹车输入 PWM_BRK0和PWM_BRK1 控制
-	PWM_BrkConfig(PWM1, PWM_CH_A, PWM_BRK2, 0, 1, 1, 0);			//PWM1通道A 受刹车输入 PWM_BRK2 控制
 	
 	/* 刹车（Brake）中断功能演示 */
 #if 0
