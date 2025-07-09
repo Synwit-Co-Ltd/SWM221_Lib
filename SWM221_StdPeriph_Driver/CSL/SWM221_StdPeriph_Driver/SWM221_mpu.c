@@ -60,19 +60,22 @@ static uint32_t MPU_IsBusy(MPU_TypeDef * MPUx)
 void MPU_WR_REG8(MPU_TypeDef * MPUx, uint8_t reg)
 {
 	MPUx->IRB = reg;
-	while(MPU_IsBusy(MPUx)) {}
+	__NOP(); __NOP(); __NOP();
+	while(MPU_IsBusy(MPUx)) __NOP();
 }
 
 void MPU_WR_DATA8(MPU_TypeDef * MPUx, uint8_t val)
 {
 	MPUx->DRB = val;
-	while(MPU_IsBusy(MPUx)) {}
+	__NOP(); __NOP(); __NOP();
+	while(MPU_IsBusy(MPUx)) __NOP();
 }
 
 void MPU_WR_DATA16(MPU_TypeDef * MPUx, uint16_t val)
 {
 	MPUx->DRH = val;
-	while(MPU_IsBusy(MPUx)) {}
+	__NOP(); __NOP(); __NOP();
+	while(MPU_IsBusy(MPUx)) __NOP();
 }
 
 void MPU_WriteReg(MPU_TypeDef * MPUx, uint8_t reg, uint8_t val)
