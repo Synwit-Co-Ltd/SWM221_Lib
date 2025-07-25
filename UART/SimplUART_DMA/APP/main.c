@@ -14,7 +14,7 @@ const char TX_String[8][32] = {
 };
 
 #define RX_LEN	256					// 推荐用 2 的整数次幂，从而将取余运算转换成与运算，加快运算速度
-int  RX_Buffer[RX_LEN] = { 0 };		// DMA 搬运 UART 接收到的数据必须以字为单位，否则可能出现数据暂存在 DMA 内部无法被程序读出的问题
+char RX_Buffer[RX_LEN] = { 0 };
 char TX_Buffer[RX_LEN] = { 0 };
 
 
