@@ -1,5 +1,11 @@
 #include "SWM221.h"
 
+
+// 1: 转换完成后触发中断，在 ADC_Handler() 中读取转换结果
+// 0: 注意：此方法可能会漏掉一些转换结果，若需要读取到所有转换结果，请使用中断方法
+#define USE_INT		0
+
+
 void SerialInit(void);
 
 int main(void)
@@ -27,7 +33,7 @@ int main(void)
 	ADC_SEQ_initStruct.trig_src = ADC_TRIGGER_TIMER1;
 	ADC_SEQ_initStruct.samp_tim = 6;
 	ADC_SEQ_initStruct.conv_cnt = 1;
-	ADC_SEQ_initStruct.EOCIntEn = 0;
+	ADC_SEQ_initStruct.EOCIntEn = USE_INT;
 	ADC_SEQ_initStruct.channels = (uint8_t []){ ADC_CH0, 0xF };
 	ADC_SEQ_Init(ADC0, ADC_SEQ0, &ADC_SEQ_initStruct);
 	
@@ -38,8 +44,23 @@ int main(void)
 	
 	while(1==1)
 	{
+#if USE_INT == 0
 		while(ADC_DataAvailable(ADC0, ADC_CH0) == 0) __NOP();
 		printf("%4d,", ADC_Read(ADC0, ADC_CH0));
+#endif
+	}
+}
+
+
+void ADC_Handler(void)
+{
+	if(ADC_INTStat(ADC0, ADC_SEQ0, ADC_IT_EOC))
+	{
+		ADC_INTClr(ADC0, ADC_SEQ0, ADC_IT_EOC);
+		
+		printf("%4d,", ADC_Read(ADC0, ADC_CH0));
+		
+		ADC_Start(ADC_SEQ0, 0);
 	}
 }
 
