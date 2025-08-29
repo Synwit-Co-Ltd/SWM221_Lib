@@ -321,10 +321,10 @@ typedef struct {
 #define SYS_PVDCR_IE_Pos			4		//PVD Interrupt Enable
 #define SYS_PVDCR_IE_Msk			(0x01 << SYS_PVDCR_IE_Pos)
 
-#define SYS_PVDSR_ST_Pos			0		//PVD Status
-#define SYS_PVDSR_ST_Msk			(0x01 << SYS_PVDSR_ST_Pos)
-#define SYS_PVDSR_IF_Pos			1		//中断标志，写1清零
+#define SYS_PVDSR_IF_Pos			0		//中断标志，写1清零
 #define SYS_PVDSR_IF_Msk			(0x01 << SYS_PVDSR_IF_Pos)
+#define SYS_PVDSR_ST_Pos			1		//PVD Status
+#define SYS_PVDSR_ST_Msk			(0x01 << SYS_PVDSR_ST_Pos)
 
 #define SYS_LVRCR_EN_Pos			0		//LVR Enable
 #define SYS_LVRCR_EN_Msk			(0x01 << SYS_LVRCR_EN_Pos)
