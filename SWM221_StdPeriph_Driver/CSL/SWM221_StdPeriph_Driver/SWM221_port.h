@@ -233,7 +233,7 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define PORTB_PIN15_SPI0_SSEL	3
 #define PORTB_PIN15_BTIMR3_OUT	4
 #define PORTB_PIN15_TIMR0_IN	5
-#define PORTB_PIN15_TIMR0_OUT	5
+#define PORTB_PIN15_TIMR0_OUT	6
 #define PORTB_PIN15_ADC1_CH8	7
 
 #define PORTC_PIN0_GPIO         0
