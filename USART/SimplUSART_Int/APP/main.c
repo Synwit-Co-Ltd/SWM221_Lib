@@ -58,7 +58,7 @@ void USART0_Handler(void)
 		msg_rcvd = true;
 	}
 	
-	if(USART_INTStat(USART0, USART_IT_TX_RDY))
+	if((USART0->IMR & USART_IMR_TXRDY_Msk) & USART_INTStat(USART0, USART_IT_TX_RDY))
 	{
 		CirBuf_Read(&CirBuf, &chr, 1);
 		
