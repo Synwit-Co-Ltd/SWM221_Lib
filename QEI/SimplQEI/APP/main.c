@@ -47,7 +47,7 @@ void BTIMR1_Handler(void)
 {
 	static int16_t Cnt[2] = {0};
 
-	TIMR_INTClr(BTIMR1);
+	TIMR_INTClr(BTIMR1, TIMR_IT_TO);
 	
 	Cnt[1] = Cnt[0];
 	Cnt[0] = (int16_t)QEI->POSCNT;
@@ -73,7 +73,7 @@ void BTIMR0_Handler(void)
 {
 	static uint32_t i = 0;
 	
-	TIMR_INTClr(BTIMR0);
+	TIMR_INTClr(BTIMR0, TIMR_IT_TO);
 	
 	if(i%20000 < 10000)	//Ä£ÄâÕý×ª
 	{

@@ -287,7 +287,7 @@ static void IOI2C_MST_Stop(void)
 ******************************************************************************************************************************************/
 void IOI2C_ISR(void)
 {	
-	TIMR_INTClr(IOI2C_TMR);
+	TIMR_INTClr(IOI2C_TMR, TIMR_IT_TO);
 	
 	if(IsBusy) IOI2C_MST_Func();
 }

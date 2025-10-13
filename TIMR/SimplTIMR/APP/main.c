@@ -21,14 +21,14 @@ int main(void)
 
 void TIMR0_Handler(void)
 {
-	TIMR_INTClr(TIMR0);
+	TIMR_INTClr(TIMR0, TIMR_IT_TO);
 	
 	GPIO_InvBit(GPIOA, PIN4);	//反转LED亮灭状态
 }
 
 void BTIMR0_Handler(void)
 {	
-	TIMR_INTClr(BTIMR0);
+	TIMR_INTClr(BTIMR0, TIMR_IT_TO);
 	
 	GPIO_InvBit(GPIOA, PIN5);	//反转LED亮灭状态
 }
