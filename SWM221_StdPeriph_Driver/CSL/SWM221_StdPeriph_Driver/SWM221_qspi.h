@@ -109,11 +109,10 @@ typedef struct {
 
 
 /* Interrupt Type */
-#define QSPI_IT_ERR   	(1 << QSPI_CR_ERR_Pos)
-#define QSPI_IT_DONE   	(1 << QSPI_CR_DONE_Pos)
-#define QSPI_IT_FFTHR	(1 << QSPI_CR_FFTHR_Pos)
-#define QSPI_IT_PSMAT	(1 << QSPI_CR_PSMAT_Pos)
-#define QSPI_IT_TO		(1 << QSPI_CR_TOIE_Pos)
+#define QSPI_IT_ERR   	QSPI_SR_ERR_Msk
+#define QSPI_IT_DONE   	QSPI_SR_DONE_Msk
+#define QSPI_IT_FFTHR	QSPI_SR_FFTHR_Msk
+#define QSPI_IT_PSMAT	QSPI_SR_PSMAT_Msk
 
 
 

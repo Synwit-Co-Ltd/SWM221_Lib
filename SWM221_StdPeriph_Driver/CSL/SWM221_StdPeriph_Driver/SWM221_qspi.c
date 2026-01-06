@@ -543,7 +543,7 @@ void QSPI_WriteReg(QSPI_TypeDef * QSPIx, uint8_t cmd, uint32_t data, uint8_t n_b
 * 函数名称:	QSPI_INTEn()
 * 功能说明:	中断使能
 * 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
-* 			uint32_t it				interrupt type，可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_FFTHR、QSPI_IT_PSMAT、QSPI_IT_TO 及其“或”
+* 			uint32_t it				interrupt type，可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_FFTHR、QSPI_IT_PSMAT 及其“或”
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
@@ -556,7 +556,7 @@ void QSPI_INTEn(QSPI_TypeDef * QSPIx, uint32_t it)
 * 函数名称:	QSPI_INTDis()
 * 功能说明:	中断禁止
 * 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
-* 			uint32_t it				interrupt type，可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_FFTHR、QSPI_IT_PSMAT、QSPI_IT_TO 及其“或”
+* 			uint32_t it				interrupt type，可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_FFTHR、QSPI_IT_PSMAT 及其“或”
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
@@ -569,7 +569,7 @@ void QSPI_INTDis(QSPI_TypeDef * QSPIx, uint32_t it)
 * 函数名称:	QSPI_INTClr()
 * 功能说明:	中断标志清除
 * 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
-* 			uint32_t it				interrupt type，可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_PSMAT、QSPI_IT_TO 及其“或”
+* 			uint32_t it				interrupt type，可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_PSMAT 及其“或”
 * 输    出: 无
 * 注意事项: 无
 ******************************************************************************************************************************************/
@@ -582,7 +582,7 @@ void QSPI_INTClr(QSPI_TypeDef * QSPIx, uint32_t it)
 * 函数名称:	QSPI_INTStat()
 * 功能说明:	中断状态查询
 * 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
-* 			uint32_t it				interrupt type，可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_FFTHR、QSPI_IT_PSMAT、QSPI_IT_TO 及其“或”
+* 			uint32_t it				interrupt type，可取值 QSPI_IT_ERR、QSPI_IT_DONE、QSPI_IT_FFTHR、QSPI_IT_PSMAT 及其“或”
 * 输    出: uint32_t				0 中断未发生    非0 中断已发生
 * 注意事项: 无
 ******************************************************************************************************************************************/

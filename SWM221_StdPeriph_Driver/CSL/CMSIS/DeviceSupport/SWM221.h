@@ -2090,8 +2090,6 @@ typedef struct {
 #define QSPI_SR_FFTHR_Msk			(0x01 << QSPI_SR_FFTHR_Pos)
 #define QSPI_SR_PSMAT_Pos			3		//Polling Status Match Flag
 #define QSPI_SR_PSMAT_Msk			(0x01 << QSPI_SR_PSMAT_Pos)
-#define QSPI_SR_TO_Pos				4		//Time-Out
-#define QSPI_SR_TO_Msk				(0x01 << QSPI_SR_TO_Pos)
 #define QSPI_SR_BUSY_Pos			5		//Set when operation is on going, Clear when operation done and FIFO emtpy
 #define QSPI_SR_BUSY_Msk			(0x01 << QSPI_SR_BUSY_Pos)
 #define QSPI_SR_FFLVL_Pos			8		//FIFO Level
