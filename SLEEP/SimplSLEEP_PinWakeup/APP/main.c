@@ -9,7 +9,7 @@
 extern void EnterSleepMode(void) ;
 void gpio_outhigh(void); //GPIO无外设连接情况下,GPIO输出高降低功耗,应用中根据实际情况配置IO状态
 
-
+int n = 0;
 int main(void)
 {
 	uint32_t i;
@@ -27,10 +27,7 @@ int main(void)
 	
 	while(1==1)
 	{
-		GPIO_SetBit(GPIOA, PIN5);							//点亮LED
-		for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
-		GPIO_ClrBit(GPIOA, PIN5);							//熄灭LED
-
+	
 		Flash_Param_at_xMHz(72);
 		switchToHRC();//休眠前切换到内部RC时钟，进入低功耗模式之后自动切换到内部低频时钟
 		
@@ -49,6 +46,20 @@ int main(void)
 		switchToDIV(SYS_CLK_PLL, SYS_CLK_DIV_1);
 		SystemCoreClockUpdate();
 		Flash_Param_at_xMHz(CyclesPerUs);
+	
+		*((volatile uint32_t *)0x40000190) = 1;//使能SWD复用,按需
+		PORT_Init(PORTC, PIN1, PORTC_PIN1_SWDIO, 1);
+		PORT_Init(PORTC, PIN0, PORTC_PIN0_SWCLK, 1);
+        
+        
+		n = 0;
+		while(n < 5){
+				GPIO_SetBit(GPIOA, PIN5);							//??LED
+				for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
+				GPIO_ClrBit(GPIOA, PIN5);							//??LED
+				for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
+				n++;
+		}
 	}
 }
 
@@ -59,7 +70,9 @@ int main(void)
 		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_GPIOA_Pos);
 		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_GPIOB_Pos);
 		SYS->CLKEN0 |= (0x01 << SYS_CLKEN0_GPIOC_Pos);
-
+	 
+	 *((volatile uint32_t *)0x40000190) = 0;// SWD 去复用 按需
+	 
 	 GPIO_Init(GPIOA ,0 ,1,0, 0, 0);//set gpio out modle
 	 GPIO_Init(GPIOA ,1 ,1,0, 0, 0);
 	 GPIO_Init(GPIOA ,2 ,1,0, 0, 0);
