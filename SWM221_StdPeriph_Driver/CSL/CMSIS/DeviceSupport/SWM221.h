@@ -556,10 +556,8 @@ typedef struct {
 
 #define TIMR_IE_TO_Pos				0		//Time out
 #define TIMR_IE_TO_Msk				(0x01 << TIMR_IE_TO_Pos)
-#define TIMR_IE_OC0_Pos				1		//输出比较，第一个反转点
-#define TIMR_IE_OC0_Msk				(0x01 << TIMR_IE_OC0_Pos)
-#define TIMR_IE_OC1_Pos				2		//输出比较，第二个反转点
-#define TIMR_IE_OC1_Msk				(0x01 << TIMR_IE_OC1_Pos)
+#define TIMR_IE_OC_Pos				1		//输出比较，VALUE == OCMAT
+#define TIMR_IE_OC_Msk				(0x01 << TIMR_IE_OC_Pos)
 #define TIMR_IE_ICR_Pos				3		//输入捕获，上升沿中断
 #define TIMR_IE_ICR_Msk				(0x01 << TIMR_IE_ICR_Pos)
 #define TIMR_IE_ICF_Pos				4		//输入捕获，下降沿中断
@@ -567,10 +565,8 @@ typedef struct {
 
 #define TIMR_IF_TO_Pos				0		//超时中断标志，写1清零
 #define TIMR_IF_TO_Msk				(0x01 << TIMR_IF_TO_Pos)
-#define TIMR_IF_OC0_Pos				1
-#define TIMR_IF_OC0_Msk				(0x01 << TIMR_IF_OC0_Pos)
-#define TIMR_IF_OC1_Pos				2
-#define TIMR_IF_OC1_Msk				(0x01 << TIMR_IF_OC1_Pos)
+#define TIMR_IF_OC_Pos				1
+#define TIMR_IF_OC_Msk				(0x01 << TIMR_IF_OC_Pos)
 #define TIMR_IF_ICR_Pos				3
 #define TIMR_IF_ICR_Msk				(0x01 << TIMR_IF_ICR_Pos)
 #define TIMR_IF_ICF_Pos				4
