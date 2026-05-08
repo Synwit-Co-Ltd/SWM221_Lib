@@ -1,23 +1,18 @@
-/****************************************************************************************************************************************** 
-* 文件名称:	SWM221_i2c.c
-* 功能说明:	SWM221单片机的I2C串行接口功能驱动库
-* 技术支持:	http://www.synwit.com.cn/e/tool/gbook/?bid=1
-* 注意事项:
-* 版本日期:	V1.0.0		2016年1月30日
-* 升级记录:  
+/*******************************************************************************************************************************
+* @brief	I2C driver
 *
 *
-*******************************************************************************************************************************************
+********************************************************************************************************************************
 * @attention
 *
-* THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIES AT PROVIDING CUSTOMERS WITH CODING INFORMATION 
-* REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIEE. AS A RESULT, SYNWIT SHALL NOT BE HELD LIABLE 
-* FOR ANY DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIES ARISING FROM THE CONTENT 
+* THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS WITH CODING INFORMATION 
+* REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME. AS A RESULT, SYNWIT SHALL NOT BE HELD LIABLE 
+* FOR ANY DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE CONTENT 
 * OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING INFORMATION CONTAINED HEREIN IN CONN-
 * -ECTION WITH THEIR PRODUCTS.
 *
-* COPYRIGHT 2012 Synwit Technology
-*******************************************************************************************************************************************/
+* COPYRIGHT 2012 Synwit Technology 
+*******************************************************************************************************************************/
 #include "SWM221.h"
 #include "SWM221_i2c.h"
 
