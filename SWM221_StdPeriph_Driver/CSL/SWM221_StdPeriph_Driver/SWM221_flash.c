@@ -37,13 +37,13 @@ const IAP_Flash_Param_t IAP_Flash_Param_TAC = (IAP_Flash_Param_t)0x010004F1;
 ******************************************************************************************************************************************/
 uint32_t FLASH_Erase(uint32_t addr)
 {
-	__disable_irq();
+	uint32_t primask = SW_enter_critical();
 	
 	IAP_Flash_Erase(addr / 0x200, 0x0B11FFAC);
 	
 	Cache_Clear();
 	
-	__enable_irq();
+	SW_exit_critical(primask);
 	
 	return FLASH_RES_OK;
 }
@@ -60,13 +60,13 @@ uint32_t FLASH_Erase(uint32_t addr)
 ******************************************************************************************************************************************/
 uint32_t FLASH_Write(uint32_t addr, uint32_t buff[], uint32_t count)
 {
-	__disable_irq();
+	uint32_t primask = SW_enter_critical();
 	
 	IAP_Flash_Write(addr, (uint32_t)buff, count/2, 0x0B11FFAC);
 	
 	Cache_Clear();
 	
-	__enable_irq();
+	SW_exit_critical(primask);
 	
 	return FLASH_RES_OK;
 }
@@ -81,13 +81,13 @@ uint32_t FLASH_Write(uint32_t addr, uint32_t buff[], uint32_t count)
 ******************************************************************************************************************************************/
 void Flash_Param_at_xMHz(uint32_t x)
 {
-	__disable_irq();
+	uint32_t primask = SW_enter_critical();
 	
 	IAP_Flash_Param_TAC(30, 0x0B11FFAC);
 	
 	IAP_Flash_Param(1000 / x, 0x0B11FFAC);
 	
-	__enable_irq();
+	SW_exit_critical(primask);
 }
 
 
