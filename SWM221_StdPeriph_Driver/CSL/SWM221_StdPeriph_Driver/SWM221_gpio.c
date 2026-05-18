@@ -72,6 +72,18 @@ void GPIO_Init(GPIO_TypeDef * GPIOx, uint32_t n, uint32_t dir, uint32_t pull_up,
 	else                 PORTx->OPEND &= ~(1 << n);
 }
 
+/*******************************************************************************************************************************
+* @brief	set specify pin to specify level
+* @param	GPIOx is port of pin
+* @param	n is pin number in port
+* @param	v is level to set
+* @return
+*******************************************************************************************************************************/
+void GPIO_WriteBit(GPIO_TypeDef * GPIOx, uint32_t n, uint32_t v)
+{
+	*(&GPIOx->DATAPIN0 + n) = v;
+}
+
 /****************************************************************************************************************************************** 
 * 函数名称: GPIO_SetBit()
 * 功能说明:	将参数指定的引脚电平置高
@@ -122,6 +134,22 @@ void GPIO_InvBit(GPIO_TypeDef * GPIOx, uint32_t n)
 uint32_t GPIO_GetBit(GPIO_TypeDef * GPIOx, uint32_t n)
 {
 	return *(&GPIOx->DATAPIN0 + n);
+}
+
+/*******************************************************************************************************************************
+* @brief	set specify pins (by start pin and pin count) to specify level
+* @param	GPIOx is port of pin
+* @param	n is pin number in port
+* @param	w is pin count to set
+* @param	v is level to set
+* @return
+*******************************************************************************************************************************/
+void GPIO_WriteBits(GPIO_TypeDef * GPIOx, uint32_t n, uint32_t w, uint32_t v)
+{
+	uint32_t bits = 0xFFFF >> (16 - w);
+	
+	GPIOx->ODR &=~(bits << n);
+	GPIOx->ODR |= (v << n);
 }
 
 /****************************************************************************************************************************************** 
@@ -195,64 +223,4 @@ uint32_t GPIO_GetBits(GPIO_TypeDef * GPIOx, uint32_t n, uint32_t w)
    	bits = 0xFFFF >> (16 - w);
 	
 	return ((GPIOx->IDR >> n) & bits);
-}
-
-/****************************************************************************************************************************************** 
-* 函数名称: GPIO_AtomicSetBits()
-* 功能说明: 将参数指定的从n开始的w位连续引脚的电平置高，确保引脚”读-改-写“操作的原子性（不被中断ISR打断）
-* 输    入: GPIO_TypeDef * GPIOx	    指定GPIO端口，有效值包括GPIOA、GPIOB、GPIOC	
-*			uint32_t n		       指定GPIO引脚，有效值包括PIN0、PIN1、PIN2、... ... PIN14、PIN15
-*			uint32_t w		指定要将引脚电平置高的引脚的个数
-* 输    出: 无
-* 注意事项: 当GPIOx的16个引脚中，有些在主循环中操作，有些在中断ISR中操作时，GPIOx的引脚必须都用GPIO_Atomic类型函数操作
-******************************************************************************************************************************************/
-void GPIO_AtomicSetBits(GPIO_TypeDef * GPIOx, uint32_t n, uint32_t w)
-{
-	uint32_t bits;
-	
-	bits = 0xFFFF >> (16 - w);
-	
-	uint32_t primask = SW_enter_critical();
-	GPIOx->ODR |= (bits << n);
-	SW_exit_critical(primask);
-}
-
-/****************************************************************************************************************************************** 
-* 函数名称:	GPIO_AtomicClrBits()
-* 功能说明: 将参数指定的从n开始的w位连续引脚的电平置低，确保引脚”读-改-写“操作的原子性（不被中断ISR打断）
-* 输    入: GPIO_TypeDef * GPIOx	    指定GPIO端口，有效值包括GPIOA、GPIOB、GPIOC	
-*			uint32_t n		       指定GPIO引脚，有效值包括PIN0、PIN1、PIN2、... ... PIN14、PIN15
-*			uint32_t w			   指定要将引脚电平置低的引脚的个数
-* 输    出: 无
-* 注意事项: 当GPIOx的16个引脚中，有些在主循环中操作，有些在中断ISR中操作时，GPIOx的引脚必须都用GPIO_Atomic类型函数操作
-******************************************************************************************************************************************/
-void GPIO_AtomicClrBits(GPIO_TypeDef * GPIOx, uint32_t n, uint32_t w)
-{
-	uint32_t bits;
-	
-	bits = 0xFFFF >> (16 - w);
-	
-	uint32_t primask = SW_enter_critical();
-	GPIOx->ODR &= ~(bits << n);
-	SW_exit_critical(primask);
-}
-
-/****************************************************************************************************************************************** 
-* 函数名称: GPIO_AtomicInvBits()
-* 功能说明: 将参数指定的从n开始的w位连续引脚的电平反转，确保引脚”读-改-写“操作的原子性（不被中断ISR打断）
-* 输    入: GPIO_TypeDef * GPIOx	    指定GPIO端口，有效值包括GPIOA、GPIOB、GPIOC	
-*			uint32_t n		       指定GPIO引脚，有效值包括PIN0、PIN1、PIN2、... ... PIN14、PIN15
-*			uint32_t w			   指定要将引脚电平反转的引脚的个数
-* 输    出: 无
-* 注意事项: 当GPIOx的16个引脚中，有些在主循环中操作，有些在中断ISR中操作时，GPIOx的引脚必须都用GPIO_Atomic类型函数操作
-******************************************************************************************************************************************/
-void GPIO_AtomicInvBits(GPIO_TypeDef * GPIOx, uint32_t n, uint32_t w)
-{
-	uint32_t bits;
-	
-	bits = 0xFFFF >> (16 - w);
-	
-	uint32_t primask = SW_enter_critical();
-	GPIOx->ODR ^= (bits << n);
-	SW_exit_critical(primask);
 }
