@@ -17,9 +17,7 @@ void SerialInit(void);
 void I2C_Slv_Init(void);
 
 int main(void)
-{	
-	uint32_t i;
-	
+{
 	SystemInit();
 	
 	SerialInit();
@@ -45,7 +43,7 @@ int main(void)
 		else
 			printf("Fail\r\n");
 		
-		for(i = 0; i < SystemCoreClock/10; i++) __NOP();
+		SW_DelayMS(500);
 	}
 }
 

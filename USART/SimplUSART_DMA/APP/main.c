@@ -78,7 +78,7 @@ int main(void)
 				while(UART_IsTXBusy(UART0));
 			}
 			
-			for(int j = 0; j < SystemCoreClock/8; j++) __NOP();
+			SW_DelayMS(500);
 		}
 	}
 }

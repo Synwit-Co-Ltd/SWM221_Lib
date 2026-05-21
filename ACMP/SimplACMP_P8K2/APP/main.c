@@ -23,7 +23,7 @@ int main(void)
 	{
 		printf("ACMP0->OUT = %d\n", (SYS->ACMPSR & SYS_ACMPSR_CMP0OUT_Msk) ? 1 : 0);
 		
-		for(int i = 0; i < SystemCoreClock/32; i++) __NOP();
+		SW_DelayMS(200);
 	}
 }
 

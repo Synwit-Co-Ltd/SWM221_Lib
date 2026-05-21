@@ -48,7 +48,7 @@ int main(void)
 		
 		printf("\r\nCAN->TXERR: %d\r\n", CAN0->TXERR);
 		
-		for(int i = 0; i < SystemCoreClock / 16; i++) __NOP();
+		SW_DelayMS(500);
 	}
 }
 

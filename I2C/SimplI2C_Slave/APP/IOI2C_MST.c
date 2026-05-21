@@ -24,7 +24,6 @@ static void IOI2C_MST_SendByte(void);
 static void IOI2C_MST_ReadByte(void);
 static void IOI2C_MST_Stop(void);
 
-static void delayuS(uint32_t dly) { uint32_t i; for(i = 0; i < SystemCoreClock/1000000 * dly; i++) __NOP(); }
 
 /****************************************************************************************************************************************** 
 * º¯ÊýÃû³Æ:	IOI2C_MST_Init()
@@ -42,8 +41,8 @@ void IOI2C_MST_Init(uint32_t baud)
 #define IOI2C_ISR	BTIMR0_Handler
 	
 	GPIO_Init(IOI2C_PORT, IOI2C_SCL, 1, 0, 0, 0);
-#define I2C_SCL_LOW()		{ GPIO_ClrBit(IOI2C_PORT, IOI2C_SCL); delayuS(1); }
-#define I2C_SCL_HIGH()		{ GPIO_SetBit(IOI2C_PORT, IOI2C_SCL); delayuS(1); }
+#define I2C_SCL_LOW()		{ GPIO_ClrBit(IOI2C_PORT, IOI2C_SCL); SW_DelayUS(1); }
+#define I2C_SCL_HIGH()		{ GPIO_SetBit(IOI2C_PORT, IOI2C_SCL); SW_DelayUS(1); }
 
 	GPIO_Init(IOI2C_PORT, IOI2C_SDA, 0, 1, 0, 1);
 #define I2C_SDA_OUTPUT()	IOI2C_PORT->DIR |= (1 << IOI2C_SDA);

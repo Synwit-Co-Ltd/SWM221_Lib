@@ -12,8 +12,7 @@ void gpio_outhigh(void); //GPIOÎŞÍâÉèÁ¬½ÓÇé¿öÏÂ,GPIOÊä³ö¸ß½µµÍ¹¦ºÄ,Ó¦ÓÃÖĞ¸ù¾İÊµ¼
 int n = 0;
 int main(void)
 {
-	uint32_t i;
-	for(i = 0; i < SystemCoreClock/2; i++)  __NOP();//·ÀÖ¹µ÷ÊÔ¹ı³ÌÖĞ¿¨ËÀ
+	SW_DelayMS(2000);	//·ÀÖ¹µ÷ÊÔ¹ı³ÌÖĞ¿¨ËÀ
 	
 	SystemInit();
 	
@@ -54,10 +53,10 @@ int main(void)
         
 		n = 0;
 		while(n < 5){
-				GPIO_SetBit(GPIOA, PIN5);							//??LED
-				for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
-				GPIO_ClrBit(GPIOA, PIN5);							//??LED
-				for(int i = 0; i < SystemCoreClock/8; i++) __NOP();
+				GPIO_SetBit(GPIOA, PIN5);
+				SW_DelayMS(500);
+				GPIO_ClrBit(GPIOA, PIN5);
+				SW_DelayMS(500);
 				n++;
 		}
 	}

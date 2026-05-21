@@ -35,14 +35,14 @@ int main(void)
 	{
 		QSPI_SPI_Write(QSPI0, txbuf, sizeof(txbuf));
 		
-		for(int i = 0; i < SystemCoreClock / 16; i++) __NOP();
+		SW_DelayMS(500);
 		
 		QSPI_SPI_Read(QSPI0, rxbuf, sizeof(rxbuf));
 		
 		printf("Received data: %02X,  %02X,  %02X,  %02X,  %02X,  %02X,  %02X,  %02X\n",
 					rxbuf[0], rxbuf[1], rxbuf[2], rxbuf[3], rxbuf[4], rxbuf[5], rxbuf[6], rxbuf[7]);
 		
-		for(int i = 0; i < SystemCoreClock / 16; i++) __NOP();
+		SW_DelayMS(500);
 	}
 }
 

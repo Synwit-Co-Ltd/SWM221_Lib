@@ -38,7 +38,7 @@ int main(void)
 			printf("%02X, ", rxbuff[i]);
 		printf("\n\n");
 		
-		for(i = 0; i < SystemCoreClock/10; i++) __NOP();
+		SW_DelayMS(500);
 	}
 }
 

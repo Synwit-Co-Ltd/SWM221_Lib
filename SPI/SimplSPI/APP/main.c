@@ -37,7 +37,7 @@ int main(void)
 		
 		printf("rxdata: 0x%X\r\n", rxdata);
 		
-		for(int i = 0; i < SystemCoreClock/10; i++);
+		SW_DelayMS(500);
 	}
 }
 

@@ -24,7 +24,7 @@ int main(void)
 	{
 		SPIMstSend(buff, 16);
 		
-		for(int i = 0; i < SystemCoreClock/10; i++) __NOP();
+		SW_DelayMS(500);
 	}
 }
 

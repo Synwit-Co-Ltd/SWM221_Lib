@@ -41,7 +41,7 @@ int main(void)
 		SPI_RXIndex = 0;
 		memset(SPI_RXBuffer, 0, 64);
 		
-		for(i = 0; i < SystemCoreClock/10; i++) __NOP();
+		SW_DelayMS(500);
 	}
 }
 

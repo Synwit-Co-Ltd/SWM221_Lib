@@ -77,7 +77,7 @@ int main(void)
 
 nextloop:
 		I2C_Stop(I2C0, 1);
-		for(i = 0; i < SystemCoreClock/8; i++) ;
+		SW_DelayMS(1000);
 	}
 }
 

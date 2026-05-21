@@ -10,7 +10,7 @@ int main(void)
 	
 	SerialInit();
    	
-	printf("SystemCoreClock = %d\r\n", SystemCoreClock);
+	printf("SystemCoreClock = %dMHz\r\n", SystemCoreClock/1000000);
 	
 	while(1==1)
 	{
@@ -20,9 +20,9 @@ int main(void)
 		
 		for(int i = 0; i < 4; i++)
 		{
-			printf("SystemCoreClock = %d\r\n", SystemCoreClock);
+			printf("SystemCoreClock = %dMHz\r\n", SystemCoreClock/1000000);
 			
-			for(int j = 0; j < SystemCoreClock / 8; j++) __NOP();
+			SW_DelayMS(500);
 		}
 		
 		SystemInit();
@@ -31,9 +31,9 @@ int main(void)
 		
 		for(int i = 0; i < 4; i++)
 		{
-			printf("SystemCoreClock = %d\r\n", SystemCoreClock);
+			printf("SystemCoreClock = %dMHz\r\n", SystemCoreClock/1000000);
 			
-			for(int j = 0; j < SystemCoreClock / 8; j++) __NOP();
+			SW_DelayMS(500);
 		}
 	}
 }

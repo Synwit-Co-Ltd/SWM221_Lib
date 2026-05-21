@@ -60,7 +60,7 @@ int main(void)
 		USART_LINStart(USART0, LIN_ID_Switch, USART_LIN_PUBLISH, LIN_NB_Switch, USART_CHECKSUM_LIN13);		// Ïò Switch Ð´Êý¾Ý
 		
 retry:
-		for(int i = 0; i < SystemCoreClock/2; i++) __NOP();
+		SW_DelayMS(2000);
 	}
 }
 

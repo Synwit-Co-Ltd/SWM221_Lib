@@ -3,14 +3,12 @@
 void SerialInit(void);
 
 int main(void)
-{	
-	int i;
-	
+{
 	SystemInit();
 	
 	SerialInit();
 	
-	for(i = 0; i < SystemCoreClock/4; i++) __NOP();	//等待晶振稳定，防止上电时误识别晶振停振
+	SW_DelayMS(1000);	//等待晶振稳定，防止上电时误识别晶振停振
 	
 	SYS->XTALSR = SYS_XTALSR_STOP_Msk;				//清除标志
 	NVIC_ClearPendingIRQ(XTALSTOP_IRQn);
@@ -20,16 +18,16 @@ int main(void)
 	{
 		printf("SystemCoreClock = %d\r\n", SystemCoreClock);
 		
-		for(i = 0; i < SystemCoreClock/4; i++) __NOP();
+		SW_DelayMS(1000);
 	}
 }
 
 
 void XTALSTOP_Handler(void)
 {
-	/* 若不执行 switchTo8MHz()，晶振恢复振荡时系统时钟会自动切换回外部晶振，
+	/* 若不执行 switchToHRC()，晶振恢复振荡时系统时钟会自动切换回外部晶振，
 	   若外部晶振不稳定，在振荡和不振荡间来回切换，则系统时钟也会在内部时钟和外部时钟之间来回切换 */
-	switchTo8MHz();
+	switchToHRC();
 	
 	SystemCoreClockUpdate();
 	

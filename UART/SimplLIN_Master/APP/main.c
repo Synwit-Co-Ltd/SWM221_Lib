@@ -61,7 +61,7 @@ int main(void)
 		LIN_Master_Start(LIN_ID_Switch, false);		// Ïò Switch Ð´Êý¾Ý
 		
 retry:
-		for(int i = 0; i < SystemCoreClock/4; i++) __NOP();
+		SW_DelayMS(1000);
 	}
 }
 
