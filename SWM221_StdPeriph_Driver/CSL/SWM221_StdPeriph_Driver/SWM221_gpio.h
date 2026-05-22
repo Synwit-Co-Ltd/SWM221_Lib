@@ -38,5 +38,7 @@ void GPIO_WriteBits(GPIO_TypeDef * GPIOx, uint32_t n, uint32_t w, uint32_t v);
 #define GPIO_AtomicClrBits(GPIOx, n, w)	{ uint32_t primask = SW_enter_critical(); GPIO_ClrBits(GPIOx, n, w); SW_exit_critical(primask); }
 #define GPIO_AtomicInvBits(GPIOx, n, w)	{ uint32_t primask = SW_enter_critical(); GPIO_InvBits(GPIOx, n, w); SW_exit_critical(primask); }
 
+#define GPIO_AtomicWriteBits(GPIOx, n, w, v) { uint32_t primask = SW_enter_critical(); GPIO_WriteBits(GPIOx, n, w, v); SW_exit_critical(primask); }
+
 
 #endif //__SWM221_GPIO_H__
