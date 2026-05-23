@@ -217,3 +217,16 @@ void switchOn32KHz(void)
 {
 	SYS->RCCR |= (1 << SYS_RCCR_LON_Pos);
 }
+
+
+void SW_DelayUS(uint32_t us)
+{
+	us = CyclesPerUs * us / 4;
+	
+	for(int i = 0; i < us; i++) __NOP();
+}
+
+void SW_DelayMS(uint32_t ms)
+{
+	for(int i = 0; i < ms; i++) SW_DelayUS(1000);
+}

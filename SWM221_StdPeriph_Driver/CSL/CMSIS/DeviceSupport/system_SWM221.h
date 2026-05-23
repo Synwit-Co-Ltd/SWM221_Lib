@@ -36,6 +36,10 @@ extern void switchOnPLL(uint32_t src, uint32_t indiv, uint32_t fbdiv);
 extern void switchOn32KHz(void);
 
 
+void SW_DelayUS(uint32_t us);
+void SW_DelayMS(uint32_t ms);
+
+
 #ifdef __cplusplus
 }
 #endif
