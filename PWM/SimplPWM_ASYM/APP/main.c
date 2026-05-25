@@ -46,7 +46,7 @@ int main(void)
 	PWM_Init(PWM0, &PWM_initStruct);
 	PWM_Init(PWM1, &PWM_initStruct);
 	
-	PWM_IntEn(PWM1, PWM_IT_OVF_UP);
+	PWM_IntEn(PWM1, PWM_IT_OVF_DOWN);
 	NVIC_EnableIRQ(PWM1_IRQn);
 	
 	PWM_Start(PWM0_MSK | PWM1_MSK);
@@ -62,9 +62,9 @@ void PWM1_Handler(void)
 	static int dir = 0;
 	static int n = 0;
 	
-	if(PWM_IntStat(PWM1, PWM_IT_OVF_UP))
+	if(PWM_IntStat(PWM1, PWM_IT_OVF_DOWN))
 	{
-		PWM_IntClr(PWM1, PWM_IT_OVF_UP);
+		PWM_IntClr(PWM1, PWM_IT_OVF_DOWN);
 		
 		if(++n == 2)
 			n = 0;
