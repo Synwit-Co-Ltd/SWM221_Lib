@@ -42,6 +42,13 @@ int main(void)
 	int id = QSPI_ReadJEDEC(QSPI0);
 	printf("SPI Flash JEDEC: %06X\n", id);
 	
+	// Read Unique ID Number
+#if 0
+	uint8_t dummy_uid[12];	// byte 0-3 for dummy bytes, byte 4-11 for the unique ID
+	
+	QSPI_ReadRegEx(QSPI0, QSPI_CMD_READ_UID, 0, dummy_uid, 12);
+	printf("SPI Flash Unique ID: %02X%02X%02X%02X%02X%02X%02X%02X\n", dummy_uid[4], dummy_uid[5], dummy_uid[6], dummy_uid[7], dummy_uid[8], dummy_uid[9], dummy_uid[10], dummy_uid[11]);
+#endif
 	
 	int quad = QSPI_QuadState(QSPI0);
 	if(quad == 0)

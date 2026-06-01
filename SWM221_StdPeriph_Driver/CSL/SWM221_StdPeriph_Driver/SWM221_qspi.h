@@ -66,6 +66,7 @@ typedef struct {
 
 
 #define QSPI_CMD_READ_JEDEC			0x9F
+#define QSPI_CMD_READ_UID			0x4B
 #define QSPI_CMD_FAST_READ			0x0B
 #define QSPI_CMD_FAST_READ_2bit		0x3B
 #define QSPI_CMD_FAST_READ_IO2bit	0xBB
@@ -145,6 +146,7 @@ void QSPI_QuadSwitch(QSPI_TypeDef * QSPIx, uint8_t on);
 
 uint32_t QSPI_ReadReg(QSPI_TypeDef * QSPIx, uint8_t cmd, uint8_t n_bytes);
 void QSPI_WriteReg(QSPI_TypeDef * QSPIx, uint8_t cmd, uint32_t data, uint8_t n_bytes);
+void QSPI_ReadRegEx(QSPI_TypeDef * QSPIx, uint8_t cmd, uint8_t n_dummy, uint8_t *buffer, uint8_t n_bytes);
 
 #define QSPI_ReadJEDEC(QSPIx)			QSPI_ReadReg(QSPIx, QSPI_CMD_READ_JEDEC, 3)
 #define QSPI_WriteEnable(QSPIx)			QSPI_WriteReg(QSPIx, QSPI_CMD_WRITE_ENABLE, 0, 0)

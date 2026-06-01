@@ -502,6 +502,28 @@ uint32_t QSPI_ReadReg(QSPI_TypeDef * QSPIx, uint8_t cmd, uint8_t n_bytes)
 }
 
 
+void QSPI_ReadRegEx(QSPI_TypeDef * QSPIx, uint8_t cmd, uint8_t n_dummy, uint8_t *buffer, uint8_t n_bytes)
+{
+	QSPI_CmdStructure cmdStruct;
+	QSPI_CmdStructClear(&cmdStruct);
+	
+	cmdStruct.InstructionMode 	 = QSPI_PhaseMode_1bit;
+	cmdStruct.Instruction 		 = cmd;
+	cmdStruct.AddressMode 		 = QSPI_PhaseMode_None;
+	cmdStruct.AlternateBytesMode = QSPI_PhaseMode_None;
+	cmdStruct.DummyCycles 		 = n_dummy;
+	cmdStruct.DataMode 			 = QSPI_PhaseMode_1bit;
+	cmdStruct.DataCount 		 = n_bytes;
+	
+	QSPI_Command(QSPIx, QSPI_Mode_IndirectRead, &cmdStruct);
+	
+	while(QSPI_FIFOCount(QSPIx) < n_bytes) __NOP();
+	
+	for(int i = 0; i < n_bytes; i++)
+		buffer[i] = QSPIx->DRB;
+}
+
+
 /****************************************************************************************************************************************** 
 * 函数名称:	QSPI_WriteReg()
 * 功能说明:	QSPI Flash 寄存器写入，适用于只有命令、数据阶段，且数据不多于4字节的情况
