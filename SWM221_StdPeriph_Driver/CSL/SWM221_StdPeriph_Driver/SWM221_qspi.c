@@ -517,10 +517,12 @@ void QSPI_ReadRegEx(QSPI_TypeDef * QSPIx, uint8_t cmd, uint8_t n_dummy, uint8_t 
 	
 	QSPI_Command(QSPIx, QSPI_Mode_IndirectRead, &cmdStruct);
 	
-	while(QSPI_FIFOCount(QSPIx) < n_bytes) __NOP();
-	
 	for(int i = 0; i < n_bytes; i++)
+	{
+		while(QSPI_FIFOCount(QSPIx) < 1) __NOP();
+		
 		buffer[i] = QSPIx->DRB;
+	}
 }
 
 
