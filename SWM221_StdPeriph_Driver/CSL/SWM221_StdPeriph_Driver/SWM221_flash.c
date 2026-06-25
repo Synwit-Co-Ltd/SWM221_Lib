@@ -91,7 +91,18 @@ void Flash_Param_at_xMHz(uint32_t x)
 }
 
 
-#if   defined ( __CC_ARM ) || defined (__ARMCC_VERSION)
+#if defined ( __ICCARM__ )
+
+__ramfunc void Cache_Clear(void)
+{
+	__NOP(); __NOP(); __NOP(); __NOP();
+	
+	FMC->CACHE |= FMC_CACHE_CCLR_Msk;	// Cache Clear
+	
+	__NOP(); __NOP(); __NOP(); __NOP();
+}
+
+#else
 
 /* Code_Cache_Clear 中数据是此函数编译生成的指令
 __asm void Cache_Clear(void)
@@ -124,44 +135,12 @@ uint16_t Code_Cache_Clear[] = {
 	0xBF00, 0xBF00, 0xBF00, 0x4770, 
 };
 
-#if   defined ( __CC_ARM )
-__asm void Cache_Clear(void)	// AC5
+typedef void (*RAM_Cache_Clear_t)(void);
+void Cache_Clear(void)
 {
-	IMPORT Code_Cache_Clear
-	PUSH {LR}
-	NOP
-	LDR R0,=Code_Cache_Clear
-    ADDS R0, R0, #1
-	NOP
-	BLX R0
-	POP {R0}
-	BX R0
-}
-#else
-void Cache_Clear(void)			// AC6
-{
-__asm(
-	"PUSH {LR}\n"
-	"NOP\n"
-	"LDR R0,=Code_Cache_Clear\n"
-	"ADDS R0, R0, #1\n"
-	"NOP\n"
-	"BLX R0\n"
-	"POP {R0}\n"
-	"BX R0\n");
-}
-#endif
-
-#elif defined ( __ICCARM__ )
-
-__ramfunc void Cache_Clear(void)
-{
-	__NOP(); __NOP(); __NOP(); __NOP();
+	const RAM_Cache_Clear_t RAM_Cache_Clear = (RAM_Cache_Clear_t)((uint32_t)Code_Cache_Clear + 1);
 	
-	FMC->CACHE |= FMC_CACHE_CCLR_Msk;	// Cache Clear
-	
-	__NOP(); __NOP(); __NOP(); __NOP();
+	RAM_Cache_Clear();
 }
 
 #endif
-
