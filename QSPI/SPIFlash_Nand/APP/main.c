@@ -1,8 +1,9 @@
+#include <string.h>
 #include "SWM221.h"
 #include "W25N01G.h"
 
 
-#define EEPROM_ADDR	  0x0020000
+#define RW_PAGE	64
 
 
 #define N_DATA  48
@@ -15,8 +16,8 @@ uint8_t WrBuff[W25N_PAGE_SIZE] = {
 };
 
 
-void W25N01G_Write_DMA(uint32_t addr, uint8_t buff[2048], uint8_t data_width);
-void W25N01G_Read_DMA(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width);
+void W25N01G_Write_DMA(uint32_t page, uint8_t buff[2048], uint8_t data_width);
+void W25N01G_Read_DMA(uint32_t page, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width);
 void SerialInit(void);
 
 int main(void)
@@ -35,64 +36,110 @@ int main(void)
 	W25N01G_FlashProtect(W25N_PROTECT_Upper_1MB);
 	
 	
-	W25N01G_Erase(EEPROM_ADDR, 1);
+	W25N01G_Erase(RW_PAGE, 1);
 	
-	W25N01G_Read(EEPROM_ADDR, RdBuff);
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
+	W25N01G_Read(RW_PAGE, RdBuff);
 	
 	printf("\n\nAfter Erase: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	W25N01G_Write(EEPROM_ADDR, WrBuff);
+	W25N01G_Write(RW_PAGE, WrBuff);
 	
-	W25N01G_Read(EEPROM_ADDR, RdBuff);
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
+	W25N01G_Read(RW_PAGE, RdBuff);
 	
 	printf("\n\nAfter Write: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	W25N01G_Read_2bit(EEPROM_ADDR, RdBuff);
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
+	W25N01G_Read_2bit(RW_PAGE, RdBuff);
 	
 	printf("\n\nDual Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	W25N01G_Read_IO2bit(EEPROM_ADDR, RdBuff);
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
+	W25N01G_Read_IO2bit(RW_PAGE, RdBuff);
 	
 	printf("\n\nDual IO Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	W25N01G_Erase(EEPROM_ADDR, 1);
-	W25N01G_Write_4bit(EEPROM_ADDR, WrBuff);
+	W25N01G_Erase(RW_PAGE, 1);
+	W25N01G_Write_4bit(RW_PAGE, WrBuff);
 	
-	W25N01G_Read_4bit(EEPROM_ADDR, RdBuff);
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
+	W25N01G_Read_4bit(RW_PAGE, RdBuff);
 	
 	printf("\n\nQuad Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	W25N01G_Read_IO4bit(EEPROM_ADDR, RdBuff);
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
+	W25N01G_Read_IO4bit(RW_PAGE, RdBuff);
 	
 	printf("\n\nQuad IO Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
 	
 	
-	W25N01G_Erase(EEPROM_ADDR, 1);
-	W25N01G_Write_DMA(EEPROM_ADDR, WrBuff, 4);
+	W25N01G_Erase(RW_PAGE, 1);
+	W25N01G_Write_DMA(RW_PAGE, WrBuff, 4);
 	
-	W25N01G_Read_DMA(EEPROM_ADDR, RdBuff, 4, 4);
+	memset(RdBuff, 0x00, W25N_PAGE_SIZE);
+	W25N01G_Read_DMA(RW_PAGE, RdBuff, 4, 4);
 	
 	printf("\n\nDMA Read: \n");
 	for(i = 0; i < N_DATA; i++) printf("0x%02X, ", RdBuff[i]);
-   	
+	
+	
+	/* 2MB Read/write check */
+#if 1
+	uint32_t addr;
+	uint32_t *wrbuf = (uint32_t *)WrBuff;
+	uint32_t *rdbuf = (uint32_t *)RdBuff;
+	
+	for(addr = 0; addr < 0x200000; addr += W25N_BLOCK_SIZE)
+	{
+		W25N01G_Erase(addr / W25N_PAGE_SIZE, 1);
+	}
+	
+	for(addr = 0; addr < 0x200000; addr += W25N_PAGE_SIZE)
+	{
+		for(i = 0; i < W25N_PAGE_SIZE; i += 4)
+			wrbuf[i / 4] = addr + i;
+		
+		W25N01G_Write_4bit(addr / W25N_PAGE_SIZE, (uint8_t *)wrbuf);
+	}
+	
+	for(addr = 0; addr < 0x200000; addr += W25N_PAGE_SIZE)
+	{
+		W25N01G_Read_4bit(addr / W25N_PAGE_SIZE, (uint8_t *)rdbuf);
+		
+		for(i = 0; i < W25N_PAGE_SIZE; i += 4)
+		{
+			if(rdbuf[i / 4] != addr + i)
+			{
+				printf("\n\nError: expected 0x%08X, get 0x%08X\n", addr + i, rdbuf[i / 4]);
+				while(1) __NOP();
+			}
+		}
+	}
+	
+	if(addr == 0x200000)
+		printf("\n\nPass\n");
+#endif
+	
+	
 	while(1==1)
 	{
 	}
 }
 
 
-void W25N01G_Write_DMA(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
+void W25N01G_Write_DMA(uint32_t page, uint8_t buff[2048], uint8_t data_width)
 {
 	static bool dma_inited = false;
 	
@@ -108,7 +155,7 @@ void W25N01G_Write_DMA(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
 		DMA_initStruct.PeripheralAddr = (uint32_t)&QSPI0->DRB;
 		DMA_initStruct.PeripheralAddrInc = 0;
 		DMA_initStruct.Handshake = DMA_CH0_QSPI0TX;
-		DMA_initStruct.Priority = DMA_PRI_VERY_HIGH;
+		DMA_initStruct.Priority = DMA_PRI_LOW;
 		DMA_initStruct.INTEn = 0;
 		DMA_CH_Init(DMA_CH0, &DMA_initStruct);
 		
@@ -119,25 +166,25 @@ void W25N01G_Write_DMA(uint32_t addr, uint8_t buff[2048], uint8_t data_width)
 	
 	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectWrite);
 	
-	W25N01G_Write_(addr, buff, data_width, 0);
+	W25N01G_Write_(page, buff, data_width, 0);
 	
 	DMA_CH_Open(DMA_CH0);
 	
 	while(DMA_CH_INTStat(DMA_CH0, DMA_IT_DONE) == 0) __NOP();
     DMA_CH_INTClr(DMA_CH0, DMA_IT_DONE);
 	
-	/* 在 QSPI busy 时，写 QSPI->CR 寄存器无效 */
+	/* When QSPI busy, writing to the QSPI->CR register is invalid */
 	while(QSPI_Busy(QSPI0)) __NOP();
 	
 	QSPI_DMADisable(QSPI0);
 	
-	W25N01G_Program_Execute(addr);
+	W25N01G_Program_Execute(page);
 	
 	while(W25N01G_FlashBusy()) __NOP();
 }
 
 
-void W25N01G_Read_DMA(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width)
+void W25N01G_Read_DMA(uint32_t page, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width)
 {
 	static bool dma_inited = false;
 	
@@ -153,7 +200,7 @@ void W25N01G_Read_DMA(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uin
 		DMA_initStruct.PeripheralAddr = (uint32_t)&QSPI0->DRB;
 		DMA_initStruct.PeripheralAddrInc = 0;
 		DMA_initStruct.Handshake = DMA_CH1_QSPI0RX;
-		DMA_initStruct.Priority = DMA_PRI_VERY_HIGH;
+		DMA_initStruct.Priority = DMA_PRI_LOW;
 		DMA_initStruct.INTEn = 0;
 		DMA_CH_Init(DMA_CH1, &DMA_initStruct);
 		
@@ -164,7 +211,7 @@ void W25N01G_Read_DMA(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uin
 	
 	QSPI_DMAEnable(QSPI0, QSPI_Mode_IndirectRead);
 	
-	W25N01G_Read_(addr, buff, addr_width, data_width, 0);
+	W25N01G_Read_(page, buff, addr_width, data_width, 0);
 	
 	DMA_CH_Open(DMA_CH1);
 	
@@ -181,8 +228,8 @@ void SerialInit(void)
 {
 	UART_InitStructure UART_initStruct;
 	
-	PORT_Init(PORTA, PIN0, PORTA_PIN0_UART0_RX, 1);	//GPIOA.0配置为UART0 RXD
-	PORT_Init(PORTA, PIN1, PORTA_PIN1_UART0_TX, 0);	//GPIOA.1配置为UART0 TXD
+	PORT_Init(PORTA, PIN0, PORTA_PIN0_UART0_RX, 1);	//GPIOA.0閰嶇疆涓篣ART0 RXD
+	PORT_Init(PORTA, PIN1, PORTA_PIN1_UART0_TX, 0);	//GPIOA.1閰嶇疆涓篣ART0 TXD
  	
  	UART_initStruct.Baudrate = 57600;
 	UART_initStruct.DataBits = UART_DATA_8BIT;
@@ -198,14 +245,6 @@ void SerialInit(void)
 	UART_Open(UART0);
 }
 
-/****************************************************************************************************************************************** 
-* 函数名称: fputc()
-* 功能说明: printf()使用此函数完成实际的串口打印动作
-* 输    入: int ch		要打印的字符
-*			FILE *f		文件句柄
-* 输    出: 无
-* 注意事项: 无
-******************************************************************************************************************************************/
 int fputc(int ch, FILE *f)
 {
 	UART_WriteByte(UART0, ch);

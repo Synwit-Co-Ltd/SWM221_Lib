@@ -3,6 +3,7 @@
 
 
 #define W25N_PAGE_SIZE	2048
+#define W25N_BLOCK_SIZE	(W25N_PAGE_SIZE * 64)	// 64 page per block, Erase in unit of block
 
 
 #define W25N_CMD_READ_JEDEC			0x9F
@@ -26,7 +27,7 @@
 #define W25N_STATUS_REG2			0xB0
 #define W25N_STATUS_REG3			0xC0
 
-#define W25N_STATUS_REG1_WPE_Pos	1		// 硬件写保护使能位，关闭时引脚 /WP & /HOLD 用作 IO
+#define W25N_STATUS_REG1_WPE_Pos	1		// Hardware write protection enable bit, when off pin /WP & /HOLD is used as IO
 
 #define W25N_STATUS_REG1_TB_Pos		2
 #define W25N_STATUS_REG1_TB_Msk		(0x01 << W25N_STATUS_REG1_TB_Pos)
@@ -56,18 +57,18 @@
 void W25N01G_Init(void);
 uint32_t W25N01G_ReadJEDEC(void);
 
-void W25N01G_Erase(uint32_t addr, uint8_t wait);
-void W25N01G_Write_(uint32_t addr, uint8_t buff[2048], uint8_t data_width, uint8_t data_phase);
-#define W25N01G_Write(addr, buff)			W25N01G_Write_((addr), (buff), 1, 1)
-#define W25N01G_Write_4bit(addr, buff)		W25N01G_Write_((addr), (buff), 4, 1)
-void W25N01G_Read_(uint32_t addr, uint8_t buff[2048], uint8_t addr_width, uint8_t data_width, uint8_t data_phase);
-#define W25N01G_Read(addr, buff)			W25N01G_Read_((addr), (buff), 1, 1, 1)
-#define W25N01G_Read_2bit(addr, buff)		W25N01G_Read_((addr), (buff), 1, 2, 1)
-#define W25N01G_Read_4bit(addr, buff)		W25N01G_Read_((addr), (buff), 1, 4, 1)
-#define W25N01G_Read_IO2bit(addr, buff)		W25N01G_Read_((addr), (buff), 2, 2, 1)
-#define W25N01G_Read_IO4bit(addr, buff)		W25N01G_Read_((addr), (buff), 4, 4, 1)
+void W25N01G_Erase(uint32_t page, uint8_t wait);
+void W25N01G_Write_(uint32_t page, uint8_t buff[2048], uint8_t data_width, uint8_t data_phase);
+#define W25N01G_Write(page, buff)			W25N01G_Write_((page), (buff), 1, 1)
+#define W25N01G_Write_4bit(page, buff)		W25N01G_Write_((page), (buff), 4, 1)
+void W25N01G_Read_(uint32_t page, uint8_t buff[2048], uint8_t page_width, uint8_t data_width, uint8_t data_phase);
+#define W25N01G_Read(page, buff)			W25N01G_Read_((page), (buff), 1, 1, 1)
+#define W25N01G_Read_2bit(page, buff)		W25N01G_Read_((page), (buff), 1, 2, 1)
+#define W25N01G_Read_4bit(page, buff)		W25N01G_Read_((page), (buff), 1, 4, 1)
+#define W25N01G_Read_IO2bit(page, buff)		W25N01G_Read_((page), (buff), 2, 2, 1)
+#define W25N01G_Read_IO4bit(page, buff)		W25N01G_Read_((page), (buff), 4, 4, 1)
 
-void W25N01G_Program_Execute(uint32_t addr);
+void W25N01G_Program_Execute(uint32_t page);
 
 bool W25N01G_FlashBusy(void);
 void W25N01G_FlashProtect(uint8_t protect);
@@ -75,4 +76,4 @@ void W25N01G_WriteReg(uint8_t reg_addr, uint8_t data);
 uint8_t W25N01G_ReadReg(uint8_t reg_addr);
 
 
-#endif // __W25N01G_H__
+#endif
