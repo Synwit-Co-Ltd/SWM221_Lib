@@ -100,6 +100,7 @@ typedef struct {
 #define QSPI_C4B_PAGE_PROGRAM		0x12
 #define QSPI_C4B_PAGE_PROGRAM_4bit	0x34
 #define QSPI_C4B_ERASE_SECTOR 		0x21
+#define QSPI_C4B_ERASE_BLOCK32KB	0x5C
 #define QSPI_C4B_ERASE_BLOCK64KB	0xDC
 
 
@@ -125,8 +126,9 @@ void QSPI_CmdStructClear(QSPI_CmdStructure * cmdStruct);
 void QSPI_Command(QSPI_TypeDef * QSPIx, uint8_t cmdMode, QSPI_CmdStructure * cmdStruct);
 
 void QSPI_Erase_(QSPI_TypeDef * QSPIx, uint32_t addr, uint16_t block_size, uint8_t wait);
-#define QSPI_Erase(QSPIx, addr, wait)				QSPI_Erase_(QSPIx, (addr),  4, (wait));
-#define QSPI_Erase_Block64KB(QSPIx, addr, wait)		QSPI_Erase_(QSPIx, (addr), 64, (wait));
+#define QSPI_Erase(QSPIx, addr, wait)				QSPI_Erase_(QSPIx, (addr),  4, (wait))
+#define QSPI_Erase_Block32KB(QSPIx, addr, wait)		QSPI_Erase_(QSPIx, (addr), 32, (wait))
+#define QSPI_Erase_Block64KB(QSPIx, addr, wait)		QSPI_Erase_(QSPIx, (addr), 64, (wait))
 
 void QSPI_Write_(QSPI_TypeDef * QSPIx, uint32_t addr, uint8_t buff[], uint32_t count, uint8_t data_width, uint8_t data_phase);
 #define QSPI_Write(QSPIx, addr, buff, count)	   QSPI_Write_(QSPIx, (addr), (buff), (count), 1, 1)

@@ -146,7 +146,7 @@ void QSPI_Command(QSPI_TypeDef * QSPIx, uint8_t cmdMode, QSPI_CmdStructure * cmd
 * 功能说明:	QSPI Flash 擦除
 * 输    入: QSPI_TypeDef * QSPIx	指定要被设置的QSPI接口，有效值包括QSPI0
 *			uint32_t addr			要擦除的 SPI Flash 地址
-*			uint16_t block_size		要擦除的块大小，单位为 kbytes，有效值 4、64
+*			uint16_t block_size		要擦除的块大小，单位为 kbytes，有效值 4、32、64
 *			uint8_t wait			是否等待 SPI Flash 完成操作操作，1 等待完成   0 立即返回
 * 输    出: 无
 * 注意事项: 若 wait == 0 立即返回，需要在随后调用 QSPI_FlashBusy() 检查 SPI Flash 完成操作后，再执行读、写操作
@@ -161,6 +161,10 @@ void QSPI_Erase_(QSPI_TypeDef * QSPIx, uint32_t addr, uint16_t block_size, uint8
 	{
 	case 4:
 		instruction = (AddressSize == QSPI_PhaseSize_32bit) ? QSPI_C4B_ERASE_SECTOR    : QSPI_CMD_ERASE_SECTOR;
+		break;
+	
+	case 32:
+		instruction = (AddressSize == QSPI_PhaseSize_32bit) ? QSPI_C4B_ERASE_BLOCK32KB : QSPI_CMD_ERASE_BLOCK32KB;
 		break;
 	
 	case 64:
