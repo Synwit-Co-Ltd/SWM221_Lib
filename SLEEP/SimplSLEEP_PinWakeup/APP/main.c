@@ -29,7 +29,8 @@ int main(void)
 	
 		Flash_Param_at_xMHz(72);
 		switchToHRC();//休眠前切换到内部RC时钟，进入低功耗模式之后自动切换到内部低频时钟
-		
+		Flash_Param_at_xMHz(8);//Flash参数切换
+
 		SYS->XTALCR&= ~((1 << SYS_XTALCR_ON_Pos) | (1 << SYS_XTALCR_DET_Pos)  );//关闭外振,降低功耗
 		
 		SYS->PLLCR &= ~(1<< SYS_PLLCR_OUTEN_Pos) ;
@@ -39,6 +40,8 @@ int main(void)
 		gpio_outhigh(); //IO没有外设的情况下，将GPIO输出高功耗最低
 
 		EnterSleepMode();//在SRAM中进入sleep,等待唤醒
+
+		Flash_Param_at_xMHz(72);
 
 		SYS->CLKEN0 |=(1 << SYS_CLKEN0_ANAC_Pos); 
 		switchOnPLL(3,2,15);//唤醒后切换到PLL时钟
