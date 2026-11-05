@@ -103,6 +103,8 @@ void SystemCoreClockUpdate(void)
 	}
 	
 	CyclesPerUs = SystemCoreClock / 1000000;
+	if(CyclesPerUs == 0)
+		CyclesPerUs = 1;
 }
 
 
