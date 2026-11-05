@@ -98,12 +98,12 @@ int main(void)
 		GPIO_SetBit(GPIOA, PIN8);
 		PWMG->SWBRK |= (PWMG_SWBRK_PWM0A_Msk |		//软件触发PWM0A和PWM0B的刹车动作
 						PWMG_SWBRK_PWM0B_Msk);
-		for(int i = 0; i < 300000; i++) {}
+		for(int i = 0; i < 300000; i++) __NOP();
 		
 		GPIO_ClrBit(GPIOA, PIN8);
 		PWMG->SWBRK &=~(PWMG_SWBRK_PWM0A_Msk |		//撤销PWM0A和PWM0B的软件刹车，恢复正常输出
 						PWMG_SWBRK_PWM0B_Msk);
-		for(int i = 0; i < 900000; i++) {}
+		for(int i = 0; i < 900000; i++) __NOP();
 	}
 #endif
 

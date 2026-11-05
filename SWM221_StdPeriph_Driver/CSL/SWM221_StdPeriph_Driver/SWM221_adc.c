@@ -158,7 +158,7 @@ void ADC_Open(ADC_TypeDef * ADCx)
 	
 	int clkdiv = ((ADCx->CR & ADC_CR_CLKDIV_Msk) >> ADC_CR_CLKDIV_Pos) + 1;
 	
-	for(int i = 0; i < clkdiv * 32; i++) {}	// 退出 Powerdown 32 个采样时钟周期后才能工作
+	for(int i = 0; i < clkdiv * 32; i++) __NOP();	// 退出 Powerdown 32 个采样时钟周期后才能工作
 }
 
 /****************************************************************************************************************************************** 

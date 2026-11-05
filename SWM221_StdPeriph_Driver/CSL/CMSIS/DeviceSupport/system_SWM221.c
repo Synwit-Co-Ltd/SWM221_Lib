@@ -158,7 +158,7 @@ void switchToHRC(void)
 {
 	SYS->RCCR |= (1 << SYS_RCCR_HON_Pos);
 	
-	for(int i = 0; i < CyclesPerUs; i++) {}
+	for(int i = 0; i < CyclesPerUs; i++) __NOP();
 	
 	SYS->CLKSEL |= (1 << SYS_CLKSEL_SYS_Pos);		//SYS <= HRC
 	
@@ -173,7 +173,7 @@ void switchToDIV(uint32_t src, uint32_t div)
 	
 	SYS->CLKDIVx_ON = 1;
 	
-	for(int i = 0; i < CyclesPerUs; i++) {}
+	for(int i = 0; i < CyclesPerUs; i++) __NOP();
 	
 	SYS->CLKSEL &=~(1 << SYS_CLKSEL_SYS_Pos);		//SYS <= CLK_DIVx
 	
