@@ -210,7 +210,15 @@ void switchOnPLL(uint32_t src, uint32_t indiv, uint32_t fbdiv)
 				 (indiv					<< SYS_PLLCR_INDIV_Pos)  |
 				 (fbdiv					<< SYS_PLLCR_FBDIV_Pos);
 	
-	while((SYS->PLLSR & SYS_PLLSR_LOCK_Msk) == 0) __NOP();		//等待PLL锁定
+	for(int i = 0; i < 10; i = i)	// 连续检测到 10 次 PLLSR.LOCK 为 1，才认为真的已经 lock
+	{
+		if(SYS->PLLSR & SYS_PLLSR_LOCK_Msk)
+			i += 1;
+		else
+			i = 0;
+		
+		SW_DelayUS(2);
+	}
 	
 	SYS->PLLSR |= SYS_PLLSR_ENA_Msk;
 }
