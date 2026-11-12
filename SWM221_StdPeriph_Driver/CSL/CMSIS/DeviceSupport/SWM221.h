@@ -263,8 +263,8 @@ typedef struct {
 #define SYS_PRSTR0_DIV_Msk			(0x01 <<SYS_PRSTR0_DIV_Pos)
 #define SYS_PRSTR0_ANAC_Pos			14
 #define SYS_PRSTR0_ANAC_Msk			(0x01 <<SYS_PRSTR0_ANAC_Pos)
-#define SYS_PRSTR0_ADC0_Pos			15
-#define SYS_PRSTR0_ADC0_Msk			(0x01 <<SYS_PRSTR0_ADC0_Pos)
+#define SYS_PRSTR0_ADC_Pos			15
+#define SYS_PRSTR0_ADC_Msk			(0x01 <<SYS_PRSTR0_ADC_Pos)
 #define SYS_PRSTR0_CAN0_Pos			16
 #define SYS_PRSTR0_CAN0_Msk			(0x01 <<SYS_PRSTR0_CAN0_Pos)
 #define SYS_PRSTR0_IOFILT_Pos		17
