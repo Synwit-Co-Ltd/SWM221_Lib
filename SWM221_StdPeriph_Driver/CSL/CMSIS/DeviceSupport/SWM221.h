@@ -284,7 +284,7 @@ typedef struct {
 #define SYS_RCCR_HON_Pos			0		//High speed RC ON
 #define SYS_RCCR_HON_Msk			(0x01 << SYS_RCCR_HON_Pos)
 #define SYS_RCCR_LON_Pos			1		//Low speed RC ON
-#define SYS_RCCR_LON_Msk			(0x03 << SYS_RCCR_LON_Pos)
+#define SYS_RCCR_LON_Msk			(0x01 << SYS_RCCR_LON_Pos)
 
 #define SYS_XTALCR_ON_Pos			0		//XTAL On
 #define SYS_XTALCR_ON_Msk			(0x01 << SYS_XTALCR_ON_Pos)
@@ -420,7 +420,7 @@ typedef struct {
 #define SYS_PGAREF_REFSEL_Msk		(0x03 << SYS_PGAREF_REFSEL_Pos)
 
 #define SYS_TEMPCR_EN_Pos			0
-#define SYS_TEMPCR_EN_Msk			(0x03 << SYS_TEMPCR_EN_Pos)
+#define SYS_TEMPCR_EN_Msk			(0x01 << SYS_TEMPCR_EN_Pos)
 
 #define SYS_ADCREF_REFSEL_Pos		0 		//ADC 参考电压选择：0 VDD   1 VREF
 #define SYS_ADCREF_REFSEL_Msk		(0x01 << SYS_ADCREF_REFSEL_Pos)
@@ -535,8 +535,8 @@ typedef struct {
 	__IO uint32_t OCMAT;
 	__IO uint32_t RESERVED2;
 	
-	__IO uint32_t ICLOW;
-	__IO uint32_t ICHIGH;
+	__I  uint32_t ICLOW;
+	__I  uint32_t ICHIGH;
 	
 	__IO uint32_t PREDIV;					//预分频，8位
 } TIMR_TypeDef;
@@ -589,13 +589,13 @@ typedef struct {
 	
 	__IO uint32_t HALLEN;					//[0] HALL功能开关
 	
-	__IO uint32_t HALLDR;					//HALL输入跳变沿将计数器（加载值 - 当前值）存入此寄存器
+	__I  uint32_t HALLDR;					//HALL输入跳变沿将计数器（加载值 - 当前值）存入此寄存器
 	
 		 uint32_t RESERVED2[2];
 	
-	__IO uint32_t HALLSR;
+	__I  uint32_t HALLSR;
 	
-	__IO uint32_t ICSR;						//Input Capture Pin Status
+	__I  uint32_t ICSR;						//Input Capture Pin Status
 		
 		 uint32_t RESERVED3[7];
 	
@@ -761,6 +761,8 @@ typedef struct {
 #define UART_RTSCR_STAT_Pos			8		//RTS信号的当前状态
 #define UART_RTSCR_STAT_Msk			(0x01 << UART_RTSCR_STAT_Pos)
 
+#define UART_CFG_RXEN_Pos			0		// RX Enable
+#define UART_CFG_RXEN_Msk			(0x01 << UART_CFG_RXEN_Pos)
 #define UART_CFG_MSBF_Pos			1		//接收发送MSB First
 #define UART_CFG_MSBF_Msk			(0x01 << UART_CFG_MSBF_Pos)
 #define UART_CFG_BRKTXLEN_Pos		2		//1表示1bit，以此类推，默认值13
@@ -1098,6 +1100,8 @@ typedef struct {
 #define SPI_CTRL_RFCLR_Msk			(0x01 << SPI_CTRL_RFCLR_Pos)
 #define SPI_CTRL_TFCLR_Pos			25		//TX FIFO Clear
 #define SPI_CTRL_TFCLR_Msk			(0x01 << SPI_CTRL_TFCLR_Pos)
+#define SPI_CTRL_SAMPDLY_Pos		26		// sample delay 0/1/2/3 system clock cycle
+#define SPI_CTRL_SAMPDLY_Msk		(0x03 << SPI_CTRL_SAMPDLY_Pos)
 #define SPI_CTRL_LSBF_Pos			28		//LSB Fisrt
 #define SPI_CTRL_LSBF_Msk			(0x01 << SPI_CTRL_LSBF_Pos)
 #define SPI_CTRL_NSYNC_Pos			29		//0 对SPI输入信号进行采样同步    1 对SPI输入信号不进行采样同步
@@ -1174,11 +1178,11 @@ typedef struct {
 typedef struct {
 	__IO uint32_t CR;
 
-	__IO uint32_t SR;
+	__I  uint32_t SR;
 
 	__IO uint32_t TR;						//Transfer Register
 
-	__IO uint32_t RXDATA;
+	__I  uint32_t RXDATA;
 	
 	__IO uint32_t TXDATA;
 	
@@ -1333,13 +1337,13 @@ typedef struct {
 	
 		 uint32_t RESERVED[2];
 		
-	__IO uint32_t DATA[10];
+	__I  uint32_t DATA[10];
 	
 		 uint32_t RESERVED2[6];
 	
-	__IO uint32_t SEQ0DMA;
+	__I  uint32_t SEQ0DMA;
 	
-	__IO uint32_t SEQ1DMA;
+	__I  uint32_t SEQ1DMA;
 	
 		 uint32_t RESERVED3[98];
 	
@@ -1531,9 +1535,9 @@ typedef struct {
 	
 	__IO uint32_t IF;
 	
-	__IO uint32_t VALUE;
+	__I  uint32_t VALUE;
 	
-	__IO uint32_t SR;
+	__I  uint32_t SR;
 } PWM_TypeDef;
 
 
@@ -1672,6 +1676,8 @@ typedef struct {
 #define PWM_IE_DNCMPA_Msk			(0x01 << PWM_IE_DNCMPA_Pos)
 #define PWM_IE_DNCMPB_Pos			5		//向下计数时计数器值与CMPB相等中断使能
 #define PWM_IE_DNCMPB_Msk			(0x01 << PWM_IE_DNCMPB_Pos)
+#define PWM_IE_RELOAD_Pos			6		// PWM counter reload interrupt enable
+#define PWM_IE_RELOAD_Msk			(0x01 << PWM_IE_RELOAD_Pos)
 
 #define PWM_IF_UPOVF_Pos			0
 #define PWM_IF_UPOVF_Msk			(0x01 << PWM_IF_UPOVF_Pos)
@@ -1685,6 +1691,8 @@ typedef struct {
 #define PWM_IF_DNCMPA_Msk			(0x01 << PWM_IF_DNCMPA_Pos)
 #define PWM_IF_DNCMPB_Pos			5
 #define PWM_IF_DNCMPB_Msk			(0x01 << PWM_IF_DNCMPB_Pos)
+#define PWM_IF_RELOAD_Pos			6
+#define PWM_IF_RELOAD_Msk			(0x01 << PWM_IF_RELOAD_Pos)
 
 #define PWM_SR_STAT_Pos				0		//0 IDLE   1 ACTIVE   2 PAUSE
 #define PWM_SR_STAT_Msk				(0x03 << PWM_SR_STAT_Pos)
@@ -1727,7 +1735,7 @@ typedef struct {
 		__IO uint32_t BRKSR;
 	};
 	
-	__IO uint32_t EVSR;
+	__I  uint32_t EVSR;
 	
 	__IO uint32_t SWEV;
 } PWMG_TypeDef;
@@ -1762,7 +1770,7 @@ typedef struct {
 #define PWMG_RESTART_PWM1_Pos		9
 #define PWMG_RESTART_PWM1_Msk		(0x01 << PWMG_RESTART_PWM1_Pos)
 
-#define PWMG_PULSE_EDGE0_Pos		0		//PWM_PULSE0 计数边沿，0 上升沿   1 下降沿
+#define PWMG_PULSE_EDGE0_Pos		0		//PWM_PULSE0 计数边沿，1 上升沿   0 下降沿
 #define PWMG_PULSE_EDGE0_Msk		(0x01 << PWMG_PULSE_EDGE0_Pos)
 #define PWMG_PULSE_EDGE1_Pos		1
 #define PWMG_PULSE_EDGE1_Msk		(0x01 << PWMG_PULSE_EDGE1_Pos)
@@ -1904,7 +1912,7 @@ typedef struct {
 
 
 typedef struct {    
-	__IO uint32_t IF;						//Interrupt Flag
+	__I  uint32_t IF;						//Interrupt Flag
     
 	__IO uint32_t IFC;						//Interrupt Flag Clear
     	
@@ -2011,7 +2019,7 @@ typedef struct {
 	
 	__IO uint32_t DCR;						//Device Configuration Register
 	
-	__IO uint32_t SR;
+	__I  uint32_t SR;
 	
 	__IO uint32_t FCR;						//Flag Clear Register
 	
@@ -2134,7 +2142,7 @@ typedef struct {
 	
 	__I  uint32_t SR;						//Status Register
 	
-	__IO uint32_t IF;						//Interrupt Flag，读取清零
+	__I  uint32_t IF;						//Interrupt Flag，读取清零
 	
 	__IO uint32_t IE;						//Interrupt Enable
 	
@@ -2423,7 +2431,7 @@ typedef struct {
 	
 	__IO uint32_t CFG4;
 	
-	__IO uint32_t STAT;
+	__I  uint32_t STAT;
 		
 	__IO uint32_t REMAP;
 } FMC_TypeDef;

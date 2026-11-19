@@ -263,6 +263,6 @@ void PORT_Init(PORT_TypeDef * PORTx, uint32_t n, uint32_t func, uint32_t digit_i
 #define PORTC_PIN3_QSPI0_SCLK	3
 #define PORTC_PIN3_CAN0_TX		4
 #define PORTC_PIN3_PWM0B        5
-#define PORTC_PIN3_HALL_IN1		7
+#define PORTC_PIN3_HALL_IN1		6
 
 #endif //__SWM221_PORT_H__
